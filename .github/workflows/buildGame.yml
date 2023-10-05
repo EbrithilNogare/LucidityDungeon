@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-          - WebGL # WebGL.
+          - webgl # WebGL.
     steps:
       # Checkout
       - uses: actions/checkout@v3
