@@ -1,6 +1,6 @@
 # Lucidity dungeon
 
-- Top down 2D game
+- Top-down 2D game
 - grid
 - piel art
 - generated dungeon
@@ -10,7 +10,21 @@
 - Karak (board game)
 - Decked out 2 (Minecraft map)
 
-### World
+### Screens
+- Main menu
+- Map
+- Inventory
+
+### Locations
+- Base
+  - Buy stuff
+  - Reset point
+- Dungeon
+  - Get coins
+  - Artefacts
+  - Multiple levels (locked)
+
+### Dungeon
 - NPCs
   - friendly
     - traders
@@ -30,5 +44,18 @@
   - staff
   - bow
 - spells
+
+### RPG Characters
+- Warrior
+  - Two weapons
+- Mage
+  - Scrolls have a chance not to deplete
+
+### Inventory
+- Weapon
+- Potion
+- One-use scroll
+
+
 
 
