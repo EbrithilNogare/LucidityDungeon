@@ -65,6 +65,7 @@ Inventory has slots for up to two weapons, multiple scrolls, and a common area f
 - Weapon
 - Potion
 - One-use scroll
+- Each item have multiple levels of rarity (depends on background color)
 
 
 ## Assets
