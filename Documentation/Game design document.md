@@ -1,5 +1,15 @@
 # Lucidity dungeon
 
+## Story
+The game is situated in the dreams of a person, with a limited time player must go more and more again into a dungeon and collect artefacts and coins, which will help him in his next run to get further than ever before.
+
+Every dream has a different level layout but some things are common. 
+
+The player has health and mana. Each character will have different stats.
+
+Inventory has slots for up to two weapons, multiple scrolls, and a common area for coins and artifacts.
+
+## Summary
 - Top-down 2D game
 - grid
 - piel art
