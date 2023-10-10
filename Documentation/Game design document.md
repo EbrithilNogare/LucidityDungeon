@@ -67,5 +67,11 @@ Inventory has slots for up to two weapons, multiple scrolls, and a common area f
 - One-use scroll
 
 
+## Assets
+
+- [rpg pixel art pack](https://assetstore.unity.com/packages/2d/gui/icons/rpg-pixel-art-pack-254546)
+- [pixel art roguelike](https://assetstore.unity.com/packages/2d/environments/pixel-art-roguelike-pack-217434)
+
+![image](https://github.com/EbrithilNogare/LucidityDungeon/assets/22661032/050a272b-d1cb-4be2-8396-9d63ac8a1b41)
 
 
