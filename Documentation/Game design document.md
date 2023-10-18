@@ -94,7 +94,7 @@ Sound effects and music that match the game's retro pixel art style and enhance 
 ##  Appendices
 ### References
 - [GitHub Repository with Game Assets](https://github.com/EbrithilNogare/LucidityDungeon/assets/22661032/050a272b-d1cb-4be2-8396-9d63ac8a1b41)
-
+- Pixel font from minecraft: https://www.dafont.com/minecraft.font
 ---
 
 This Game Design Document provides an overview of "Lucidity Dungeon" and serves as a reference for the game's development and design. It outlines the story, gameplay mechanics, art style, and technical requirements necessary for the game's successful creation.
