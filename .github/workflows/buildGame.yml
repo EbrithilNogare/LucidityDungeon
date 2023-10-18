@@ -7,7 +7,7 @@ on:
 
 jobs:
   buildForAllSupportedPlatforms:
-    name: Build for WebGL
+    name: Build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -24,13 +24,21 @@ jobs:
             Library-WebGL-
             Library-
       - uses: game-ci/unity-builder@v3
+        name: Build WebGL
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: WebGL
+      - uses: JamesIves/github-pages-deploy-action@4.1.3
+        with:
+          branch: gh-pages
+          folder: build/WebGL/WebGL
+          commit-message: Deploy
+          single-commit: true
       - uses: game-ci/unity-builder@v3
+        name: Build Android
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
@@ -39,11 +47,5 @@ jobs:
           targetPlatform: Android
       - uses: actions/upload-artifact@v3
         with:
-          name: Build-WebGL
-          path: build/WebGL
-      - uses: JamesIves/github-pages-deploy-action@4.1.3
-        with:
-          branch: gh-pages
-          folder: build/WebGL/WebGL
-          commit-message: Deploy
-          single-commit: true
+          name: Build-Android
+          path: build/Android
