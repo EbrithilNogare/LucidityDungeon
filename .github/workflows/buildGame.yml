@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  buildForAllSupportedPlatforms:
+  buildForWebGL:
     name: Build
     runs-on: ubuntu-latest
     strategy:
@@ -40,7 +40,26 @@ jobs:
           folder: build/WebGL/WebGL
           commit-message: Deploy
           single-commit: true
-          
+
+  buildForAndroid:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          lfs: false
+
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-Android-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-Android-
+            Library-
+
       - uses: jlumbroso/free-disk-space@v1.3.0
       
       - name: Build Android
@@ -51,7 +70,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: Android
-          
+
       - uses: actions/upload-artifact@v3
         with:
           name: Build-Android
