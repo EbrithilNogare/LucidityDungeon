@@ -1,4 +1,8 @@
 # Lucidity Dungeon
+## Timesheet in hours
+- Preparation: |||
+- Design: |
+- Coding: 
 
 ## Main points to implement
 - Scenes
@@ -88,8 +92,17 @@ Sound effects and music that match the game's retro pixel art style and enhance 
 - Custom sound effects and music tracks for ambiance and immersion.
 
 ##  Technical Requirements
-- Platform: PC, Mac, and consoles.
-- Development in Unity or a suitable game engine.
+- Platform: WebGL, and Android.
+- Development in Unity
+
+## Sketchbook
+![](./sketchbook.png)
+
+## Inspiration:
+- Decked out (Minecraft)
+- Baldurs gate 3 (PC)
+- Mini dungeong RPG (Android)
+
 
 ##  Appendices
 ### References
