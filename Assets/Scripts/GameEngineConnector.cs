@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -18,7 +16,7 @@ namespace Assets.Scripts
         public Tile[] nothingTiles;
 
         private GameEngine gameEngine;
-        
+
         void Start()
         {
             Config config = new Config();
@@ -34,89 +32,156 @@ namespace Assets.Scripts
             }
             first = false;
 
-            Coordinate pos = new Coordinate(0, 0);
-            RenderRoom(gameEngine.map[pos], pos);
+            for (int x = -15; x < 15; x++)
+            {
+                for (int y = -15; y < 15; y++)
+                {
+                    var pos = new Coordinate(x, y);
+                    gameEngine.checkMapTile(pos);
+                    RenderRoom(gameEngine.map[pos], pos);
+                }
+            }
         }
 
-        RoomTileType[,] defaultRoom = {
-            { RoomTileType.R, RoomTileType.W, RoomTileType.W, RoomTileType.W, RoomTileType.W, RoomTileType.W, RoomTileType.W, RoomTileType.L },
-            { RoomTileType.R, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.L },
-            { RoomTileType.R, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.L },
-            { RoomTileType.R, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.L },
-            { RoomTileType.R, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.L },
-            { RoomTileType.R, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.L },
-            { RoomTileType.R, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.F, RoomTileType.L },
-            { RoomTileType.N, RoomTileType.U, RoomTileType.U, RoomTileType.U, RoomTileType.U, RoomTileType.U, RoomTileType.U, RoomTileType.N },
+        byte[,] defaultRoom = new byte[8, 8]{
+            { 0, 0, 0, 1, 1, 0, 0, 0 },
+            { 0, 1, 1, 1, 1, 1, 1, 0 },
+            { 0, 1, 1, 1, 1, 1, 1, 0 },
+            { 1, 1, 1, 1, 1, 1, 1, 1 },
+            { 1, 1, 1, 1, 1, 1, 1, 1 },
+            { 0, 1, 1, 1, 1, 1, 1, 0 },
+            { 0, 1, 1, 1, 1, 1, 1, 0 },
+            { 0, 0, 0, 1, 1, 0, 0, 0 },
         };
 
         void RenderRoom(MapTile mapTile, Coordinate coordinate)
         {
-            RoomTileType[,] room = (RoomTileType[,])defaultRoom.Clone();
+            var room = (byte[,])defaultRoom.Clone();
 
-            if (mapTile.entries.up)
+            if (!mapTile.entries.up)
             {
-                room[0, 3] = RoomTileType.F;
-                room[0, 4] = RoomTileType.F;
+                if (mapTile.roomContent == MapRoomContent.Empty)
+                {
+                    for (int x = 0; x < 8; x++)
+                    {
+                        room[0, x] = 0;
+                        room[1, x] = 0;
+                        room[2, x] = 0;
+                    }
+                }
+                else
+                {
+                    room[0, 3] = 0;
+                    room[0, 4] = 0;
+                }
             }
 
-            if (mapTile.entries.left)
+            if (!mapTile.entries.left)
             {
-                room[2, 0] = RoomTileType.W;
-                room[3, 0] = RoomTileType.F;
-                room[4, 0] = RoomTileType.F;
-                room[5, 0] = RoomTileType.UR;
+                if (mapTile.roomContent == MapRoomContent.Empty)
+                {
+                    for (int y = 0; y < 8; y++)
+                    {
+                        room[y, 0] = 0;
+                        room[y, 1] = 0;
+                        room[y, 2] = 0;
+                    }
+                }
+                else
+                {
+                    room[3, 0] = 0;
+                    room[4, 0] = 0;
+                }
             }
 
-            if (mapTile.entries.down)
+            if (!mapTile.entries.down)
             {
-                room[7, 2] = RoomTileType.UR;
-                room[7, 3] = RoomTileType.F;
-                room[7, 4] = RoomTileType.F;
-                room[7, 5] = RoomTileType.UL;
+                if (mapTile.roomContent == MapRoomContent.Empty)
+                {
+                    for (int x = 0; x < 8; x++)
+                    {
+                        room[7, x] = 0;
+                        room[6, x] = 0;
+                        room[5, x] = 0;
+                    }
+                }
+                else
+                {
+                    room[7, 3] = 0;
+                    room[7, 4] = 0;
+                }
             }
 
-            if (mapTile.entries.right)
+            if (!mapTile.entries.right)
             {
-                room[2, 7] = RoomTileType.W;
-                room[3, 7] = RoomTileType.F;
-                room[4, 7] = RoomTileType.F;
-                room[5, 7] = RoomTileType.UL;
+                if (mapTile.roomContent == MapRoomContent.Empty)
+                {
+                    for (int y = 0; y < 8; y++)
+                    {
+                        room[y, 7] = 0;
+                        room[y, 6] = 0;
+                        room[y, 5] = 0;
+                    }
+                }
+                else
+                {
+                    room[3, 7] = 0;
+                    room[4, 7] = 0;
+                }
             }
+
 
             for (int x = 0; x < 8; x++)
             {
                 for (int y = 0; y < 8; y++)
                 {
-                    switch (room[7-y, x])
+                    var randomIndex = Mathf.Abs(coordinate.x * 13 + coordinate.y * 29 + x * 79 + y * 53);
+                    if (room[7 - y, x] == 1)
                     {
-                        case RoomTileType.F:
-                            tilemap.SetTile(new Vector3Int(coordinate.x+x, coordinate.y+y, 0), floorTiles[(x*13+y*29) % floorTiles.Length]);
-                            break;
-                        case RoomTileType.W:
-                            tilemap.SetTile(new Vector3Int(coordinate.x+x, coordinate.y+y, 0), wallTiles[0]);
-                            break;
-                        case RoomTileType.U:
-                            tilemap.SetTile(new Vector3Int(coordinate.x+x, coordinate.y+y, 0), edgeUpTiles[0]);
-                            break;
-                        case RoomTileType.L:
-                            tilemap.SetTile(new Vector3Int(coordinate.x+x, coordinate.y+y, 0), edgeLeftTiles[0]);
-                            break;
-                        case RoomTileType.R:
-                            tilemap.SetTile(new Vector3Int(coordinate.x+x, coordinate.y+y, 0), edgeRightTiles[0]);
-                            break;
-                        case RoomTileType.UL:
-                            tilemap.SetTile(new Vector3Int(coordinate.x+x, coordinate.y+y, 0), edgeUpLeftTiles[0]);
-                            break;
-                        case RoomTileType.UR:
-                            tilemap.SetTile(new Vector3Int(coordinate.x+x, coordinate.y+y, 0), edgeUpRightTiles[0]);
-                            break;
-                        case RoomTileType.N:
-                            tilemap.SetTile(new Vector3Int(coordinate.x+x, coordinate.y+y, 0), nothingTiles[0]);
-                            break;
+                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), floorTiles[randomIndex % floorTiles.Length]);
+                        continue;
                     }
+
+                    if (7 - y + 1 <= 7 && room[7 - y + 1, x] == 1)
+                    {
+                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), wallTiles[randomIndex % wallTiles.Length]);
+                        continue;
+                    }
+
+                    if (x + 1 <= 7 && room[7 - y, x + 1] == 1 && 7 - y - 1 >= 0 && room[7 - y - 1, x] == 1)
+                    {
+                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), edgeUpRightTiles[randomIndex % edgeUpRightTiles.Length]);
+                        continue;
+                    }
+
+                    if (x - 1 >= 0 && room[7 - y, x - 1] == 1 && 7 - y - 1 >= 0 && room[7 - y - 1, x] == 1)
+                    {
+                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), edgeUpLeftTiles[randomIndex % edgeUpLeftTiles.Length]);
+                        continue;
+                    }
+
+                    if (7 - y - 1 >= 0 && room[7 - y - 1, x] == 1)
+                    {
+                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), edgeUpTiles[randomIndex % edgeUpTiles.Length]);
+                        continue;
+                    }
+
+                    if ((x - 1 >= 0 && room[7 - y, x - 1] == 1) || (x - 1 >= 0 && 7 - y + 1 <= 7 && room[7 - y + 1, x - 1] == 1))
+                    {
+                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), edgeLeftTiles[randomIndex % edgeLeftTiles.Length]);
+                        continue;
+                    }
+
+                    if ((x + 1 <= 7 && room[7 - y, x + 1] == 1) || (x + 1 <= 7 && 7 - y + 1 <= 7 && room[7 - y + 1, x + 1] == 1))
+                    {
+                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), edgeRightTiles[randomIndex % edgeRightTiles.Length]);
+                        continue;
+                    }
+
+                    tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), nothingTiles[randomIndex % nothingTiles.Length]);
                 }
             }
-
         }
+
     }
 }

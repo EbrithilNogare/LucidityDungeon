@@ -259,7 +259,7 @@ namespace Assets.Scripts
             return mapTile.roomContent == MapRoomContent.Treasure && !turnState.treasureTaken.Contains(turnState.position);
         }
 
-        private void checkMapTile(Coordinate coordinate)
+        public void checkMapTile(Coordinate coordinate)
         {
             if (!map.ContainsKey(coordinate))
             {

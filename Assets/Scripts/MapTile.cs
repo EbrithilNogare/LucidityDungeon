@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Assets.Scripts
 {
@@ -57,10 +55,10 @@ namespace Assets.Scripts
                 return new Entries(true, true, true, true);
             }
 
-            bool up = new Random(config.seed + x * 733 + y * 739).NextDouble() < config.entryProbability;
-            bool left = new Random(config.seed + x * 733 + y * 739 + 7).NextDouble() < config.entryProbability;
-            bool down = new Random(config.seed + x * 733 + (y + 1) * 739).NextDouble() < config.entryProbability;
-            bool right = new Random(config.seed + (x + 1) * 733 + y * 739 + 7).NextDouble() < config.entryProbability;
+            bool up = new Random(config.seed * x * 23 * y * 13).NextDouble() < config.entryProbability;
+            bool left = new Random(config.seed * x * 23 * y * 13 + 7).NextDouble() < config.entryProbability;
+            bool down = new Random(config.seed * x * 23 * (y - 1) * 13).NextDouble() < config.entryProbability;
+            bool right = new Random(config.seed * (x + 1) * 23 * y * 13 + 7).NextDouble() < config.entryProbability;
 
             if (x == 0 && y == -1) up = true;
             if (x == 1 && y == 0) left = true;
