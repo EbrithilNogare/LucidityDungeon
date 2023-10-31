@@ -28,12 +28,9 @@ namespace Assets.Scripts
         [Pure]
         public TurnState Simulate(TurnState turnState, GameAction gameAction)
         {
-            turnState = new TurnState(turnState);
-
             if (turnState.energy-- <= 0)
             {
-                doExit(turnState, false);
-                return turnState;
+                return doExit(turnState, false); ;
             }
 
             switch (gameAction)
@@ -41,33 +38,38 @@ namespace Assets.Scripts
                 case GameAction.GoUp:
                 case GameAction.GoLeft:
                 case GameAction.GoDown:
-                case GameAction.GoRight: doMove(turnState, gameAction); break;
-                case GameAction.Attack: doAttack(turnState); break;
-                case GameAction.DrinkPotion: doDrinkPotion(turnState); break;
-                case GameAction.UseSpell: doUseSpell(turnState); break;
-                case GameAction.OpenChest: doOpenChest(turnState); break;
-                case GameAction.BuyPotion: doBuyPotion(turnState); break;
-                case GameAction.BuySpell: doBuySpell(turnState); break;
-                case GameAction.BuyToken: doBuyToken(turnState); break;
-                case GameAction.Exit: doExit(turnState, true); break;
+                case GameAction.GoRight: turnState = doMove(turnState, gameAction); break;
+                case GameAction.Attack: turnState = doAttack(turnState); break;
+                case GameAction.UsePotion: turnState = doDrinkPotion(turnState); break;
+                case GameAction.UseSpell: turnState = doUseSpell(turnState); break;
+                case GameAction.OpenChest: turnState = doOpenChest(turnState); break;
+                case GameAction.BuyPotion: turnState = doBuyPotion(turnState); break;
+                case GameAction.BuySpell: turnState = doBuySpell(turnState); break;
+                case GameAction.BuyToken: turnState = doBuyToken(turnState); break;
+                case GameAction.Exit: turnState = doExit(turnState, true); break;
             }
 
             return turnState;
         }
 
-        private void doExit(TurnState turnState, bool success)
+        [Pure]
+        private TurnState doExit(TurnState turnState, bool success)
         {
-            if(success && (turnState.position.x != 0 || turnState.position.y != 0))
+            if (success && (turnState.position.x != 0 || turnState.position.y != 0))
             {
-                return;
+                gameState.permanentTokens = turnState.tokens;
+                return new TurnState(gameState, config);
             }
+
+            return new TurnState(gameState, config);
         }
 
-        private void doAttack(TurnState turnState)
+        [Pure]
+        private TurnState doAttack(TurnState turnState)
         {
             if (!isEnemyInMyRoom(turnState))
             {
-                return;
+                throw new Exception("Invalid action");
             }
 
             int enemyLevel = GetEnemyLevel(turnState.position, gameState.upgradeEnemyLevel);
@@ -78,20 +80,21 @@ namespace Assets.Scripts
             if (turnState.enemyHp <= 0)
             {
                 enemyDefeated(turnState, enemyLevel);
-                return;
+                return turnState;
             }
 
-            turnState.hp -= random.Next(1, config.enemyDamageCountPerLevel*enemyLevel + 5 + 1);
+            turnState.hp -= random.Next(1, config.enemyDamageCountPerLevel * enemyLevel + 5 + 1);
 
             if (turnState.hp <= 0)
             {
-                doExit(turnState, false);
-                return;
+                return doExit(turnState, false); ;
             }
 
+            return turnState;
         }
 
-        private void enemyDefeated(TurnState turnState, int enemyLevel)
+        [Pure]
+        private TurnState enemyDefeated(TurnState turnState, int enemyLevel)
         {
             Random random = new Random(config.seed + turnState.position.GetHashCode());
 
@@ -106,65 +109,74 @@ namespace Assets.Scripts
             {
                 if (enemyLevel < 4)
                 {
-                    turnState.weaponLevel = Math.Max(turnState.weaponLevel, 1);
+                    turnState.weaponLevel = Math.Max(turnState.weaponLevel, (byte)1);
                 }
                 else if (enemyLevel < 7)
                 {
-                    turnState.weaponLevel = Math.Max(turnState.weaponLevel, 2);
+                    turnState.weaponLevel = Math.Max(turnState.weaponLevel, (byte)2);
                 }
                 else
                 {
-                    turnState.weaponLevel = Math.Max(turnState.weaponLevel, 3);
+                    turnState.weaponLevel = Math.Max(turnState.weaponLevel, (byte)3);
                 }
             }
 
             turnState.money += config.enemyDropMoneyCountPerLevel * enemyLevel;
+            return turnState;
         }
 
+        [Pure]
         private int GetEnemyLevel(Coordinate position, int upgradeEnemyLevel)
         {
             Random random = new Random(config.seed + position.GetHashCode());
-            return random.Next(config.enemyLevelRanges[upgradeEnemyLevel,0], config.enemyLevelRanges[upgradeEnemyLevel,1] + 1);
+            return random.Next(config.enemyLevelRanges[upgradeEnemyLevel, 0], config.enemyLevelRanges[upgradeEnemyLevel, 1] + 1);
         }
 
-        private void doBuyToken(TurnState turnState)
+        [Pure]
+        private TurnState doBuyToken(TurnState turnState)
         {
             if (!isTraderInMyRoom(turnState) || turnState.money < config.tokenPrice)
             {
-                return;
+                throw new Exception("Invalid action");
             }
 
             turnState.money -= config.tokenPrice;
             turnState.tokens += config.tokensCountForPrice;
+            return turnState;
         }
 
-        private void doBuySpell(TurnState turnState)
+        [Pure]
+        private TurnState doBuySpell(TurnState turnState)
         {
             if (!isTraderInMyRoom(turnState) || turnState.money < config.spellPrice)
             {
-                return;
+                throw new Exception("Invalid action");
             }
 
             turnState.money -= config.spellPrice;
             turnState.spells++;
+            return turnState;
         }
 
-        private void doBuyPotion(TurnState turnState)
+        [Pure]
+        private TurnState doBuyPotion(TurnState turnState)
         {
             if (!isTraderInMyRoom(turnState) || turnState.money < config.potionPrice)
             {
-                return;
+                throw new Exception("Invalid action");
             }
 
             turnState.money -= config.potionPrice;
             turnState.potions++;
+            return turnState;
         }
 
-        private void doOpenChest(TurnState turnState)
+        [Pure]
+        private TurnState doOpenChest(TurnState turnState)
         {
             if (!isTreasureInMyRoom(turnState) || turnState.keys <= 0)
             {
-                return;
+                throw new Exception("Invalid action");
             }
 
             Random random = new Random(config.seed + turnState.position.GetHashCode());
@@ -173,13 +185,15 @@ namespace Assets.Scripts
             turnState.money += random.Next(config.treasureDropMoneyCountMin, config.treasureDropMoneyCountMax + 1);
             turnState.tokens += random.Next(config.treasureDropTokensCountMin, config.treasureDropTokensCountMax + 1);
             turnState.treasureTaken.Add(turnState.position);
+            return turnState;
         }
 
-        private void doUseSpell(TurnState turnState)
+        [Pure]
+        private TurnState doUseSpell(TurnState turnState)
         {
             if (!isEnemyInMyRoom(turnState) || turnState.spells <= 0)
             {
-                return;
+                throw new Exception("Invalid action");
             }
 
             turnState.spells--;
@@ -189,25 +203,30 @@ namespace Assets.Scripts
                 int enemyLevel = GetEnemyLevel(turnState.position, gameState.upgradeEnemyLevel);
                 enemyDefeated(turnState, enemyLevel);
             }
+
+            return turnState;
         }
 
-        private void doDrinkPotion(TurnState turnState)
+        [Pure]
+        private TurnState doDrinkPotion(TurnState turnState)
         {
             if (turnState.potions <= 0)
             {
-                return;
+                throw new Exception("Invalid action");
             }
 
             turnState.potions--;
             turnState.hp += config.healthPotionRegeneration[gameState.upgradePotionLevel];
-            turnState.hp = Math.Min(turnState.hp, 100);
+            turnState.hp = Math.Min(turnState.hp, config.playerDefaultHealthPoints);
+            return turnState;
         }
 
-        private void doMove(TurnState turnState, GameAction gameAction)
+        [Pure]
+        private TurnState doMove(TurnState turnState, GameAction gameAction)
         {
             if (isEnemyInMyRoom(turnState))
             {
-                return;
+                throw new Exception("Invalid action");
             }
 
             if (gameAction == GameAction.GoUp && map[turnState.position].entries.up)
@@ -233,10 +252,18 @@ namespace Assets.Scripts
                 turnState.position.x++;
                 checkMapTile(turnState.position);
             }
+
+            if (isEnemyInMyRoom(turnState))
+            {
+                turnState.enemyHp = GetEnemyLevel(turnState.position, gameState.upgradeEnemyLevel) * config.enemyHealthCountPerLevel + config.enemyHealthCountBase;
+                turnState.hp = config.playerDefaultHealthPoints;
+            }
+
+            return turnState;
         }
 
         [Pure]
-        private bool isTraderInMyRoom(TurnState turnState)
+        public bool isTraderInMyRoom(TurnState turnState)
         {
             bool tileFound = map.TryGetValue(turnState.position, out MapTile mapTile);
             if (!tileFound) throw new Exception("not found tile I am standing on");
@@ -244,7 +271,7 @@ namespace Assets.Scripts
         }
 
         [Pure]
-        private bool isEnemyInMyRoom(TurnState turnState)
+        public bool isEnemyInMyRoom(TurnState turnState)
         {
             bool tileFound = map.TryGetValue(turnState.position, out MapTile mapTile);
             if (!tileFound) throw new Exception("not found tile I am standing on");
@@ -252,7 +279,7 @@ namespace Assets.Scripts
         }
 
         [Pure]
-        private bool isTreasureInMyRoom(TurnState turnState)
+        public bool isTreasureInMyRoom(TurnState turnState)
         {
             bool tileFound = map.TryGetValue(turnState.position, out MapTile mapTile);
             if (!tileFound) throw new Exception("not found tile I am standing on");
@@ -265,6 +292,70 @@ namespace Assets.Scripts
             {
                 map.Add(coordinate, new MapTile(coordinate, gameState, config));
             }
+        }
+
+        [Pure]
+        public List<GameAction> GetValidActions()
+        {
+            List<GameAction> actions = new List<GameAction>();
+
+            if (isTraderInMyRoom(turnState) && turnState.keys > 0)
+            {
+                if (turnState.money >= config.potionPrice)
+                {
+                    actions.Add(GameAction.BuyPotion);
+                }
+                if (turnState.money >= config.spellPrice)
+                {
+                    actions.Add(GameAction.BuySpell);
+                }
+                if (turnState.money >= config.tokenPrice)
+                {
+                    actions.Add(GameAction.BuyToken);
+                }
+            }
+            if (isTreasureInMyRoom(turnState) && turnState.keys > 0)
+            {
+                actions.Add(GameAction.OpenChest);
+            }
+            if (isEnemyInMyRoom(turnState))
+            {
+                actions.Add(GameAction.Attack);
+                if (turnState.spells > 0)
+                {
+                    actions.Add(GameAction.UseSpell);
+                }
+                if (turnState.potions > 0)
+                {
+                    actions.Add(GameAction.UsePotion);
+                }
+            }
+            else
+            {
+
+                if (map[turnState.position].entries.up)
+                {
+                    actions.Add(GameAction.GoUp);
+                }
+                if (map[turnState.position].entries.left)
+                {
+                    actions.Add(GameAction.GoLeft);
+                }
+                if (map[turnState.position].entries.down)
+                {
+                    actions.Add(GameAction.GoDown);
+                }
+                if (map[turnState.position].entries.right)
+                {
+                    actions.Add(GameAction.GoRight);
+                }
+            }
+            if (turnState.position.x == 0 && turnState.position.y == 0)
+            {
+                actions.Add(GameAction.Exit);
+            }
+
+            return actions;
         }
     }
 }

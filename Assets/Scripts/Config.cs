@@ -18,6 +18,9 @@
         public int[] energyPrices = new int[] { 0, 10, 25, 55, 90 };
         public int tokensCountForPrice = 5;
 
+        // Player
+        public int playerDefaultHealthPoints = 100;
+
         // Trader
         public int potionPrice = 5;
         public int spellPrice = 2;
@@ -29,6 +32,8 @@
         public float enemyDropRateWeapon = .33f;
         public int enemyDropMoneyCountPerLevel = 2;
         public int enemyDamageCountPerLevel = 1;
+        public int enemyHealthCountPerLevel = 10;
+        public int enemyHealthCountBase = 20;
 
         // Weapon
         public int[] weaponDamageDiceSides = { 4, 6, 8, 10 };

@@ -1,3 +1,5 @@
+using DG.Tweening;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -8,7 +10,9 @@ namespace Assets.Scripts
         [Header("Editable")]
         public GameObject player;
         public Tilemap tilemap;
+
         [Space(100)]
+
         [Header("From prefab")]
         public Tile[] floorTiles;
         public Tile[] wallTiles;
@@ -26,6 +30,8 @@ namespace Assets.Scripts
 
 
         private GameEngine gameEngine;
+        private List<GameAction> actions = new List<GameAction>();
+        private float timeToAction = 1f;
 
         void Start()
         {
@@ -36,24 +42,42 @@ namespace Assets.Scripts
         private bool first = true;
         private void Update()
         {
-            if (!first)
+            timeToAction -= Time.deltaTime;
+            if (timeToAction < 0)
             {
-                return;
-            }
-            first = false;
+                timeToAction = .2f;
 
-            for (int x = -15; x < 15; x++)
+                GameAction action = AIPlay(gameEngine);
+                gameEngine.Tick(action);
+                player.transform.DOMove(new Vector3(gameEngine.turnState.position.x * 8, gameEngine.turnState.position.y * 8, 0), .2f);
+                Debug.Log(action);
+            }
+
+            if (first)
             {
-                for (int y = -15; y < 15; y++)
+                first = false;
+                // TODO remove
+                // render dungeon
+                for (int x = -15; x < 15; x++)
                 {
-                    var pos = new Coordinate(x, y);
-                    gameEngine.checkMapTile(pos);
-                    RenderRoom(gameEngine.map[pos], pos);
-                    RenderContent(gameEngine.map[pos], pos);
+                    for (int y = -15; y < 15; y++)
+                    {
+                        var pos = new Coordinate(x, y);
+                        gameEngine.checkMapTile(pos);
+                        RenderRoom(gameEngine.map[pos], pos);
+                        RenderContent(gameEngine.map[pos], pos);
+                    }
                 }
             }
+        }
 
+        System.Random random = new System.Random(42);
 
+        private GameAction AIPlay(GameEngine gameEngine)
+        {
+            List<GameAction> possibleMoves = gameEngine.GetValidActions();
+
+            return possibleMoves[random.Next(0, possibleMoves.Count)];
         }
 
         void RenderContent(MapTile mapTile, Coordinate coordinate)
@@ -91,75 +115,67 @@ namespace Assets.Scripts
         {
             var room = (byte[,])defaultRoom.Clone();
 
-            if (!mapTile.entries.up)
+            if (mapTile.roomContent == MapRoomContent.Empty)
             {
-                if (mapTile.roomContent == MapRoomContent.Empty)
+                for (int x = 1; x < 7; x++)
                 {
-                    for (int x = 0; x < 8; x++)
+                    for (int y = 1; y < 7; y++)
                     {
-                        room[0, x] = 0;
-                        room[1, x] = 0;
-                        room[2, x] = 0;
+                        if (x != 3 && x != 4 && y != 3 && y != 4)
+                            room[y, x] = 0;
                     }
                 }
-                else
+            }
+
+            if (!mapTile.entries.up)
+            {
+                room[0, 3] = 0;
+                room[0, 4] = 0;
+                if (mapTile.roomContent == MapRoomContent.Empty)
                 {
-                    room[0, 3] = 0;
-                    room[0, 4] = 0;
+                    room[1, 3] = 0;
+                    room[1, 4] = 0;
+                    room[2, 3] = 0;
+                    room[2, 4] = 0;
                 }
             }
 
             if (!mapTile.entries.left)
             {
+                room[3, 0] = 0;
+                room[4, 0] = 0;
                 if (mapTile.roomContent == MapRoomContent.Empty)
                 {
-                    for (int y = 0; y < 8; y++)
-                    {
-                        room[y, 0] = 0;
-                        room[y, 1] = 0;
-                        room[y, 2] = 0;
-                    }
-                }
-                else
-                {
-                    room[3, 0] = 0;
-                    room[4, 0] = 0;
+                    room[3, 1] = 0;
+                    room[4, 1] = 0;
+                    room[3, 2] = 0;
+                    room[4, 2] = 0;
                 }
             }
 
             if (!mapTile.entries.down)
             {
+                room[7, 3] = 0;
+                room[7, 4] = 0;
                 if (mapTile.roomContent == MapRoomContent.Empty)
                 {
-                    for (int x = 0; x < 8; x++)
-                    {
-                        room[7, x] = 0;
-                        room[6, x] = 0;
-                        room[5, x] = 0;
-                    }
-                }
-                else
-                {
-                    room[7, 3] = 0;
-                    room[7, 4] = 0;
+                    room[6, 3] = 0;
+                    room[6, 4] = 0;
+                    room[5, 3] = 0;
+                    room[5, 4] = 0;
                 }
             }
 
             if (!mapTile.entries.right)
             {
+                room[3, 7] = 0;
+                room[4, 7] = 0;
                 if (mapTile.roomContent == MapRoomContent.Empty)
                 {
-                    for (int y = 0; y < 8; y++)
-                    {
-                        room[y, 7] = 0;
-                        room[y, 6] = 0;
-                        room[y, 5] = 0;
-                    }
-                }
-                else
-                {
-                    room[3, 7] = 0;
-                    room[4, 7] = 0;
+                    room[3, 6] = 0;
+                    room[4, 6] = 0;
+                    room[3, 5] = 0;
+                    room[4, 5] = 0;
                 }
             }
 

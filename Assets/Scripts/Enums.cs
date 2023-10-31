@@ -10,7 +10,7 @@
 
         // Enemy actions
         Attack,
-        DrinkPotion,
+        UsePotion,
         UseSpell,
 
         // Treasure actions

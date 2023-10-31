@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Assets.Scripts
 {
     struct TurnState
     {
         public Coordinate position;
-        public int lives;
+        public byte lives;
         public int hp;
         public int enemyHp;
-        public int weaponLevel;
+        public byte weaponLevel;
         public int energy;
         public int potions;
         public int spells;
