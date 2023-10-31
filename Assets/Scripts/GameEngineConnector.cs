@@ -5,7 +5,11 @@ namespace Assets.Scripts
 {
     public class GameEngineConnector : MonoBehaviour
     {
+        [Header("Editable")]
+        public GameObject player;
         public Tilemap tilemap;
+        [Space(100)]
+        [Header("From prefab")]
         public Tile[] floorTiles;
         public Tile[] wallTiles;
         public Tile[] edgeUpTiles;
@@ -14,6 +18,12 @@ namespace Assets.Scripts
         public Tile[] edgeUpLeftTiles;
         public Tile[] edgeUpRightTiles;
         public Tile[] nothingTiles;
+        public Sprite trader;
+        public Sprite chestClose;
+        public Sprite chestOpen;
+        public GameObject enemyPrefab;
+        public Sprite[] enemies;
+
 
         private GameEngine gameEngine;
 
@@ -39,8 +49,31 @@ namespace Assets.Scripts
                     var pos = new Coordinate(x, y);
                     gameEngine.checkMapTile(pos);
                     RenderRoom(gameEngine.map[pos], pos);
+                    RenderContent(gameEngine.map[pos], pos);
                 }
             }
+
+
+        }
+
+        void RenderContent(MapTile mapTile, Coordinate coordinate)
+        {
+            if (mapTile.roomContent == MapRoomContent.Enemy)
+            {
+                GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8, coordinate.y * 8, 0), Quaternion.identity);
+                newObj.GetComponent<SpriteRenderer>().sprite = enemies[0];
+            }
+            if (mapTile.roomContent == MapRoomContent.Treasure)
+            {
+                GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8, coordinate.y * 8, 0), Quaternion.identity);
+                newObj.GetComponent<SpriteRenderer>().sprite = chestClose;
+            }
+            if (mapTile.roomContent == MapRoomContent.Trader)
+            {
+                GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8, coordinate.y * 8, 0), Quaternion.identity);
+                newObj.GetComponent<SpriteRenderer>().sprite = trader;
+            }
+
         }
 
         byte[,] defaultRoom = new byte[8, 8]{
