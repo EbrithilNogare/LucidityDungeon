@@ -30,32 +30,30 @@ namespace Assets.Scripts
 
 
         private GameEngine gameEngine;
-        private List<GameAction> actions = new List<GameAction>();
-        private float timeToAction = 1f;
+        private Dictionary<Coordinate, GameObject> sprites = new Dictionary<Coordinate, GameObject>();
+        private float timeToAction;
 
         void Start()
         {
+            timeToAction = 1f;
             Config config = new Config();
             gameEngine = new GameEngine(config);
         }
 
-        private bool first = true;
+        private bool rerenderRoom = true;
         private void Update()
         {
             timeToAction -= Time.deltaTime;
             if (timeToAction < 0)
             {
-                timeToAction = .2f;
-
+                timeToAction = .02f;
                 GameAction action = AIPlay(gameEngine);
-                gameEngine.Tick(action);
-                player.transform.DOMove(new Vector3(gameEngine.turnState.position.x * 8, gameEngine.turnState.position.y * 8, 0), .2f);
-                Debug.Log(action);
+                DoGameTick(action);
             }
 
-            if (first)
+            if (rerenderRoom)
             {
-                first = false;
+                rerenderRoom = false;
                 // TODO remove
                 // render dungeon
                 for (int x = -15; x < 15; x++)
@@ -71,11 +69,58 @@ namespace Assets.Scripts
             }
         }
 
+        private void DoGameTick(GameAction action)
+        {
+            var countOfTreasureTaken = gameEngine.turnState.treasureTaken.Count;
+            var countOfDeadEnemies = gameEngine.turnState.enemyDefeated.Count;
+            var energy = gameEngine.turnState.energy;
+            if (action == GameAction.Exit)
+            {
+                Debug.Log("Tokens: " + gameEngine.turnState.tokens + ", Money: " + gameEngine.turnState.money);
+            }
+
+            gameEngine.Tick(action);
+
+            if (countOfDeadEnemies < gameEngine.turnState.enemyDefeated.Count)
+            {
+                sprites.Remove(gameEngine.turnState.position, out GameObject sprite);
+                Destroy(sprite);
+            }
+            if (countOfTreasureTaken < gameEngine.turnState.treasureTaken.Count)
+            {
+                sprites.Remove(gameEngine.turnState.position, out GameObject sprite);
+                Destroy(sprite);
+            }
+            if (action == GameAction.Exit || energy < gameEngine.turnState.energy)
+            {
+                rerenderRoom = true;
+                gameEngine.config.seed++;
+                //gameEngine.NewGame();
+                foreach (KeyValuePair<Coordinate, GameObject> sprite in sprites)
+                {
+                    Destroy(sprite.Value);
+                }
+                sprites.Clear();
+            }
+
+            player.transform.DOMove(new Vector3(gameEngine.turnState.position.x * 8, gameEngine.turnState.position.y * 8, 0), .02f);
+        }
+
         System.Random random = new System.Random(42);
 
         private GameAction AIPlay(GameEngine gameEngine)
         {
             List<GameAction> possibleMoves = gameEngine.GetValidActions();
+
+            if (possibleMoves.Contains(GameAction.Attack)) return GameAction.Attack;
+            if (possibleMoves.Contains(GameAction.BuyToken)) return GameAction.BuyToken;
+            if (possibleMoves.Contains(GameAction.OpenChest)) return GameAction.OpenChest;
+
+            var distanceToExit = gameEngine.DistanceToExit(gameEngine.turnState);
+            if (gameEngine.turnState.energy - 5 <= distanceToExit.Item1)
+            {
+                return distanceToExit.Item2;
+            }
 
             return possibleMoves[random.Next(0, possibleMoves.Count)];
         }
@@ -85,19 +130,21 @@ namespace Assets.Scripts
             if (mapTile.roomContent == MapRoomContent.Enemy)
             {
                 GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8, coordinate.y * 8, 0), Quaternion.identity);
-                newObj.GetComponent<SpriteRenderer>().sprite = enemies[0];
+                newObj.GetComponent<SpriteRenderer>().sprite = enemies[gameEngine.GetEnemyLevel(coordinate) - 1];
+                sprites.Add(coordinate, newObj);
             }
             if (mapTile.roomContent == MapRoomContent.Treasure)
             {
                 GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8, coordinate.y * 8, 0), Quaternion.identity);
                 newObj.GetComponent<SpriteRenderer>().sprite = chestClose;
+                sprites.Add(coordinate, newObj);
             }
             if (mapTile.roomContent == MapRoomContent.Trader)
             {
                 GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8, coordinate.y * 8, 0), Quaternion.identity);
                 newObj.GetComponent<SpriteRenderer>().sprite = trader;
+                sprites.Add(coordinate, newObj);
             }
-
         }
 
         byte[,] defaultRoom = new byte[8, 8]{

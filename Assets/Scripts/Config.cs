@@ -4,7 +4,7 @@
     {
         public int seed = 5393; // balanced prime number
 
-        public int[] energy = new int[] { 30, 45, 60, 80, 100 };
+        public byte[] energy = new byte[] { 60, 90, 120, 160, 200 };
 
         // Map
         public float[] enemyProbability = new float[] { .05f, .07f, .1f, .12f, .15f };

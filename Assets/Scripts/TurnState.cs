@@ -9,7 +9,7 @@ namespace Assets.Scripts
         public int hp;
         public int enemyHp;
         public byte weaponLevel;
-        public int energy;
+        public byte energy;
         public int potions;
         public int spells;
         public int money;

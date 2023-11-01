@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Assets.Scripts
+﻿namespace Assets.Scripts
 {
     struct MapTile
     {
@@ -25,8 +23,7 @@ namespace Assets.Scripts
         {
             MapRoomContent roomContent;
 
-            Random random = new Random(config.seed + coordinate.GetHashCode());
-            float contentValue = (float)random.NextDouble();
+            float contentValue = (float)MyRandom.NextDouble(config.seed + coordinate.GetHashCode());
 
             if ((contentValue -= config.enemyProbability[gameState.upgradeEnemyAndTreasureProbability]) < 0)
             {
@@ -55,10 +52,10 @@ namespace Assets.Scripts
                 return new Entries(true, true, true, true);
             }
 
-            bool up = new Random(config.seed * (x * 23 + y * 13)).NextDouble() < config.entryProbability;
-            bool left = new Random(config.seed * (x * 23 + y * 13 + 7)).NextDouble() < config.entryProbability;
-            bool down = new Random(config.seed * (x * 23 + (y - 1) * 13)).NextDouble() < config.entryProbability;
-            bool right = new Random(config.seed * ((x + 1) * 23 + y * 13 + 7)).NextDouble() < config.entryProbability;
+            bool up = MyRandom.NextDouble(config.seed + (x * 23 + y * 13)) < config.entryProbability;
+            bool left = MyRandom.NextDouble(config.seed + (x * 23 + y * 13 + 7)) < config.entryProbability;
+            bool down = MyRandom.NextDouble(config.seed + (x * 23 + (y - 1) * 13)) < config.entryProbability;
+            bool right = MyRandom.NextDouble(config.seed + ((x + 1) * 23 + y * 13 + 7)) < config.entryProbability;
 
             if (x == 0 && y == -1) up = true;
             if (x == 1 && y == 0) left = true;

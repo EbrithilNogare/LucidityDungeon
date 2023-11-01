@@ -2,8 +2,8 @@
 ## Timesheet in hours
 - Preparation: |||
 - Design: |
-- Coding engine: ||||||||||
-- Coding in unity: |||||||
+- Coding engine: |||||||||||
+- Coding in unity: ||||||||||||
 
 ## Main points to implement
 - Scenes

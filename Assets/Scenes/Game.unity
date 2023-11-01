@@ -230,7 +230,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 50
+  orthographic size: 40
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -368,7 +368,16 @@ MonoBehaviour:
   chestOpen: {fileID: 21300000, guid: 6620bb56d257493488ccdd077eee9351, type: 2}
   enemyPrefab: {fileID: 1058307256}
   enemies:
+  - {fileID: 21300000, guid: ce1b95609397c724aa6ad4db9236ed6d, type: 2}
+  - {fileID: 21300000, guid: af7b73be03edd614ea6438d43731fdc1, type: 2}
   - {fileID: 21300000, guid: af127cfc90e823f4abb193630ae9986c, type: 2}
+  - {fileID: 21300000, guid: eed1e3790cccf5d4ba9508a5bfd6c295, type: 2}
+  - {fileID: 21300000, guid: aa6d4ba0db04e354f93f1c3a3290be64, type: 2}
+  - {fileID: 21300000, guid: f8885ba39f7b1a9429de96804399d0ff, type: 2}
+  - {fileID: 21300000, guid: 3d0224c66aeccda47b7be0b6a9c1dd2e, type: 2}
+  - {fileID: 21300000, guid: 5972a3e741ab96445a438d64475fb40b, type: 2}
+  - {fileID: 21300000, guid: ab0f627ef1113224e987ca3fdf8be822, type: 2}
+  - {fileID: 21300000, guid: 7680b0b5d16d122488364b4c414e5ade, type: 2}
 --- !u!4 &422779722
 Transform:
   m_ObjectHideFlags: 0

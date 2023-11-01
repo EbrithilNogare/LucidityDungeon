@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Assets.Scripts
+﻿namespace Assets.Scripts
 {
     class GameState
     {
         public int upgradeEnemyAndTreasureProbability;
+        /// <summary>
+        /// Range: 0 - 4
+        /// </summary>
         public int upgradeEnemyLevel;
         public int upgradePotionLevel;
         public int upgradeInitPotions;
