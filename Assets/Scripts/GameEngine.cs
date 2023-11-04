@@ -136,6 +136,7 @@ namespace Assets.Scripts
                 }
             }
 
+            turnState.hp = config.playerDefaultHealthPoints;
             turnState.money += config.enemyDropMoneyCountPerLevel * enemyLevel;
             return turnState;
         }

@@ -20,6 +20,7 @@
 
         // Player
         public int playerDefaultHealthPoints = 100;
+        public byte playerDefaultLives = 3;
 
         // Trader
         public int potionPrice = 5;

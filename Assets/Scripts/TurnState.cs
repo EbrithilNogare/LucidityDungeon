@@ -20,7 +20,7 @@ namespace Assets.Scripts
 
         public TurnState(GameState gameState, Config config)
         {
-            lives = 5;
+            lives = config.playerDefaultLives;
             hp = 100;
             enemyHp = 0;
             weaponLevel = 0;

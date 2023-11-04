@@ -5,11 +5,12 @@ using UnityEngine.Tilemaps;
 
 namespace Assets.Scripts
 {
-    public class GameEngineConnector : MonoBehaviour
+    class GameEngineConnector : MonoBehaviour
     {
         [Header("Editable")]
         public GameObject player;
         public Tilemap tilemap;
+        public GUIRenderer theGUIRenderer;
 
         [Space(100)]
 
@@ -38,6 +39,8 @@ namespace Assets.Scripts
             timeToAction = 1f;
             Config config = new Config();
             gameEngine = new GameEngine(config);
+
+            // SGA.Main();
         }
 
         private bool rerenderRoom = true;
@@ -67,6 +70,8 @@ namespace Assets.Scripts
                     }
                 }
             }
+
+            theGUIRenderer.UpdateGUI(gameEngine.turnState, gameEngine.gameState, gameEngine.config);
         }
 
         private void DoGameTick(GameAction action)
@@ -112,15 +117,16 @@ namespace Assets.Scripts
         {
             List<GameAction> possibleMoves = gameEngine.GetValidActions();
 
-            if (possibleMoves.Contains(GameAction.Attack)) return GameAction.Attack;
             if (possibleMoves.Contains(GameAction.BuyToken)) return GameAction.BuyToken;
             if (possibleMoves.Contains(GameAction.OpenChest)) return GameAction.OpenChest;
 
             var distanceToExit = gameEngine.DistanceToExit(gameEngine.turnState);
-            if (gameEngine.turnState.energy - 5 <= distanceToExit.Item1)
+            if (!possibleMoves.Contains(GameAction.Attack) && gameEngine.turnState.energy - 2 <= distanceToExit.Item1)
             {
                 return distanceToExit.Item2;
             }
+
+            possibleMoves.Remove(GameAction.Exit);
 
             return possibleMoves[random.Next(0, possibleMoves.Count)];
         }

@@ -2,7 +2,7 @@
 
 namespace Assets.Scripts
 {
-    internal static class MyRandom
+    static class MyRandom
     {
         public static int RangeInt(int seed, int min, int max)
         {
