@@ -1,6 +1,6 @@
 # Lucidity Dungeon
 ## Timesheet in hours
-- Preparation: |||
+- Preparation: ||||
 - Design: |
 - Coding engine: |||||||||||||
 - Coding in unity: ||||||||||||||||
@@ -11,17 +11,22 @@
 	- [ ] Map scene
 	- [ ] Camp scene
 - Components
-    - [ ] Health bar 
-    - [ ] Inventory
     - [ ] Fight minigame
     - [ ] Lockpick minigame
 - Level design
     - [ ] Dungeon procedural generator
-    - [ ] Rooms
-    - [ ] Chest and items ...
+    - [ ] Rooms - Treasure, Enemy and Merchant
+- Gameplay mechanics
+    - [ ] Limited energy per run
+    - [ ] Flow: Defeat enemy -> get key -> unlock treasure -> get tokens -> get back to exit until energy is depleated 
+    - [ ] Buyable upgrades (energy, enemies ...)
+    - [ ] Attack with different weapon levels plus spell damage and potion healing during battle
 - Builds
     - [ ] Build for Android
     - [ ] Build for WebGL
+- Game
+    - [ ] Save / Load game
+    - [ ] Balanced config via Generic Algorithm
 
 ## Story
 The game is set within the dreams of a person, and the player must repeatedly journey into a mysterious dungeon, collecting artifacts and coins to improve their chances in subsequent dream runs. Each dream presents a unique level layout, but some common elements persist. The player has limited health and each character comes with distinct stats. The player's inventory contains slots for up to two weapons, multiple scrolls, and potions which help player in battle, which reward him with coins, key or weapon. Keys are used to open chests to get tokens, which can be used outside of dream to buy upgrades into dungoens next runs.
@@ -47,26 +52,24 @@ The game is divided into two main locations:
 ### Gameplay Mechanics
 - Top-down 2D grid-based movement.
 - Dynamic generation of dungeon layouts.
-- Combat against friendly and hostile NPCs.
-- Inventory management, with slots for weapons, potions, and scrolls.
-- Skill tree for player progression.
+- Combat against hostile NPCs.
+- Weapons, potions, and scrolls.
 
 ### Player Character
 Players can choose from different character classes, including:
 - **Warrior**: Equipped with two weapons.
-- **Mage**: Scrolls have a chance not to deplete.
+- **Mage**: Scrolls have a chance not to depleate.
+- **Advanturer**: 30 more energy.
+- **Bard** Lower prices
 
 ## Art and Visuals
 - Pixel art style.
 - Assets from the [RPG Pixel Art Pack](https://assetstore.unity.com/packages/2d/gui/icons/rpg-pixel-art-pack-254546) and [Pixel Art Roguelike Pack](https://assetstore.unity.com/packages/2d/environments/pixel-art-roguelike-pack-217434).
 
-## Audio
-Sound effects and music that match the game's retro pixel art style and enhance the player's immersion.
-
 ## User Interface
 - Main Menu
 - Map
-- Inventory
+- Pause menu
 
 ## Game Levels
 - Dynamic generation of dungeon layouts.
@@ -74,11 +77,11 @@ Sound effects and music that match the game's retro pixel art style and enhance 
 
 ## NPCs
 - Friendly NPCs, such as traders.
-- Hostile NPCs with diverse behavior patterns.
+- Hostile NPCs based on their level.
 
 ##  Inventory
 - Slots for weapons, potions, and scrolls.
-- Items have multiple levels of rarity, indicated by background color.
+- Items have multiple levels of rarity.qq
 
 ##  Player Progression
 - Skill tree allowing players to customize character abilities.
@@ -89,8 +92,9 @@ Sound effects and music that match the game's retro pixel art style and enhance 
 - Pixel art graphics from selected asset packs.
 - Backgrounds, character sprites, and environmental elements.
 
-### Sound and Music
-- Custom sound effects and music tracks for ambiance and immersion.
+## Sound and Music
+Sound effects and music that match the game's retro pixel art style and enhance the player's immersion.
+Custom sound effects and music tracks for ambiance and immersion.
 
 ##  Technical Requirements
 - Platform: WebGL, and Android.
