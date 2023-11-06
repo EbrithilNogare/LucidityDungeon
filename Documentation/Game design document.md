@@ -2,8 +2,8 @@
 ## Timesheet in hours
 - Preparation: |||
 - Design: |
-- Coding engine: |||||||||||
-- Coding in unity: ||||||||||||
+- Coding engine: |||||||||||||
+- Coding in unity: ||||||||||||||||
 
 ## Main points to implement
 - Scenes
@@ -24,7 +24,7 @@
     - [ ] Build for WebGL
 
 ## Story
-The game is set within the dreams of a person, and the player must repeatedly journey into a mysterious dungeon, collecting artifacts and coins to improve their chances in subsequent dream runs. Each dream presents a unique level layout, but some common elements persist. The player has limited health and mana, and each character comes with distinct stats. The player's inventory contains slots for up to two weapons, multiple scrolls, and a shared area for coins and artifacts.
+The game is set within the dreams of a person, and the player must repeatedly journey into a mysterious dungeon, collecting artifacts and coins to improve their chances in subsequent dream runs. Each dream presents a unique level layout, but some common elements persist. The player has limited health and each character comes with distinct stats. The player's inventory contains slots for up to two weapons, multiple scrolls, and potions which help player in battle, which reward him with coins, key or weapon. Keys are used to open chests to get tokens, which can be used outside of dream to buy upgrades into dungoens next runs.
 
 ## Game Overview
 ### Game Concept
