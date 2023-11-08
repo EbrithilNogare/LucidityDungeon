@@ -49,7 +49,7 @@ namespace Assets.Scripts
             timeToAction -= Time.deltaTime;
             if (timeToAction < 0)
             {
-                timeToAction = .02f;
+                timeToAction = .1f;
                 GameAction action = AIPlay(gameEngine);
                 DoGameTick(action);
             }
@@ -108,7 +108,7 @@ namespace Assets.Scripts
                 sprites.Clear();
             }
 
-            player.transform.DOMove(new Vector3(gameEngine.turnState.position.x * 8, gameEngine.turnState.position.y * 8, 0), .02f);
+            player.transform.DOMove(new Vector3(gameEngine.turnState.position.x * 8, gameEngine.turnState.position.y * 8, 0), .09f);
         }
 
         System.Random random = new System.Random(42);
