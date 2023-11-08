@@ -9,6 +9,9 @@
 ## Online DEMO
 [Lucidity Dungeon](https://ebrithilnogare.github.io/LucidityDungeon/)
 
+## Wiki
+https://github.com/EbrithilNogare/LucidityDungeon/wiki
+
 ## LucidityDungeon
 Unity Game
 
