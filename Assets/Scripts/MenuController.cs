@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
-    public GameObject optionsMenu;
+    public RectTransform optionsMenu;
 
     private bool optionsMenuOpen = false;
 
@@ -20,11 +20,11 @@ public class MenuController : MonoBehaviour
     {
         if (optionsMenuOpen)
         {
-            optionsMenu.transform.DOLocalMove(new Vector3(1860, -440, 0), .5f);
+            optionsMenu.DOAnchorPos(new Vector2(900, 100), .5f);
         }
         else
         {
-            optionsMenu.transform.DOLocalMove(new Vector3(860, -440, 0), .5f);
+            optionsMenu.DOAnchorPos(new Vector2(-100, 100), .5f);
         }
         optionsMenuOpen = !optionsMenuOpen;
     }
