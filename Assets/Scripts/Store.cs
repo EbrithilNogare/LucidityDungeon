@@ -2,10 +2,9 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-
     class Store : MonoBehaviour
     {
-        public static Store instance;
+        public static Store _instance;
 
         public int volume;
         public int sounds;
@@ -13,13 +12,13 @@ namespace Assets.Scripts
 
         private void Awake()
         {
-            if (instance != null)
+            if (_instance != null)
             {
                 Destroy(gameObject);
                 return;
             }
 
-            instance = this;
+            _instance = this;
             DontDestroyOnLoad(gameObject);
 
             LoadPrefs();
@@ -40,8 +39,6 @@ namespace Assets.Scripts
             PlayerPrefs.SetInt("upgradeInitSpells", gameState.upgradeInitSpells);
             PlayerPrefs.SetInt("upgradeEnergyLevel", gameState.upgradeEnergyLevel);
             PlayerPrefs.SetInt("permanentTokens", gameState.permanentTokens);
-
-            PlayerPrefs.Save();
         }
 
         public void LoadPrefs()

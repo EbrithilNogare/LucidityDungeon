@@ -1134,7 +1134,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1804432911}
-        m_TargetAssemblyTypeName: OptionsController, Assembly-CSharp
+        m_TargetAssemblyTypeName: Assets.Scripts.OptionsController, Assembly-CSharp
         m_MethodName: audioMinus
         m_Mode: 1
         m_Arguments:
@@ -1363,7 +1363,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1804432911}
-        m_TargetAssemblyTypeName: OptionsController, Assembly-CSharp
+        m_TargetAssemblyTypeName: Assets.Scripts.OptionsController, Assembly-CSharp
         m_MethodName: audioPlus
         m_Mode: 1
         m_Arguments:
@@ -1724,7 +1724,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1804432911}
-        m_TargetAssemblyTypeName: OptionsController, Assembly-CSharp
+        m_TargetAssemblyTypeName: Assets.Scripts.OptionsController, Assembly-CSharp
         m_MethodName: soundsPlus
         m_Mode: 1
         m_Arguments:
@@ -2336,7 +2336,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1804432911}
-        m_TargetAssemblyTypeName: OptionsController, Assembly-CSharp
+        m_TargetAssemblyTypeName: Assets.Scripts.OptionsController, Assembly-CSharp
         m_MethodName: soundsMinus
         m_Mode: 1
         m_Arguments:
@@ -3170,11 +3170,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1804432909}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b469804ac25b89a4bbc7653f2127ab30, type: 3}
+  m_Script: {fileID: 11500000, guid: b99026b4873ae9b47b771ad7cd49641a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioValue: 2
-  soundsValue: 2
   audioBar: {fileID: 1542432319}
   soundsBar: {fileID: 1388555257}
   barSprites:
@@ -3377,9 +3375,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1877626937}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc7c9404fcae0c243b0d8ee6f0d689df, type: 3}
+  m_Script: {fileID: 11500000, guid: 1bc1c8e65a8b0c246ba220d12ebef360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  volume: 2
+  sounds: 2
 --- !u!4 &1877626939
 Transform:
   m_ObjectHideFlags: 0
