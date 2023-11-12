@@ -3,16 +3,13 @@
     class GameState
     {
         public int upgradeEnemyAndTreasureProbability;
-        /// <summary>
-        /// Range: 0 - 4
-        /// </summary>
         public int upgradeEnemyLevel;
         public int upgradePotionLevel;
         public int upgradeInitPotions;
         public int upgradeSpellLevel;
         public int upgradeInitSpells;
         public int upgradeEnergyLevel;
-        public int permanentTokens;
+        public int lastRunTokens;
 
         public GameState()
         {
@@ -23,7 +20,7 @@
             upgradeSpellLevel = 0;
             upgradeInitSpells = 0;
             upgradeEnergyLevel = 0;
-            permanentTokens = 0;
+            lastRunTokens = 0;
         }
 
         public GameState(
@@ -34,7 +31,7 @@
             int upgradeSpellLevel,
             int upgradeInitSpells,
             int upgradeEnergyLevel,
-            int permanentTokens
+            int lastRunTokens
         )
         {
             this.upgradeEnemyAndTreasureProbability = upgradeEnemyAndTreasureProbability;
@@ -44,7 +41,7 @@
             this.upgradeSpellLevel = upgradeSpellLevel;
             this.upgradeInitSpells = upgradeInitSpells;
             this.upgradeEnergyLevel = upgradeEnergyLevel;
-            this.permanentTokens = permanentTokens;
+            this.lastRunTokens = lastRunTokens;
         }
 
         public GameState(GameState gameState)
@@ -56,7 +53,7 @@
             upgradeSpellLevel = gameState.upgradeSpellLevel;
             upgradeInitSpells = gameState.upgradeInitSpells;
             upgradeEnergyLevel = gameState.upgradeEnergyLevel;
-            permanentTokens = gameState.permanentTokens;
+            lastRunTokens = gameState.lastRunTokens;
         }
     }
 }

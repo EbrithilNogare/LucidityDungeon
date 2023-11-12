@@ -45,4 +45,15 @@
         UR, // edgeUpRightTiles;
         N,  // nothing
     }
+
+    enum ShoppingHallAction
+    {
+        upgradeEnemyAndTreasureProbability,
+        upgradeEnemyLevel,
+        upgradePotionLevel,
+        upgradeInitPotions,
+        upgradeSpellLevel,
+        upgradeInitSpells,
+        upgradeEnergyLevel,
+    }
 }

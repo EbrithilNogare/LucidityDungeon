@@ -25,11 +25,11 @@
 
             float contentValue = (float)MyRandom.NextDouble(config.seed + coordinate.GetHashCode());
 
-            if ((contentValue -= config.enemyProbability[gameState.upgradeEnemyAndTreasureProbability]) < 0)
+            if ((contentValue -= config.enemyAndTreasureProbability[gameState.upgradeEnemyAndTreasureProbability]) < 0)
             {
                 roomContent = MapRoomContent.Enemy;
             }
-            else if ((contentValue -= config.enemyProbability[gameState.upgradeEnemyAndTreasureProbability]) < 0)
+            else if ((contentValue -= config.enemyAndTreasureProbability[gameState.upgradeEnemyAndTreasureProbability]) < 0)
             {
                 roomContent = MapRoomContent.Treasure;
             }

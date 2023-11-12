@@ -15,14 +15,14 @@ namespace Assets.Scripts
         {
             gameState = new GameState();
             this.config = config;
-            turnState = NewGame();
+            NewGame();
         }
 
-        public TurnState NewGame()
+        public void NewGame()
         {
             map = new Dictionary<Coordinate, MapTile>();
             map.Add(new Coordinate(0, 0), new MapTile(new Coordinate(0, 0), gameState, config));
-            return new TurnState(gameState, config);
+            turnState = new TurnState(gameState, config);
         }
 
         public void Tick(GameAction gameAction)
@@ -30,10 +30,9 @@ namespace Assets.Scripts
             turnState = Simulate(turnState, gameAction);
         }
 
-        [Pure]
         public TurnState Simulate(TurnState turnState, GameAction gameAction)
         {
-            if (turnState.energy <= 0)
+            if (turnState.energy <= 0 || turnState.lives == 0)
             {
                 return doExit(turnState, false); ;
             }
@@ -57,15 +56,15 @@ namespace Assets.Scripts
             return turnState;
         }
 
-        [Pure]
+
         private TurnState doExit(TurnState turnState, bool success)
         {
             if (success && (turnState.position.x == 0 || turnState.position.y == 0))
             {
-                gameState.permanentTokens = turnState.tokens;
+                gameState.lastRunTokens = turnState.tokens;
             }
-
-            return NewGame();
+            turnState.lives = 0;
+            return turnState;
         }
 
         [Pure]
@@ -113,7 +112,7 @@ namespace Assets.Scripts
             random.NextDouble();
             random.NextDouble();
 
-            turnState.enemyDefeated.Add(turnState.position);
+            turnState.roomCleared.Add(turnState.position);
 
             if (random.NextDouble() < .1 * enemyLevel)
             {
@@ -198,7 +197,7 @@ namespace Assets.Scripts
             turnState.keys--;
             turnState.money += MyRandom.RangeInt(config.seed + turnState.position.GetHashCode(), config.treasureDropMoneyCountMin, config.treasureDropMoneyCountMax + 1);
             turnState.tokens += MyRandom.RangeInt(config.seed + turnState.position.GetHashCode() + 42, config.treasureDropTokensCountMin, config.treasureDropTokensCountMax + 1);
-            turnState.treasureTaken.Add(turnState.position);
+            turnState.roomCleared.Add(turnState.position);
             return turnState;
         }
 
@@ -235,7 +234,6 @@ namespace Assets.Scripts
             return turnState;
         }
 
-        [Pure]
         private TurnState doMove(TurnState turnState, GameAction gameAction)
         {
             if (isEnemyInMyRoom(turnState))
@@ -289,7 +287,7 @@ namespace Assets.Scripts
         {
             bool tileFound = map.TryGetValue(turnState.position, out MapTile mapTile);
             if (!tileFound) throw new Exception("not found tile I am standing on");
-            return mapTile.roomContent == MapRoomContent.Enemy && !turnState.enemyDefeated.Contains(turnState.position);
+            return mapTile.roomContent == MapRoomContent.Enemy && !turnState.roomCleared.Contains(turnState.position);
         }
 
         [Pure]
@@ -297,7 +295,7 @@ namespace Assets.Scripts
         {
             bool tileFound = map.TryGetValue(turnState.position, out MapTile mapTile);
             if (!tileFound) throw new Exception("not found tile I am standing on");
-            return mapTile.roomContent == MapRoomContent.Treasure && !turnState.treasureTaken.Contains(turnState.position);
+            return mapTile.roomContent == MapRoomContent.Treasure && !turnState.roomCleared.Contains(turnState.position);
         }
 
         public void checkMapTile(Coordinate coordinate)
@@ -429,6 +427,87 @@ namespace Assets.Scripts
             }
 
             throw new Exception("BFS too long");
+        }
+
+        public List<ShoppingHallAction> GetValidActionsInShoppingHall()
+        {
+            var tokens = gameState.lastRunTokens;
+            List<ShoppingHallAction> output = new List<ShoppingHallAction>();
+
+            if (gameState.upgradeEnemyAndTreasureProbability + 1 < config.enemyProbabilityPrices.Length
+                && tokens >= config.enemyProbabilityPrices[gameState.upgradeEnemyAndTreasureProbability + 1])
+            { output.Add(ShoppingHallAction.upgradeEnemyAndTreasureProbability); }
+
+            if (gameState.upgradeEnemyLevel + 1 < config.enemyLevelPrices.Length
+                && tokens >= config.enemyLevelPrices[gameState.upgradeEnemyLevel + 1])
+            { output.Add(ShoppingHallAction.upgradeEnemyLevel); }
+
+            if (gameState.upgradePotionLevel + 1 < config.upgradePotionPrices.Length
+                && tokens >= config.upgradePotionPrices[gameState.upgradePotionLevel + 1])
+            { output.Add(ShoppingHallAction.upgradePotionLevel); }
+
+            if (gameState.upgradeInitPotions + 1 < config.upgradeInitPotionsPrices.Length
+                && tokens >= config.upgradeInitPotionsPrices[gameState.upgradeInitPotions + 1])
+            { output.Add(ShoppingHallAction.upgradeInitPotions); }
+
+            if (gameState.upgradeSpellLevel + 1 < config.upgradeSpellPrices.Length
+                && tokens >= config.upgradeSpellPrices[gameState.upgradeSpellLevel + 1])
+            { output.Add(ShoppingHallAction.upgradeSpellLevel); }
+
+            if (gameState.upgradeInitSpells + 1 < config.upgradeInitSpellsPrices.Length
+                && tokens >= config.upgradeInitSpellsPrices[gameState.upgradeInitSpells + 1])
+            { output.Add(ShoppingHallAction.upgradeInitSpells); }
+
+            if (gameState.upgradeEnergyLevel + 1 < config.energyPrices.Length
+                && tokens >= config.energyPrices[gameState.upgradeEnergyLevel + 1])
+            { output.Add(ShoppingHallAction.upgradeEnergyLevel); }
+
+            return output;
+        }
+
+        public void BuyInShoppingHall(ShoppingHallAction action)
+        {
+            if (!GetValidActionsInShoppingHall().Contains(action))
+            {
+                throw new Exception("invalid shoppinghall action: " + action.ToString());
+            }
+
+            switch (action)
+            {
+                case ShoppingHallAction.upgradeEnemyAndTreasureProbability:
+                    gameState.lastRunTokens -= config.enemyProbabilityPrices[gameState.upgradeEnemyAndTreasureProbability + 1];
+                    gameState.upgradeEnemyAndTreasureProbability++;
+                    break;
+                case ShoppingHallAction.upgradeEnemyLevel:
+                    gameState.lastRunTokens -= config.enemyLevelPrices[gameState.upgradeEnemyLevel + 1];
+                    gameState.upgradeEnemyLevel++;
+                    break;
+                case ShoppingHallAction.upgradePotionLevel:
+                    gameState.lastRunTokens -= config.upgradePotionPrices[gameState.upgradePotionLevel + 1];
+                    gameState.upgradePotionLevel++;
+                    break;
+                case ShoppingHallAction.upgradeInitPotions:
+                    gameState.lastRunTokens -= config.upgradeInitPotionsPrices[gameState.upgradeInitPotions + 1];
+                    gameState.upgradeInitPotions++;
+                    break;
+                case ShoppingHallAction.upgradeSpellLevel:
+                    gameState.lastRunTokens -= config.upgradeSpellPrices[gameState.upgradeSpellLevel + 1];
+                    gameState.upgradeSpellLevel++;
+                    break;
+                case ShoppingHallAction.upgradeInitSpells:
+                    gameState.lastRunTokens -= config.upgradeInitSpellsPrices[gameState.upgradeInitSpells + 1];
+                    gameState.upgradeInitSpells++;
+                    break;
+                case ShoppingHallAction.upgradeEnergyLevel:
+                    gameState.lastRunTokens -= config.energyPrices[gameState.upgradeEnergyLevel + 1];
+                    gameState.upgradeEnergyLevel++;
+                    break;
+            }
+
+            if (gameState.lastRunTokens < 0)
+            {
+                throw new Exception("lastRunTokens < 0");
+            }
         }
     }
 }

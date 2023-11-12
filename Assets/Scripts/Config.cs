@@ -4,23 +4,26 @@
     {
         public int seed = 5393; // balanced prime number
 
-        public byte[] energy = new byte[] { 60, 90, 120, 160, 200 };
+        public int[] energy = new int[] { 60, 90, 120, 160, 200 };
 
         // Map
-        public float[] enemyProbability = new float[] { .05f, .07f, .1f, .12f, .15f };
-        public float[] treasureProbability = new float[] { .1f, .12f, .15f, .19f, .25f };
+        public float[] enemyAndTreasureProbability = new float[] { .05f, .07f, .1f, .12f, .15f };
         public float traderProbability = .05f;
         public float entryProbability = .7f;
 
         // Shoping hall
         public int[] enemyProbabilityPrices = new int[] { 0, 15, 30, 50, 80 };
         public int[] enemyLevelPrices = new int[] { 0, 25, 50, 75, 100 };
+        public int[] upgradePotionPrices = new int[] { 0, 25, 45 };
+        public int[] upgradeInitPotionsPrices = new int[] { 0, 40, 55 };
+        public int[] upgradeSpellPrices = new int[] { 0, 25, 45 };
+        public int[] upgradeInitSpellsPrices = new int[] { 0, 40, 55 };
         public int[] energyPrices = new int[] { 0, 10, 25, 55, 90 };
         public int tokensCountForPrice = 5;
 
         // Player
         public int playerDefaultHealthPoints = 100;
-        public byte playerDefaultLives = 3;
+        public int playerDefaultLives = 3;
 
         // Trader
         public int potionPrice = 5;

@@ -38,7 +38,7 @@ namespace Assets.Scripts
             PlayerPrefs.SetInt("upgradeSpellLevel", gameState.upgradeSpellLevel);
             PlayerPrefs.SetInt("upgradeInitSpells", gameState.upgradeInitSpells);
             PlayerPrefs.SetInt("upgradeEnergyLevel", gameState.upgradeEnergyLevel);
-            PlayerPrefs.SetInt("permanentTokens", gameState.permanentTokens);
+            PlayerPrefs.SetInt("lastRunTokens", gameState.lastRunTokens);
         }
 
         public void LoadPrefs()
@@ -55,7 +55,7 @@ namespace Assets.Scripts
             int upgradeSpellLevel = PlayerPrefs.GetInt("upgradeSpellLevel", 0);
             int upgradeInitSpells = PlayerPrefs.GetInt("upgradeInitSpells", 0);
             int upgradeEnergyLevel = PlayerPrefs.GetInt("upgradeEnergyLevel", 0);
-            int permanentTokens = PlayerPrefs.GetInt("permanentTokens", 0);
+            int lastRunTokens = PlayerPrefs.GetInt("lastRunTokens", 0);
 
             gameState = new GameState(
                 upgradeEnemyAndTreasureProbability,
@@ -65,7 +65,7 @@ namespace Assets.Scripts
                 upgradeSpellLevel,
                 upgradeInitSpells,
                 upgradeEnergyLevel,
-                permanentTokens
+                lastRunTokens
             );
         }
     }

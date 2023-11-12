@@ -33,24 +33,28 @@ namespace Assets.Scripts
         private GameEngine gameEngine;
         private Dictionary<Coordinate, GameObject> sprites = new Dictionary<Coordinate, GameObject>();
         private float timeToAction;
+        private AI ai;
+        private bool rerenderRoom = true;
+        private IEnumerator<int> enumerator = SGA.MainGenerator().GetEnumerator();
 
         void Start()
         {
             timeToAction = 1f;
             Config config = new Config();
             gameEngine = new GameEngine(config);
-
-            // SGA.Main();
+            ai = new AI();
         }
 
-        private bool rerenderRoom = true;
         private void Update()
         {
+            // enumerator.MoveNext();
+            // return;
+
             timeToAction -= Time.deltaTime;
             if (timeToAction < 0)
             {
                 timeToAction = .1f;
-                GameAction action = AIPlay(gameEngine);
+                GameAction action = ai.NextMove(gameEngine);
                 DoGameTick(action);
             }
 
@@ -76,8 +80,7 @@ namespace Assets.Scripts
 
         private void DoGameTick(GameAction action)
         {
-            var countOfTreasureTaken = gameEngine.turnState.treasureTaken.Count;
-            var countOfDeadEnemies = gameEngine.turnState.enemyDefeated.Count;
+            var countOfRoomCleared = gameEngine.turnState.roomCleared.Count;
             var energy = gameEngine.turnState.energy;
             if (action == GameAction.Exit)
             {
@@ -86,21 +89,16 @@ namespace Assets.Scripts
 
             gameEngine.Tick(action);
 
-            if (countOfDeadEnemies < gameEngine.turnState.enemyDefeated.Count)
+            if (countOfRoomCleared < gameEngine.turnState.roomCleared.Count)
             {
                 sprites.Remove(gameEngine.turnState.position, out GameObject sprite);
                 Destroy(sprite);
             }
-            if (countOfTreasureTaken < gameEngine.turnState.treasureTaken.Count)
-            {
-                sprites.Remove(gameEngine.turnState.position, out GameObject sprite);
-                Destroy(sprite);
-            }
-            if (action == GameAction.Exit || energy < gameEngine.turnState.energy)
+            if (action == GameAction.Exit || gameEngine.turnState.lives == 0)
             {
                 rerenderRoom = true;
                 gameEngine.config.seed++;
-                //gameEngine.NewGame();
+                gameEngine.NewGame();
                 foreach (KeyValuePair<Coordinate, GameObject> sprite in sprites)
                 {
                     Destroy(sprite.Value);
@@ -109,26 +107,6 @@ namespace Assets.Scripts
             }
 
             player.transform.DOMove(new Vector3(gameEngine.turnState.position.x * 8, gameEngine.turnState.position.y * 8, 0), .09f);
-        }
-
-        System.Random random = new System.Random(42);
-
-        private GameAction AIPlay(GameEngine gameEngine)
-        {
-            List<GameAction> possibleMoves = gameEngine.GetValidActions();
-
-            if (possibleMoves.Contains(GameAction.BuyToken)) return GameAction.BuyToken;
-            if (possibleMoves.Contains(GameAction.OpenChest)) return GameAction.OpenChest;
-
-            var distanceToExit = gameEngine.DistanceToExit(gameEngine.turnState);
-            if (!possibleMoves.Contains(GameAction.Attack) && gameEngine.turnState.energy - 2 <= distanceToExit.Item1)
-            {
-                return distanceToExit.Item2;
-            }
-
-            possibleMoves.Remove(GameAction.Exit);
-
-            return possibleMoves[random.Next(0, possibleMoves.Count)];
         }
 
         void RenderContent(MapTile mapTile, Coordinate coordinate)

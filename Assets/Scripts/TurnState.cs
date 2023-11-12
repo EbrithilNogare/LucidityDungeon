@@ -15,24 +15,22 @@ namespace Assets.Scripts
         public int money;
         public int tokens;
         public int keys;
-        public List<Coordinate> treasureTaken;
-        public List<Coordinate> enemyDefeated;
+        public List<Coordinate> roomCleared;
 
         public TurnState(GameState gameState, Config config)
         {
-            lives = config.playerDefaultLives;
+            lives = (byte)config.playerDefaultLives;
             hp = 100;
             enemyHp = 0;
             weaponLevel = 0;
-            energy = config.energy[gameState.upgradeEnemyLevel];
+            energy = (byte)config.energy[gameState.upgradeEnemyLevel];
             position = new Coordinate(0, 0);
             potions = gameState.upgradeInitPotions;
             spells = gameState.upgradeInitSpells;
             money = 0;
-            tokens = gameState.permanentTokens;
+            tokens = 0;
             keys = 0;
-            treasureTaken = new List<Coordinate>();
-            enemyDefeated = new List<Coordinate>();
+            roomCleared = new List<Coordinate>();
         }
 
         public TurnState(TurnState turnState)
@@ -48,8 +46,7 @@ namespace Assets.Scripts
             money = turnState.money;
             tokens = turnState.tokens;
             keys = turnState.keys;
-            treasureTaken = new List<Coordinate>(turnState.treasureTaken);
-            enemyDefeated = new List<Coordinate>(turnState.enemyDefeated);
+            roomCleared = new List<Coordinate>(turnState.roomCleared);
         }
     }
 }
