@@ -53,26 +53,19 @@ namespace Assets.Scripts
             timeToAction -= Time.deltaTime;
             if (timeToAction < 0)
             {
-                timeToAction = .1f;
+                timeToAction = .3f;
                 GameAction action = ai.NextMove(gameEngine);
                 DoGameTick(action);
             }
 
             if (rerenderRoom)
             {
+                tilemap.ClearAllTiles();
+
+                gameEngine.checkMapTile(new Coordinate(0, 0));
+                RenderRoom(gameEngine.map[new Coordinate(0, 0)], new Coordinate(0, 0));
+
                 rerenderRoom = false;
-                // TODO remove
-                // render dungeon
-                for (int x = -15; x < 15; x++)
-                {
-                    for (int y = -15; y < 15; y++)
-                    {
-                        var pos = new Coordinate(x, y);
-                        gameEngine.checkMapTile(pos);
-                        RenderRoom(gameEngine.map[pos], pos);
-                        RenderContent(gameEngine.map[pos], pos);
-                    }
-                }
             }
 
             theGUIRenderer.UpdateGUI(gameEngine.turnState, gameEngine.gameState, gameEngine.config);
@@ -106,11 +99,24 @@ namespace Assets.Scripts
                 sprites.Clear();
             }
 
-            player.transform.DOMove(new Vector3(gameEngine.turnState.position.x * 8, gameEngine.turnState.position.y * 8, 0), .09f);
+            if (action == GameAction.GoUp || action == GameAction.GoLeft || action == GameAction.GoDown || action == GameAction.GoRight)
+            {
+                // render room
+                var pos = gameEngine.turnState.position;
+                gameEngine.checkMapTile(pos);
+                RenderRoom(gameEngine.map[pos], pos);
+                RenderContent(gameEngine.map[pos], pos);
+            }
+
+            player.transform.DOMove(new Vector3(gameEngine.turnState.position.x * 8, gameEngine.turnState.position.y * 8, 0), timeToAction);
         }
 
         void RenderContent(MapTile mapTile, Coordinate coordinate)
         {
+            if (sprites.ContainsKey(coordinate))
+            {
+                return;
+            }
             if (mapTile.roomContent == MapRoomContent.Enemy)
             {
                 GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8, coordinate.y * 8, 0), Quaternion.identity);
