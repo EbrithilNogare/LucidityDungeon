@@ -105,15 +105,15 @@ namespace Assets.Scripts
                 var pos = gameEngine.turnState.position;
                 gameEngine.checkMapTile(pos);
                 RenderRoom(gameEngine.map[pos], pos);
-                RenderContent(gameEngine.map[pos], pos);
+                RenderContent(gameEngine.map[pos], pos, gameEngine.turnState);
             }
 
             player.transform.DOMove(new Vector3(gameEngine.turnState.position.x * 8, gameEngine.turnState.position.y * 8, 0), timeToAction);
         }
 
-        void RenderContent(MapTile mapTile, Coordinate coordinate)
+        void RenderContent(MapTile mapTile, Coordinate coordinate, TurnState turnState)
         {
-            if (sprites.ContainsKey(coordinate))
+            if (sprites.ContainsKey(coordinate) || turnState.roomCleared.Contains(coordinate))
             {
                 return;
             }
