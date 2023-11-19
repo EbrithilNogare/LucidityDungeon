@@ -370,21 +370,23 @@ namespace Assets.Scripts
             return actions;
         }
 
-        // Distance, BestMove
         [Pure]
-        public Tuple<int, GameAction> DistanceToExit(TurnState turnState)
+        public List<GameAction> GetPathFromSourceToGoal(Coordinate source, Coordinate goal)
         {
-            var checkOnMap = new List<Coordinate>() { new Coordinate(0, 0) };
-            var distances = new Dictionary<Coordinate, Tuple<int, GameAction>>();
-            distances.Add(new Coordinate(0, 0), new Tuple<int, GameAction>(0, GameAction.Exit));
-
-            while (checkOnMap.Count > 0)
+            var distances = new Dictionary<Coordinate, List<GameAction>>
             {
-                var tile = checkOnMap[0];
-                checkOnMap.RemoveAt(0);
+                { source, new List<GameAction>(new List<GameAction>() { }) }
+            };
+            var toCheck = new List<Coordinate>() { source };
 
-                if (tile.Equals(turnState.position))
+            while (toCheck.Count > 0 && toCheck.Count < 1000)
+            {
+                var tile = toCheck[0];
+                toCheck.RemoveAt(0);
+
+                if (tile.Equals(goal))
                 {
+                    distances[tile].Add(GameAction.Exit);
                     return distances[tile];
                 }
 
@@ -392,41 +394,53 @@ namespace Assets.Scripts
                 {
                     var newTile = new Coordinate(tile);
                     newTile.y++;
-                    if (distances.TryAdd(newTile, new Tuple<int, GameAction>(distances[tile].Item1 + 1, GameAction.GoDown)))
+                    if (distances.TryAdd(newTile, new List<GameAction>(distances[tile])))
                     {
-                        checkOnMap.Add(newTile);
+                        distances[newTile].Add(GameAction.GoUp);
+                        toCheck.Add(newTile);
                     }
                 }
                 if (map.ContainsKey(tile) && map[tile].entries.left)
                 {
                     var newTile = new Coordinate(tile);
                     newTile.x--;
-                    if (distances.TryAdd(newTile, new Tuple<int, GameAction>(distances[tile].Item1 + 1, GameAction.GoRight)))
+                    if (distances.TryAdd(newTile, new List<GameAction>(distances[tile])))
                     {
-                        checkOnMap.Add(newTile);
+                        distances[newTile].Add(GameAction.GoLeft);
+                        toCheck.Add(newTile);
                     }
                 }
                 if (map.ContainsKey(tile) && map[tile].entries.down)
                 {
                     var newTile = new Coordinate(tile);
                     newTile.y--;
-                    if (distances.TryAdd(newTile, new Tuple<int, GameAction>(distances[tile].Item1 + 1, GameAction.GoUp)))
+                    if (distances.TryAdd(newTile, new List<GameAction>(distances[tile])))
                     {
-                        checkOnMap.Add(newTile);
+                        distances[newTile].Add(GameAction.GoDown);
+                        toCheck.Add(newTile);
                     }
                 }
                 if (map.ContainsKey(tile) && map[tile].entries.right)
                 {
                     var newTile = new Coordinate(tile);
                     newTile.x++;
-                    if (distances.TryAdd(newTile, new Tuple<int, GameAction>(distances[tile].Item1 + 1, GameAction.GoLeft)))
+                    if (distances.TryAdd(newTile, new List<GameAction>(distances[tile])))
                     {
-                        checkOnMap.Add(newTile);
+                        distances[newTile].Add(GameAction.GoRight);
+                        toCheck.Add(newTile);
                     }
                 }
             }
 
             throw new Exception("BFS too long");
+        }
+
+        // Distance, BestMove
+        [Pure]
+        public Tuple<int, GameAction> DistanceToExit(TurnState turnState)
+        {
+            List<GameAction> pathToStart = GetPathFromSourceToGoal(turnState.position, new Coordinate(0, 0));
+            return new Tuple<int, GameAction>(pathToStart.Count, pathToStart[0]);
         }
 
         public List<ShoppingHallAction> GetValidActionsInShoppingHall()

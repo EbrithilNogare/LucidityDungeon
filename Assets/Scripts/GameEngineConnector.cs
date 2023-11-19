@@ -29,43 +29,68 @@ namespace Assets.Scripts
         public GameObject enemyPrefab;
         public Sprite[] enemies;
 
+        public bool aiAutoplay;
+        public float timeToAction;
+
 
         private GameEngine gameEngine;
-        private Dictionary<Coordinate, GameObject> sprites = new Dictionary<Coordinate, GameObject>();
-        private float timeToAction;
+        private Dictionary<Coordinate, GameObject> sprites;
+        private float nextActionTimeout;
         private AI ai;
-        private bool rerenderRoom = true;
-        private IEnumerator<int> enumerator = SGA.MainGenerator().GetEnumerator();
+        private bool renderNewGame;
+        private IEnumerator<int> enumerator;
+        private HashSet<Coordinate> alreadyRenderedRooms;
+
+        private List<GameAction> actionsInQueue;
 
         void Start()
         {
-            timeToAction = 1f;
+            nextActionTimeout = timeToAction;
+            renderNewGame = true;
             Config config = new Config();
             gameEngine = new GameEngine(config);
             ai = new AI();
+            enumerator = SGA.MainGenerator().GetEnumerator();
+            actionsInQueue = new List<GameAction>();
+            alreadyRenderedRooms = new HashSet<Coordinate>();
+            sprites = new Dictionary<Coordinate, GameObject>();
         }
 
         private void Update()
         {
+            // enable for SGA computation
             // enumerator.MoveNext();
             // return;
 
-            timeToAction -= Time.deltaTime;
-            if (timeToAction < 0)
+            nextActionTimeout -= Time.deltaTime;
+            if (aiAutoplay && nextActionTimeout < 0)
             {
-                timeToAction = .3f;
-                GameAction action = ai.NextMove(gameEngine);
+                nextActionTimeout = timeToAction;
+                actionsInQueue.Add(ai.NextMove(gameEngine));
+            }
+
+            if (actionsInQueue.Count > 0)
+            {
+                var action = actionsInQueue[0];
+                actionsInQueue.RemoveAt(0);
                 DoGameTick(action);
             }
 
-            if (rerenderRoom)
+            if (renderNewGame)
             {
+                // tilemap
+                alreadyRenderedRooms.Clear();
                 tilemap.ClearAllTiles();
-
                 gameEngine.checkMapTile(new Coordinate(0, 0));
                 RenderRoom(gameEngine.map[new Coordinate(0, 0)], new Coordinate(0, 0));
+                // sprites
+                foreach (KeyValuePair<Coordinate, GameObject> sprite in sprites)
+                {
+                    Destroy(sprite.Value);
+                }
+                sprites.Clear();
 
-                rerenderRoom = false;
+                renderNewGame = false;
             }
 
             theGUIRenderer.UpdateGUI(gameEngine.turnState, gameEngine.gameState, gameEngine.config);
@@ -74,7 +99,7 @@ namespace Assets.Scripts
         private void DoGameTick(GameAction action)
         {
             var countOfRoomCleared = gameEngine.turnState.roomCleared.Count;
-            var energy = gameEngine.turnState.energy;
+
             if (action == GameAction.Exit)
             {
                 Debug.Log("Tokens: " + gameEngine.turnState.tokens + ", Money: " + gameEngine.turnState.money);
@@ -89,14 +114,9 @@ namespace Assets.Scripts
             }
             if (action == GameAction.Exit || gameEngine.turnState.lives == 0)
             {
-                rerenderRoom = true;
+                renderNewGame = true;
                 gameEngine.config.seed++;
                 gameEngine.NewGame();
-                foreach (KeyValuePair<Coordinate, GameObject> sprite in sprites)
-                {
-                    Destroy(sprite.Value);
-                }
-                sprites.Clear();
             }
 
             if (action == GameAction.GoUp || action == GameAction.GoLeft || action == GameAction.GoDown || action == GameAction.GoRight)
@@ -113,10 +133,11 @@ namespace Assets.Scripts
 
         void RenderContent(MapTile mapTile, Coordinate coordinate, TurnState turnState)
         {
-            if (sprites.ContainsKey(coordinate) || turnState.roomCleared.Contains(coordinate))
+            if (alreadyRenderedRooms.Contains(coordinate))
             {
                 return;
             }
+            alreadyRenderedRooms.Add(coordinate);
             if (mapTile.roomContent == MapRoomContent.Enemy)
             {
                 GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8, coordinate.y * 8, 0), Quaternion.identity);
