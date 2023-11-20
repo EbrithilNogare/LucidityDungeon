@@ -386,7 +386,6 @@ namespace Assets.Scripts
 
                 if (tile.Equals(goal))
                 {
-                    distances[tile].Add(GameAction.Exit);
                     return distances[tile];
                 }
 
@@ -440,7 +439,14 @@ namespace Assets.Scripts
         public Tuple<int, GameAction> DistanceToExit(TurnState turnState)
         {
             List<GameAction> pathToStart = GetPathFromSourceToGoal(turnState.position, new Coordinate(0, 0));
-            return new Tuple<int, GameAction>(pathToStart.Count, pathToStart[0]);
+            if (pathToStart.Count == 0)
+            {
+                return new Tuple<int, GameAction>(pathToStart.Count, GameAction.Exit);
+            }
+            else
+            {
+                return new Tuple<int, GameAction>(pathToStart.Count, pathToStart[0]);
+            }
         }
 
         public List<ShoppingHallAction> GetValidActionsInShoppingHall()

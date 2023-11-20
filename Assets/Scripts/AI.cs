@@ -5,7 +5,6 @@ namespace Assets.Scripts
     class AI
     {
         System.Random random;
-        GameAction lastMove = GameAction.Exit;
 
         public AI()
         {

@@ -1,6 +1,8 @@
 using DG.Tweening;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
 namespace Assets.Scripts
@@ -11,6 +13,8 @@ namespace Assets.Scripts
         public GameObject player;
         public Tilemap tilemap;
         public GUIRenderer theGUIRenderer;
+        public ActionsRenderer actionsRenderer;
+        public Camera mainCamera;
 
         [Space(100)]
 
@@ -28,6 +32,8 @@ namespace Assets.Scripts
         public Sprite chestOpen;
         public GameObject enemyPrefab;
         public Sprite[] enemies;
+        public int minCameraSize;
+        public int maxCameraSize;
 
         public bool aiAutoplay;
         public float timeToAction;
@@ -62,15 +68,15 @@ namespace Assets.Scripts
             // enumerator.MoveNext();
             // return;
 
-            nextActionTimeout -= Time.deltaTime;
-            if (aiAutoplay && nextActionTimeout < 0)
+            if (aiAutoplay && actionsInQueue.Count == 0)
             {
-                nextActionTimeout = timeToAction;
                 actionsInQueue.Add(ai.NextMove(gameEngine));
             }
 
-            if (actionsInQueue.Count > 0)
+            nextActionTimeout -= Time.deltaTime;
+            if (actionsInQueue.Count > 0 && nextActionTimeout < 0)
             {
+                nextActionTimeout = timeToAction;
                 var action = actionsInQueue[0];
                 actionsInQueue.RemoveAt(0);
                 DoGameTick(action);
@@ -94,6 +100,47 @@ namespace Assets.Scripts
             }
 
             theGUIRenderer.UpdateGUI(gameEngine.turnState, gameEngine.gameState, gameEngine.config);
+            actionsRenderer.RenderActions(gameEngine.GetValidActions());
+        }
+
+        public void Click(InputAction.CallbackContext context)
+        {
+            if (!context.started) return;
+
+            Vector2 pos = Mouse.current.position.ReadValue();
+
+            float cameraSize = mainCamera.orthographicSize;
+            Vector3 worldMousePosition = mainCamera.ScreenToWorldPoint(new Vector3(pos.x, pos.y, cameraSize));
+            var coordinate = new Coordinate((int)Math.Round(worldMousePosition.x / 8), (int)Math.Round(worldMousePosition.y / 8));
+
+            var validActions = gameEngine.GetValidActions();
+
+            if (!gameEngine.isEnemyInMyRoom(gameEngine.turnState))
+            {
+                if (gameEngine.map.ContainsKey(coordinate))
+                    actionsInQueue.AddRange(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate));
+                else if (gameEngine.map.ContainsKey(new Coordinate(coordinate.x + 1, coordinate.y)) && gameEngine.map[new Coordinate(coordinate.x + 1, coordinate.y)].entries.left)
+                {
+                    actionsInQueue.AddRange(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate));
+                }
+                else if (gameEngine.map.ContainsKey(new Coordinate(coordinate.x - 1, coordinate.y)) && gameEngine.map[new Coordinate(coordinate.x - 1, coordinate.y)].entries.right)
+                {
+                    actionsInQueue.AddRange(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate));
+                }
+                else if (gameEngine.map.ContainsKey(new Coordinate(coordinate.x, coordinate.y + 1)) && gameEngine.map[new Coordinate(coordinate.x, coordinate.y + 1)].entries.down)
+                {
+                    actionsInQueue.AddRange(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate));
+                }
+                else if (gameEngine.map.ContainsKey(new Coordinate(coordinate.x, coordinate.y - 1)) && gameEngine.map[new Coordinate(coordinate.x, coordinate.y - 1)].entries.up)
+                {
+                    actionsInQueue.AddRange(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate));
+                }
+            }
+        }
+
+        public void Zoom(InputAction.CallbackContext context)
+        {
+            mainCamera.orthographicSize = Math.Min(Math.Max(mainCamera.orthographicSize + context.ReadValue<float>() / -120, minCameraSize), maxCameraSize);
         }
 
         private void DoGameTick(GameAction action)
