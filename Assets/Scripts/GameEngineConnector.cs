@@ -106,8 +106,18 @@ namespace Assets.Scripts
         public void Click(InputAction.CallbackContext context)
         {
             if (!context.started) return;
-
             Vector2 pos = Mouse.current.position.ReadValue();
+
+            RaycastHit2D hit = Physics2D.Raycast(mainCamera.ScreenToWorldPoint(pos), Vector2.zero);
+            if (!(hit.collider != null && hit.collider.CompareTag("Map")))
+            {
+                Debug.Log("miss");
+                return;
+            }
+            else
+            {
+                Debug.Log("tilemap");
+            }
 
             float cameraSize = mainCamera.orthographicSize;
             Vector3 worldMousePosition = mainCamera.ScreenToWorldPoint(new Vector3(pos.x, pos.y, cameraSize));
