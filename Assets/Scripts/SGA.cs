@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
     class SGA : MonoBehaviour
     {
-        static readonly int POP_SIZE = 100;
+        static readonly int POP_SIZE = 32;
         static readonly int IND_LEN = 26;
         static readonly int MAX_GEN = 1;
         static readonly int MAX_VAL = 100;
@@ -132,7 +133,24 @@ namespace Assets.Scripts
             for (int G = 0; G < MAX_GEN; G++)
             {
                 stopwatch.Start();
-                List<int> fits = population.Select(fitnessFunction).ToList();
+
+                List<int> fits = new List<int>(POP_SIZE);
+                object lockObject = new object();
+
+                Parallel.ForEach(population, () => new List<int>(),
+                (individual, loopState, localFits) =>
+                {
+                    localFits.Add(fitnessFunction(individual));
+                    return localFits;
+                },
+                localFits =>
+                {
+                    lock (lockObject)
+                    {
+                        fits.AddRange(localFits);
+                    }
+                });
+
                 stopwatch.Stop();
 
                 Debug.Log("Generation: " + G);
@@ -289,8 +307,8 @@ namespace Assets.Scripts
             config.enemyHealthCountPerLevel = Scale(individual[individualIterator++], 2, 40);
             config.enemyHealthCountBase = Scale(individual[individualIterator++], 10, 50);
 
-            config.weaponDamageDiceSides[0] = 2;
-            diffI = Scale(individual[individualIterator++], 1, 10);
+            config.weaponDamageDiceSides[0] = 5;
+            diffI = Scale(individual[individualIterator++], 3, 20);
             config.weaponDamageDiceSides[1] = config.weaponDamageDiceSides[0] + diffI;
             config.weaponDamageDiceSides[2] = config.weaponDamageDiceSides[1] + diffI;
             config.weaponDamageDiceSides[3] = config.weaponDamageDiceSides[2] + diffI;
