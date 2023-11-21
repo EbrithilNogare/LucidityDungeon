@@ -9,14 +9,14 @@ namespace Assets.Scripts
 {
     class SGA : MonoBehaviour
     {
-        static readonly int POP_SIZE = 32;
+        static readonly int POP_SIZE = 64;
         static readonly int IND_LEN = 26;
         static readonly int MAX_GEN = 1;
         static readonly int MAX_VAL = 100;
         static readonly int MAX_RUNS = 60;
         static readonly double CX_PROB = 0.5;
         static readonly double MUT_PROB = 0.5;
-        static readonly double MUT_FLIP_PROB = 1 / (float)IND_LEN;
+        static readonly double MUT_FLIP_PROB = 2 / (float)IND_LEN;
         static System.Random random = new System.Random();
 
         static List<int> CreateIndividual(int length)
@@ -39,7 +39,7 @@ namespace Assets.Scripts
             for (int i = 0; i < size - size / 2; i++)
             {
                 // manual best
-                population.Add(new List<int> { 63, 59, 45, 89, 62, 51, 30, 65, 38, 35, 57, 50, 61, 44, 55, 58, 40, 49, 29, 64, 54, 39, 65, 68, 56, 63 });
+                population.Add(new List<int> { 45, 44, 54, 39, 59, 33, 77, 33, 43, 45, 30, 39, 70, 37, 61, 49, 29, 63, 46, 25, 34, 48, 61, 45, 48, 53 });
             }
 
             return population;
@@ -110,7 +110,7 @@ namespace Assets.Scripts
             {
                 for (int i = 0; i < individual.Count; i++)
                 {
-                    individual[i] += (random.NextDouble() < MUT_FLIP_PROB) ? random.Next(-MAX_VAL / 10, MAX_VAL / 10 + 1) : 0;
+                    individual[i] += (random.NextDouble() < MUT_FLIP_PROB) ? random.Next(-MAX_VAL / 5, MAX_VAL / 5 + 1) : 0;
                     individual[i] = Math.Clamp(individual[i], 0, MAX_VAL);
                 }
             }
@@ -126,6 +126,8 @@ namespace Assets.Scripts
             return population;
         }
 
+        static int bestFit = 0;
+        static List<int> bestInd = new List<int>();
         static List<List<int>> EvolutionaryAlgorithm(List<List<int>> population, Func<List<int>, int> fitnessFunction)
         {
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
@@ -153,15 +155,25 @@ namespace Assets.Scripts
 
                 stopwatch.Stop();
 
+                if (bestFit < fits.Max())
+                {
+                    bestFit = fits.Max();
+                    bestInd = new List<int>(population[fits.IndexOf(fits.Max())]);
+                }
+
                 Debug.Log("Generation: " + G);
                 Debug.Log("Time for run: " + stopwatch.ElapsedMilliseconds / (float)MAX_GEN / (float)POP_SIZE / (float)MAX_RUNS);
                 Debug.Log("fits.Max(): " + fits.Max());
                 Debug.Log("{" + string.Join(", ", population[fits.IndexOf(fits.Max())]) + "}");
+                Debug.Log("Total: fits.Max(): " + bestFit);
+                Debug.Log("Total: {" + string.Join(", ", bestInd) + "}");
                 List<List<int>> matingPool = Selection(population, fits);
                 List<List<int>> offspring = MutationPopulation(CrossoverPopulation(matingPool));
-                offspring[0] = new List<int>(population[fits.IndexOf(fits.Max())]);
-                offspring[1] = new List<int>(population[fits.IndexOf(fits.Max())]);
+                offspring[0] = new List<int>(bestInd);
+                offspring[1] = new List<int>(bestInd);
                 offspring[2] = new List<int>(population[fits.IndexOf(fits.Max())]);
+                offspring[3] = new List<int>(population[fits.IndexOf(fits.Max())]);
+                offspring[4] = new List<int>(population[fits.IndexOf(fits.Max())]);
 
                 population = offspring;
             }
