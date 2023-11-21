@@ -7,7 +7,7 @@
         public int[] energy = new int[] { 60, 90, 120, 160, 200 };
 
         // Map
-        public float[] enemyAndTreasureProbability = new float[] { .05f, .07f, .1f, .12f, .15f };
+        public float[] enemyAndTreasureProbability = new float[] { .1f, .14f, .18f, .22f, .26f };
         public float traderProbability = .05f;
         public float entryProbability = .7f;
 
@@ -19,31 +19,31 @@
         public int[] upgradeSpellPrices = new int[] { 0, 25, 45 };
         public int[] upgradeInitSpellsPrices = new int[] { 0, 40, 55 };
         public int[] energyPrices = new int[] { 0, 10, 25, 55, 90 };
-        public int tokensCountForPrice = 5;
+        public int tokensCountForPrice = 2;
 
         // Player
         public int playerDefaultHealthPoints = 100;
         public int playerDefaultLives = 3;
 
         // Trader
-        public int potionPrice = 5;
+        public int potionPrice = 3;
         public int spellPrice = 2;
-        public int tokenPrice = 50;
+        public int tokenPrice = 20;
 
         // Enemy
         public int[,] enemyLevelRanges = { { 1, 3 }, { 1, 5 }, { 2, 7 }, { 3, 9 }, { 4, 10 } };
         public float enemyDropRateKeyPerLevel = .1f;
         public float enemyDropRateWeapon = .33f;
         public int enemyDropMoneyCountPerLevel = 2;
-        public int enemyDamageCountPerLevel = 1;
-        public int enemyHealthCountPerLevel = 10;
-        public int enemyHealthCountBase = 20;
+        public int enemyDamageCountPerLevel = 5;
+        public int enemyHealthCountPerLevel = 15;
+        public int enemyHealthCountBase = 30;
 
         // Weapon
-        public int[] weaponDamageDiceSides = { 4, 6, 8, 10 };
+        public int[] weaponDamageDiceSides = { 10, 15, 20, 25 };
 
         // Potion
-        public int[] healthPotionRegeneration = { 25, 50, 100 };
+        public int[] healthPotionRegeneration = { 20, 40, 60 };
 
         // Spell
         public int[] spellDamageIncrease = { 20, 40, 60 };
