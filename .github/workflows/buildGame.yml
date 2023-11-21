@@ -17,6 +17,8 @@ jobs:
         with:
           lfs: false
 
+      - run: ls; echo "$PWD"
+      
       - uses: actions/cache@v3
         with:
           path: Library
@@ -36,7 +38,7 @@ jobs:
           versioning: Semantic
           targetPlatform: WebGL
           
-      - run: echo '{ "version":"${{ steps.myBuildStep.outputs.buildVersion }}" }' > package.json
+      - run: echo '{ "version":"${{ steps.myBuildStep.outputs.buildVersion }}" }' > build/WebGL/WebGL/package.json
 
       - uses: JamesIves/github-pages-deploy-action@4.1.3
         with:
