@@ -17,7 +17,7 @@ jobs:
         with:
           lfs: false
 
-      - run: ls; echo "$PWD"
+      - run: mkdir -p ./build/WebGL/WebGL && touch ./build/WebGL/WebGL/package.json
       
       - uses: actions/cache@v3
         with:
@@ -38,12 +38,6 @@ jobs:
           versioning: Semantic
           targetPlatform: WebGL
 
-      - run: ls
-      - run: ls ./
-      - run: ls ./build
-      - run: ls ./build/WebGL
-      - run: ls ./build/WebGL/WebGL
-      - run: touch ./build/WebGL/WebGL/package.json
       - run: echo '{ "version":"${{ steps.myBuildStep.outputs.buildVersion }}" }' > ./build/WebGL/WebGL/package.json
 
       - uses: JamesIves/github-pages-deploy-action@4.1.3
