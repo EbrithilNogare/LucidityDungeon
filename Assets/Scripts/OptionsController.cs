@@ -19,7 +19,6 @@ namespace Assets.Scripts
 
             audioBar.sprite = barSprites[audioValue];
             soundsBar.sprite = barSprites[soundsValue];
-
         }
 
         public void audioPlus()
