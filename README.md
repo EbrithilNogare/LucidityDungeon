@@ -12,8 +12,5 @@
 ## Wiki
 https://github.com/EbrithilNogare/LucidityDungeon/wiki
 
-## LucidityDungeon
-Unity Game
-
 ### Unity version
 2022.3.10f1
