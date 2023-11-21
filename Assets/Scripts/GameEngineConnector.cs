@@ -29,7 +29,6 @@ namespace Assets.Scripts
         public Tile[] nothingTiles;
         public Sprite trader;
         public Sprite chestClose;
-        public Sprite chestOpen;
         public GameObject enemyPrefab;
         public Sprite[] enemies;
         public int minCameraSize;
@@ -64,9 +63,10 @@ namespace Assets.Scripts
 
         private void Update()
         {
-            // enable for SGA computation
-            // enumerator.MoveNext();
-            // return;
+            /*/ // switch for SGA computation
+            enumerator.MoveNext();
+            return;
+            /**/
 
             if (aiAutoplay && actionsInQueue.Count == 0)
             {
@@ -80,6 +80,8 @@ namespace Assets.Scripts
                 var action = actionsInQueue[0];
                 actionsInQueue.RemoveAt(0);
                 DoGameTick(action);
+                theGUIRenderer.UpdateGUI(gameEngine.turnState, gameEngine.gameState, gameEngine.config);
+                actionsRenderer.RenderActions(gameEngine.GetValidActions(), gameEngine.turnState, gameEngine.config);
             }
 
             if (renderNewGame)
@@ -96,19 +98,45 @@ namespace Assets.Scripts
                 }
                 sprites.Clear();
 
+                theGUIRenderer.UpdateGUI(gameEngine.turnState, gameEngine.gameState, gameEngine.config);
+                actionsRenderer.RenderActions(gameEngine.GetValidActions(), gameEngine.turnState, gameEngine.config);
+
                 renderNewGame = false;
             }
 
-            theGUIRenderer.UpdateGUI(gameEngine.turnState, gameEngine.gameState, gameEngine.config);
-            actionsRenderer.RenderActions(gameEngine.GetValidActions());
+        }
+
+        public void AddActionToQueue(GameAction gameAction, bool removeOtherActions = false)
+        {
+            AddActionToQueue(new List<GameAction>(1) { gameAction }, removeOtherActions);
+        }
+
+        public void AddActionToQueue(List<GameAction> gameActions, bool removeOtherActions = false)
+        {
+            if (removeOtherActions)
+            {
+                actionsInQueue.Clear();
+            }
+            actionsInQueue.AddRange(gameActions);
         }
 
         public void Click(InputAction.CallbackContext context)
         {
             if (!context.started) return;
-            Vector2 pos = Mouse.current.position.ReadValue();
+            Vector2 position = Mouse.current.position.ReadValue();
+            ResolveClick(position);
+        }
 
-            RaycastHit2D hit = Physics2D.Raycast(mainCamera.ScreenToWorldPoint(pos), Vector2.zero);
+        public void Touch(InputAction.CallbackContext context)
+        {
+            if (!context.performed) return;
+            var touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+            ResolveClick(touchPosition);
+        }
+
+        public void ResolveClick(Vector2 position)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(mainCamera.ScreenToWorldPoint(position), Vector2.zero);
             if (!(hit.collider != null && hit.collider.CompareTag("Map")))
             {
                 Debug.Log("miss");
@@ -116,34 +144,39 @@ namespace Assets.Scripts
             }
             else
             {
+                // todo click on button propagates to tilemap
                 Debug.Log("tilemap");
             }
 
             float cameraSize = mainCamera.orthographicSize;
-            Vector3 worldMousePosition = mainCamera.ScreenToWorldPoint(new Vector3(pos.x, pos.y, cameraSize));
+            Vector3 worldMousePosition = mainCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, cameraSize));
             var coordinate = new Coordinate((int)Math.Round(worldMousePosition.x / 8), (int)Math.Round(worldMousePosition.y / 8));
+            PerformNavigation(coordinate);
+        }
 
+        private void PerformNavigation(Coordinate coordinate)
+        {
             var validActions = gameEngine.GetValidActions();
 
             if (!gameEngine.isEnemyInMyRoom(gameEngine.turnState))
             {
                 if (gameEngine.map.ContainsKey(coordinate))
-                    actionsInQueue.AddRange(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate));
+                    AddActionToQueue(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate), true);
                 else if (gameEngine.map.ContainsKey(new Coordinate(coordinate.x + 1, coordinate.y)) && gameEngine.map[new Coordinate(coordinate.x + 1, coordinate.y)].entries.left)
                 {
-                    actionsInQueue.AddRange(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate));
+                    AddActionToQueue(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate), true);
                 }
                 else if (gameEngine.map.ContainsKey(new Coordinate(coordinate.x - 1, coordinate.y)) && gameEngine.map[new Coordinate(coordinate.x - 1, coordinate.y)].entries.right)
                 {
-                    actionsInQueue.AddRange(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate));
+                    AddActionToQueue(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate), true);
                 }
                 else if (gameEngine.map.ContainsKey(new Coordinate(coordinate.x, coordinate.y + 1)) && gameEngine.map[new Coordinate(coordinate.x, coordinate.y + 1)].entries.down)
                 {
-                    actionsInQueue.AddRange(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate));
+                    AddActionToQueue(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate), true);
                 }
                 else if (gameEngine.map.ContainsKey(new Coordinate(coordinate.x, coordinate.y - 1)) && gameEngine.map[new Coordinate(coordinate.x, coordinate.y - 1)].entries.up)
                 {
-                    actionsInQueue.AddRange(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate));
+                    AddActionToQueue(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate), true);
                 }
             }
         }

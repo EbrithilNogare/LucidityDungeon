@@ -311,7 +311,7 @@ namespace Assets.Scripts
         {
             List<GameAction> actions = new List<GameAction>();
 
-            if (isTraderInMyRoom(turnState) && turnState.keys > 0)
+            if (isTraderInMyRoom(turnState))
             {
                 if (turnState.money >= config.potionPrice)
                 {
