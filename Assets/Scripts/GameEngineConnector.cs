@@ -79,7 +79,7 @@ namespace Assets.Scripts
                 var action = actionsInQueue[0];
                 actionsInQueue.RemoveAt(0);
                 DoGameTick(action);
-                theGUIRenderer.UpdateGUI(gameEngine.turnState, gameEngine.gameState, gameEngine.config);
+                theGUIRenderer.UpdateGUI(gameEngine);
                 actionsRenderer.RenderActions(gameEngine.GetValidActions(), gameEngine.turnState, gameEngine.config);
             }
 
@@ -97,7 +97,7 @@ namespace Assets.Scripts
                 }
                 sprites.Clear();
 
-                theGUIRenderer.UpdateGUI(gameEngine.turnState, gameEngine.gameState, gameEngine.config);
+                theGUIRenderer.UpdateGUI(gameEngine);
                 actionsRenderer.RenderActions(gameEngine.GetValidActions(), gameEngine.turnState, gameEngine.config);
 
                 renderNewGame = false;

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,11 +19,34 @@ namespace Assets.Scripts
         public GameObject healthBar;
         public GameObject energyBar;
         public Sprite[] barSprites;
+        public GameObject[] healthBarSprites; // 0:solo, 1:left, 2:mid, 3:right 
+        public TextMeshProUGUI enemyName;
+        public GameObject enemyHealthBarContainer;
 
-        public void UpdateGUI(TurnState turnState, GameState gameState, Config config)
+        public void UpdateGUI(GameEngine gameEngine)
         {
+            var turnState = gameEngine.turnState;
+            var gameState = gameEngine.gameState;
+            var config = gameEngine.config;
+
+            var exitInfo = gameEngine.DistanceToExit(turnState);
+            string exitDirection = "";
+            switch (exitInfo.Item2)
+            {
+                case GameAction.GoUp:
+                    exitDirection = "^"; break;
+                case GameAction.GoLeft:
+                    exitDirection = "<"; break;
+                case GameAction.GoDown:
+                    exitDirection = "v"; break;
+                case GameAction.GoRight:
+                    exitDirection = ">"; break;
+                case GameAction.Exit:
+                    exitDirection = "X"; break;
+            }
+
             exactHealtPointsValue.SetText(turnState.hp.ToString() + " / " + config.playerDefaultHealthPoints);
-            exactEnergyValue.SetText(turnState.energy.ToString() + " / " + config.energy[gameState.upgradeEnergyLevel]);
+            exactEnergyValue.SetText(turnState.energy.ToString() + " / " + config.energy[gameState.upgradeEnergyLevel] + "   |   " + exitInfo.Item1 + " " + exitDirection);
             potionsText.SetText(turnState.potions.ToString());
             spellsText.SetText(turnState.spells.ToString());
             moneyText.SetText(turnState.money.ToString());
@@ -31,6 +55,40 @@ namespace Assets.Scripts
             keysText.SetText(turnState.keys.ToString());
             healthBar.GetComponent<Image>().sprite = barSprites[(int)Mathf.Floor(turnState.hp * barSprites.Length / ((float)config.playerDefaultHealthPoints + 1))];
             energyBar.GetComponent<Image>().sprite = barSprites[(int)Mathf.Floor(turnState.energy * barSprites.Length / ((float)config.energy[gameState.upgradeEnergyLevel] + 1))];
+
+            var children = new List<GameObject>();
+            foreach (Transform child in enemyHealthBarContainer.transform) children.Add(child.gameObject);
+            children.ForEach(child => Destroy(child));
+
+            if (gameEngine.isEnemyInMyRoom(turnState))
+            {
+                int bars = (turnState.enemyHp + 9) / 10;
+                if (bars == 1)
+                {
+                    GameObject copy = Instantiate(healthBarSprites[0]);
+                    copy.transform.parent = enemyHealthBarContainer.transform;
+                }
+                if (bars > 1)
+                {
+                    GameObject copyBefore = Instantiate(healthBarSprites[1]);
+                    copyBefore.transform.parent = enemyHealthBarContainer.transform;
+
+                    for (int i = 2; i < bars; i++)
+                    {
+                        GameObject copyIn = Instantiate(healthBarSprites[2]);
+                        copyIn.transform.parent = enemyHealthBarContainer.transform;
+                    };
+
+                    GameObject copyAfter = Instantiate(healthBarSprites[3]);
+                    copyAfter.transform.parent = enemyHealthBarContainer.transform;
+                }
+
+                enemyName.SetText("Enemy   | " + turnState.enemyHp + " |"); // todo
+            }
+            else
+            {
+                enemyName.SetText("");
+            }
         }
     }
 }
