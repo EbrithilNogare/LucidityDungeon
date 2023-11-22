@@ -66,24 +66,24 @@ namespace Assets.Scripts
                 if (bars == 1)
                 {
                     GameObject copy = Instantiate(healthBarSprites[0]);
-                    copy.transform.parent = enemyHealthBarContainer.transform;
+                    copy.transform.SetParent(enemyHealthBarContainer.transform, false);
                 }
                 if (bars > 1)
                 {
                     GameObject copyBefore = Instantiate(healthBarSprites[1]);
-                    copyBefore.transform.parent = enemyHealthBarContainer.transform;
+                    copyBefore.transform.SetParent(enemyHealthBarContainer.transform, false);
 
                     for (int i = 2; i < bars; i++)
                     {
                         GameObject copyIn = Instantiate(healthBarSprites[2]);
-                        copyIn.transform.parent = enemyHealthBarContainer.transform;
+                        copyIn.transform.SetParent(enemyHealthBarContainer.transform, false);
                     };
 
                     GameObject copyAfter = Instantiate(healthBarSprites[3]);
-                    copyAfter.transform.parent = enemyHealthBarContainer.transform;
+                    copyAfter.transform.SetParent(enemyHealthBarContainer.transform, false);
                 }
 
-                enemyName.SetText("Enemy   | " + turnState.enemyHp + " |"); // todo
+                enemyName.SetText("Enemy   [ " + turnState.enemyHp + " ]"); // todo
             }
             else
             {

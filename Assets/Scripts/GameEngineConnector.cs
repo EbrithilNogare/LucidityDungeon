@@ -206,7 +206,7 @@ namespace Assets.Scripts
                 RenderContent(gameEngine.map[pos], pos, gameEngine.turnState);
             }
 
-            player.transform.DOMove(new Vector3(gameEngine.turnState.position.x * 8, gameEngine.turnState.position.y * 8, 0), timeToAction);
+            player.transform.DOMove(new Vector3(gameEngine.turnState.position.x * 8, gameEngine.turnState.position.y * 8, player.transform.position.z), timeToAction);
         }
 
         void RenderContent(MapTile mapTile, Coordinate coordinate, TurnState turnState)
