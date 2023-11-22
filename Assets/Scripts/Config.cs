@@ -32,7 +32,8 @@
 
         // Enemy
         public int[,] enemyLevelRanges = { { 1, 3 }, { 1, 5 }, { 2, 7 }, { 3, 9 }, { 4, 10 } };
-        public float enemyDropRateKeyPerLevel = .1f;
+        public float enemyDropRateKeyPerLevel = .05f;
+        public float enemyDropRateKeyBase = .33f;
         public float enemyDropRateWeapon = .33f;
         public int enemyDropMoneyCountPerLevel = 2;
         public int enemyDamageCountPerLevel = 5;

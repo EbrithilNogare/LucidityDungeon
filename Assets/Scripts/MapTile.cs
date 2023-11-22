@@ -23,7 +23,7 @@
         {
             MapRoomContent roomContent;
 
-            float contentValue = (float)MyRandom.NextDouble(config.seed + coordinate.GetHashCode());
+            float contentValue = (float)MyRandom.NextFloat(config.seed + coordinate.GetHashCode());
 
             if ((contentValue -= config.enemyAndTreasureProbability[gameState.upgradeEnemyAndTreasureProbability]) < 0)
             {
@@ -52,10 +52,10 @@
                 return new Entries(true, true, true, true);
             }
 
-            bool up = MyRandom.NextDouble(config.seed + (x * 23 + y * 13)) < config.entryProbability;
-            bool left = MyRandom.NextDouble(config.seed + (x * 23 + y * 13 + 7)) < config.entryProbability;
-            bool down = MyRandom.NextDouble(config.seed + (x * 23 + (y - 1) * 13)) < config.entryProbability;
-            bool right = MyRandom.NextDouble(config.seed + ((x + 1) * 23 + y * 13 + 7)) < config.entryProbability;
+            bool up = MyRandom.NextFloat(config.seed + (x * 23 + y * 13)) < config.entryProbability;
+            bool left = MyRandom.NextFloat(config.seed + (x * 23 + y * 13 + 7)) < config.entryProbability;
+            bool down = MyRandom.NextFloat(config.seed + (x * 23 + (y - 1) * 13)) < config.entryProbability;
+            bool right = MyRandom.NextFloat(config.seed + ((x + 1) * 23 + y * 13 + 7)) < config.entryProbability;
 
             if (x == 0 && y == -1) up = true;
             if (x == 1 && y == 0) left = true;

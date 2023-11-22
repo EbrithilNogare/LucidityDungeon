@@ -17,14 +17,13 @@ namespace Assets.Scripts
         static readonly double CX_PROB = 0.5;
         static readonly double MUT_PROB = 0.5;
         static readonly double MUT_FLIP_PROB = 2 / (float)IND_LEN;
-        static System.Random random = new System.Random();
 
         static List<int> CreateIndividual(int length)
         {
             List<int> individual = new List<int>();
             for (int i = 0; i < length; i++)
             {
-                individual.Add(random.Next((int)(3 / 8f * MAX_VAL), (int)(5 / 8f * MAX_VAL)));
+                individual.Add(UnityEngine.Random.Range((int)(3 / 8f * MAX_VAL), (int)(5 / 8f * MAX_VAL)));
             }
             return individual;
         }
@@ -50,10 +49,10 @@ namespace Assets.Scripts
             List<List<int>> selected = new List<List<int>>();
             for (int i = 0; i < population.Count; i++)
             {
-                int index1 = random.Next(population.Count);
-                int index2 = random.Next(population.Count);
-                int index3 = random.Next(population.Count);
-                int index4 = random.Next(population.Count);
+                int index1 = UnityEngine.Random.Range(0, population.Count);
+                int index2 = UnityEngine.Random.Range(0, population.Count);
+                int index3 = UnityEngine.Random.Range(0, population.Count);
+                int index4 = UnityEngine.Random.Range(0, population.Count);
                 if (fits[index1] >= fits[index2] && fits[index1] >= fits[index3] && fits[index1] >= fits[index4])
                 {
                     selected.Add(new List<int>(population[index1]));
@@ -76,7 +75,7 @@ namespace Assets.Scripts
 
         static Tuple<List<int>, List<int>> Crossover(List<int> p1, List<int> p2)
         {
-            int point = random.Next(p1.Count);
+            int point = UnityEngine.Random.Range(0, p1.Count);
             List<int> o1 = new List<int>(p1.Take(point).Concat(p2.Skip(point)));
             List<int> o2 = new List<int>(p2.Take(point).Concat(p1.Skip(point)));
             return Tuple.Create(o1, o2);
@@ -89,7 +88,7 @@ namespace Assets.Scripts
             {
                 List<int> p1 = new List<int>(population[i]);
                 List<int> p2 = new List<int>(population[i + 1]);
-                if (random.NextDouble() < CX_PROB)
+                if (UnityEngine.Random.value < CX_PROB)
                 {
                     var children = Crossover(p1, p2);
                     offspring.Add(children.Item1);
@@ -106,11 +105,11 @@ namespace Assets.Scripts
 
         static List<int> Mutate(List<int> individual)
         {
-            if (random.NextDouble() < MUT_PROB)
+            if (UnityEngine.Random.value < MUT_PROB)
             {
                 for (int i = 0; i < individual.Count; i++)
                 {
-                    individual[i] += (random.NextDouble() < MUT_FLIP_PROB) ? random.Next(-MAX_VAL / 5, MAX_VAL / 5 + 1) : 0;
+                    individual[i] += (UnityEngine.Random.value < MUT_FLIP_PROB) ? UnityEngine.Random.Range(-MAX_VAL / 5, MAX_VAL / 5 + 1) : 0;
                     individual[i] = Math.Clamp(individual[i], 0, MAX_VAL);
                 }
             }
@@ -183,7 +182,7 @@ namespace Assets.Scripts
         static int FitnessFunction(List<int> individual)
         {
             Config config = MapToConfig(individual);
-            config.seed = random.Next(10000);
+            config.seed = UnityEngine.Random.Range(0, 10000);
 
             var gameEngine = new GameEngine(config);
             var ai = new AI();

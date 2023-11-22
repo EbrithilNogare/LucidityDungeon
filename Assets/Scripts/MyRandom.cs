@@ -1,4 +1,4 @@
-﻿using System;
+﻿using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -6,30 +6,13 @@ namespace Assets.Scripts
     {
         public static int RangeInt(int seed, int min, int max)
         {
-            Random random = new Random(seed);
-            // warm up
-            random.Next();
-            random.Next();
-            random.Next();
-            return random.Next(min, max);
+            Random.InitState(seed);
+            return Random.Range(min, max);
         }
-        public static int NextInt(int seed)
+        public static double NextFloat(int seed)
         {
-            Random random = new Random(seed);
-            // warm up
-            random.Next();
-            random.Next();
-            random.Next();
-            return random.Next();
-        }
-        public static double NextDouble(int seed)
-        {
-            Random random = new Random(seed);
-            // warm up
-            random.Next();
-            random.Next();
-            random.Next();
-            return random.NextDouble();
+            Random.InitState(seed);
+            return Random.value;
         }
     }
 }

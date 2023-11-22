@@ -2,6 +2,7 @@ using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
@@ -33,10 +34,8 @@ namespace Assets.Scripts
         public Sprite[] enemies;
         public int minCameraSize;
         public int maxCameraSize;
-
         public bool aiAutoplay;
         public float timeToAction;
-
 
         private GameEngine gameEngine;
         private Dictionary<Coordinate, GameObject> sprites;
@@ -103,7 +102,6 @@ namespace Assets.Scripts
 
                 renderNewGame = false;
             }
-
         }
 
         public void AddActionToQueue(GameAction gameAction, bool removeOtherActions = false)
@@ -123,6 +121,7 @@ namespace Assets.Scripts
         public void Click(InputAction.CallbackContext context)
         {
             if (!context.started) return;
+            if (EventSystem.current.IsPointerOverGameObject(0) || EventSystem.current.IsPointerOverGameObject(-1)) return;
             Vector2 position = Mouse.current.position.ReadValue();
             ResolveClick(position);
         }
@@ -130,24 +129,13 @@ namespace Assets.Scripts
         public void Touch(InputAction.CallbackContext context)
         {
             if (!context.performed) return;
+            if (Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId)) return;
             var touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
             ResolveClick(touchPosition);
         }
 
         public void ResolveClick(Vector2 position)
         {
-            RaycastHit2D hit = Physics2D.Raycast(mainCamera.ScreenToWorldPoint(position), Vector2.zero);
-            if (!(hit.collider != null && hit.collider.CompareTag("Map")))
-            {
-                Debug.Log("miss");
-                return;
-            }
-            else
-            {
-                // todo click on button propagates to tilemap
-                Debug.Log("tilemap");
-            }
-
             float cameraSize = mainCamera.orthographicSize;
             Vector3 worldMousePosition = mainCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, cameraSize));
             var coordinate = new Coordinate((int)Math.Round(worldMousePosition.x / 8), (int)Math.Round(worldMousePosition.y / 8));

@@ -107,19 +107,14 @@ namespace Assets.Scripts
         [Pure]
         private TurnState enemyDefeated(TurnState turnState, int enemyLevel)
         {
-            Random random = new Random(config.seed + turnState.position.GetHashCode());
-            // warm up
-            random.NextDouble();
-            random.NextDouble();
-
             turnState.roomCleared.Add(turnState.position);
 
-            if (random.NextDouble() < .1 * enemyLevel)
+            if (MyRandom.NextFloat(config.seed + turnState.position.GetHashCode()) < config.enemyDropRateKeyBase + config.enemyDropRateKeyPerLevel * enemyLevel)
             {
                 turnState.keys++;
             }
 
-            if (random.NextDouble() < config.enemyDropRateWeapon)
+            if (MyRandom.NextFloat(config.seed + turnState.position.GetHashCode() + 1) < config.enemyDropRateWeapon)
             {
                 if (enemyLevel < 4)
                 {
