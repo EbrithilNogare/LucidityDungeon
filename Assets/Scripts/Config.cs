@@ -19,7 +19,6 @@
         public int[] upgradeSpellPrices = new int[] { 0, 25, 45 };
         public int[] upgradeInitSpellsPrices = new int[] { 0, 40, 55 };
         public int[] energyPrices = new int[] { 0, 10, 25, 55, 90 };
-        public int tokensCountForPrice = 2;
 
         // Player
         public int playerDefaultHealthPoints = 100;
@@ -29,6 +28,7 @@
         public int potionPrice = 3;
         public int spellPrice = 2;
         public int tokenPrice = 20;
+        public int tokensCountForPrice = 2;
 
         // Enemy
         public int[,] enemyLevelRanges = { { 1, 3 }, { 1, 5 }, { 2, 7 }, { 3, 9 }, { 4, 10 } };
