@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Credits.unity
     guid: cf680201a651eb34e8d3380c9bca93c1
+  - enabled: 1
+    path: Assets/Scenes/Shoping hall.unity
+    guid: 13ca7a79cc45f184da7ce1986bf25ed0
   m_configObjects: {}

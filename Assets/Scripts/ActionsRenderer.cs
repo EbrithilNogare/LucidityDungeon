@@ -6,10 +6,12 @@ namespace Assets.Scripts
 {
     class ActionsRenderer : MonoBehaviour
     {
-        // outside of prefab
+        [Header("Editable")]
         public GameEngineConnector gameEngineCOnnector;
 
-        // in prefab
+        [Space(100)]
+
+        [Header("From prefab")]
         public GameObject attack;
         public GameObject usePotion;
         public GameObject useSpell;
@@ -18,18 +20,7 @@ namespace Assets.Scripts
         public GameObject buyPotion;
         public GameObject buySpell;
         public GameObject exit;
-
         public TextMeshProUGUI potionValue;
-
-        void Start()
-        {
-
-        }
-
-        void Update()
-        {
-
-        }
 
         public void Attack() { gameEngineCOnnector.AddActionToQueue(GameAction.Attack, true); }
         public void UsePotion() { gameEngineCOnnector.AddActionToQueue(GameAction.UsePotion, true); }
@@ -50,8 +41,6 @@ namespace Assets.Scripts
             buyPotion.SetActive(actions.Contains(GameAction.BuyPotion));
             buySpell.SetActive(actions.Contains(GameAction.BuySpell));
             exit.SetActive(actions.Contains(GameAction.Exit));
-
-
         }
     }
 }
