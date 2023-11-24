@@ -16,6 +16,8 @@ namespace Assets.Scripts
         public GUIRenderer theGUIRenderer;
         public ActionsRenderer actionsRenderer;
         public Camera mainCamera;
+        public GameObject shadowCasterContainer;
+        public GameObject shadowCasterPrefab;
 
         [Space(100)]
 
@@ -219,18 +221,21 @@ namespace Assets.Scripts
             if (mapTile.roomContent == MapRoomContent.Enemy)
             {
                 GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8 + 1.5f, coordinate.y * 8, 0), Quaternion.identity);
+                newObj.SetActive(true);
                 newObj.GetComponent<SpriteRenderer>().sprite = enemies[gameEngine.GetEnemyLevel(coordinate) - 1];
                 sprites.Add(coordinate, newObj);
             }
             if (mapTile.roomContent == MapRoomContent.Treasure)
             {
                 GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8 + 1.5f, coordinate.y * 8, 0), Quaternion.identity);
+                newObj.SetActive(true);
                 newObj.GetComponent<SpriteRenderer>().sprite = chestClose;
                 sprites.Add(coordinate, newObj);
             }
             if (mapTile.roomContent == MapRoomContent.Trader)
             {
                 GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8 + 1.5f, coordinate.y * 8, 0), Quaternion.identity);
+                newObj.SetActive(true);
                 newObj.GetComponent<SpriteRenderer>().sprite = trader;
                 sprites.Add(coordinate, newObj);
             }
@@ -364,6 +369,19 @@ namespace Assets.Scripts
                     }
 
                     tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), nothingTiles[randomIndex % nothingTiles.Length]);
+                }
+            }
+
+            for (int x = 0; x < 8; x++)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+                    if (room[7 - y, x] != 0) continue;
+
+                    GameObject copy = Instantiate(shadowCasterPrefab, Vector3.zero, Quaternion.identity);
+                    copy.SetActive(true);
+                    copy.transform.localPosition = new Vector3Int(coordinate.x * 8 + x - 4, coordinate.y * 8 + y - 4, 0);
+                    copy.transform.SetParent(shadowCasterContainer.transform);
                 }
             }
         }
