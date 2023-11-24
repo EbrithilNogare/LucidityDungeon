@@ -218,19 +218,19 @@ namespace Assets.Scripts
             alreadyRenderedRooms.Add(coordinate);
             if (mapTile.roomContent == MapRoomContent.Enemy)
             {
-                GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8, coordinate.y * 8, 0), Quaternion.identity);
+                GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8 + 1.5f, coordinate.y * 8, 0), Quaternion.identity);
                 newObj.GetComponent<SpriteRenderer>().sprite = enemies[gameEngine.GetEnemyLevel(coordinate) - 1];
                 sprites.Add(coordinate, newObj);
             }
             if (mapTile.roomContent == MapRoomContent.Treasure)
             {
-                GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8, coordinate.y * 8, 0), Quaternion.identity);
+                GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8 + 1.5f, coordinate.y * 8, 0), Quaternion.identity);
                 newObj.GetComponent<SpriteRenderer>().sprite = chestClose;
                 sprites.Add(coordinate, newObj);
             }
             if (mapTile.roomContent == MapRoomContent.Trader)
             {
-                GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8, coordinate.y * 8, 0), Quaternion.identity);
+                GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8 + 1.5f, coordinate.y * 8, 0), Quaternion.identity);
                 newObj.GetComponent<SpriteRenderer>().sprite = trader;
                 sprites.Add(coordinate, newObj);
             }
