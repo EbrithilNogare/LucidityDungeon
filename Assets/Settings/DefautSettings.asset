@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eef15483d4a9e074088052df1e4670dd, type: 3}
+  m_Name: DefautSettings
+  m_EditorClassIdentifier: 
+  floorTiles:
+  - {fileID: 11400000, guid: 23468365647d0d74a8f6857239d8d049, type: 2}
+  - {fileID: 11400000, guid: 627bb7f4e0015c04b92a61e2d4d2451b, type: 2}
+  - {fileID: 11400000, guid: 1226a2d6126079344b4d3d164d6681fa, type: 2}
+  - {fileID: 11400000, guid: b23595af325009b4a85dbb09e9445a0d, type: 2}
+  - {fileID: 11400000, guid: c1574123a8f931248b9e601484d83b79, type: 2}
+  - {fileID: 11400000, guid: 357d1b7226b4d5942b7e36519311c595, type: 2}
+  - {fileID: 11400000, guid: b3d6d5a6df0852a419433627814d07c4, type: 2}
+  - {fileID: 11400000, guid: 9e6578ca1977cd048ba0fd6661f3d71a, type: 2}
+  - {fileID: 11400000, guid: eb9f81755a716524a88321eb149a3029, type: 2}
+  - {fileID: 11400000, guid: f83a00a01c569ba47b3510f3688e3d66, type: 2}
+  - {fileID: 11400000, guid: 2b65ca6aa6b7cf5438cff539094a37f0, type: 2}
+  - {fileID: 11400000, guid: 145c7fe47931f3d48bfe12b2bc6893c8, type: 2}
+  - {fileID: 11400000, guid: a43392924ba8b2c41be443ec2bc2b55a, type: 2}
+  - {fileID: 11400000, guid: 1574e44f7e37ce2438753fc615049550, type: 2}
+  - {fileID: 11400000, guid: 7e1ec9a9a59b03f40851a00ae6c9c9e4, type: 2}
+  - {fileID: 11400000, guid: d48914f15bb360d428210f6e8798363e, type: 2}
+  - {fileID: 11400000, guid: c5929923097b7dc4f9506bde6841924a, type: 2}
+  - {fileID: 11400000, guid: 856d4634414d9ea4a91695d4d578c90d, type: 2}
+  - {fileID: 11400000, guid: 4f9173cfae945fc4ba8f05f2bd51e9a4, type: 2}
+  - {fileID: 11400000, guid: e1d5d4b84fd654744a53d1ddcfb6db5e, type: 2}
+  - {fileID: 11400000, guid: 05332f224ecf9544f8327f69ec696716, type: 2}
+  - {fileID: 11400000, guid: df0a2de26335018438f42acb2adc6eaf, type: 2}
+  - {fileID: 11400000, guid: a389c698a7c98164c902bbfb53b40b27, type: 2}
+  - {fileID: 11400000, guid: 1cf9ee7899f937144ab37faf107e62ea, type: 2}
+  - {fileID: 11400000, guid: c068e41b486de3141863789cac213fe5, type: 2}
+  - {fileID: 11400000, guid: a551f0154f889f341b727d9f0e7bd5e6, type: 2}
+  - {fileID: 11400000, guid: 6088f98b0cca246479e180c408c466b8, type: 2}
+  - {fileID: 11400000, guid: 768a9e23a05843c489c8a227b5e716b6, type: 2}
+  - {fileID: 11400000, guid: cebadbb8df7a6394db7402db841ddf95, type: 2}
+  - {fileID: 11400000, guid: 748f4ab8ed3ae3d4ea74e3a2b6acc831, type: 2}
+  - {fileID: 11400000, guid: 5e43d936af3a2e04a8a9e06e2457c11f, type: 2}
+  - {fileID: 11400000, guid: 289bd91e8319615448c935c9271a20a4, type: 2}
+  - {fileID: 11400000, guid: 1990fac4d8c545c498939ed90886160c, type: 2}
+  - {fileID: 11400000, guid: ae3519b1284730e478f0aa14ee97feb0, type: 2}
+  - {fileID: 11400000, guid: 7862f52bd2bae7a48b47b0dc547f2f52, type: 2}
+  - {fileID: 11400000, guid: 52922ccaf6b3fe942ae55acf999c2030, type: 2}
+  - {fileID: 11400000, guid: b3d278ead728c034e847ff4d6be837ab, type: 2}
+  - {fileID: 11400000, guid: b1eecb1911e1ff149b6b45fa620a772f, type: 2}
+  - {fileID: 11400000, guid: 9d8d79e227f7513468882eb912a3932b, type: 2}
+  - {fileID: 11400000, guid: c0fdd08dcaa6d8440ba81d33bc3984d8, type: 2}
+  - {fileID: 11400000, guid: c395ca60279f43a4e986ce89a04393b0, type: 2}
+  - {fileID: 11400000, guid: d46d114c1d6f78e44b1045483524da3b, type: 2}
+  - {fileID: 11400000, guid: 9f24ce41310fbd84aa8faddc3cc25ea5, type: 2}
+  - {fileID: 11400000, guid: 185138bdbbc239343bfa7a561c8ee748, type: 2}
+  wallTiles: []
+  edgeUpTiles: []
+  edgeLeftTiles: []
+  edgeRightTiles: []
+  edgeUpLeftTiles: []
+  edgeUpRightTiles: []
+  nothingTiles: []
+  trader: {fileID: 0}
+  chestClose: {fileID: 0}
+  enemyPrefab: {fileID: 0}
+  enemies: []
+  minCameraSize: 0
+  maxCameraSize: 0
+  aiAutoplay: 0
+  timeToAction: 0

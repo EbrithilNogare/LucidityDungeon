@@ -13,4 +13,4 @@
 https://github.com/EbrithilNogare/LucidityDungeon/wiki
 
 ### Unity version
-2022.3.10f1
+2022.3.9f1
