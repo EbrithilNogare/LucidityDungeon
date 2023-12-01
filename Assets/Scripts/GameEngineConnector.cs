@@ -22,18 +22,9 @@ namespace Assets.Scripts
         [Space(100)]
 
         [Header("From prefab")]
-        public Tile[] floorTiles;
-        public Tile[] wallTiles;
-        public Tile[] edgeUpTiles;
-        public Tile[] edgeLeftTiles;
-        public Tile[] edgeRightTiles;
-        public Tile[] edgeUpLeftTiles;
-        public Tile[] edgeUpRightTiles;
-        public Tile[] nothingTiles;
-        public Sprite trader;
-        public Sprite chestClose;
+        public ConstDictionary constDictionary;
+
         public GameObject enemyPrefab;
-        public Sprite[] enemies;
         public int minCameraSize;
         public int maxCameraSize;
         public bool aiAutoplay;
@@ -222,21 +213,21 @@ namespace Assets.Scripts
             {
                 GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8 + 1.5f, coordinate.y * 8, 0), Quaternion.identity);
                 newObj.SetActive(true);
-                newObj.GetComponent<SpriteRenderer>().sprite = enemies[gameEngine.GetEnemyLevel(coordinate) - 1];
+                newObj.GetComponent<SpriteRenderer>().sprite = constDictionary.enemies[gameEngine.GetEnemyLevel(coordinate) - 1];
                 sprites.Add(coordinate, newObj);
             }
             if (mapTile.roomContent == MapRoomContent.Treasure)
             {
                 GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8 + 1.5f, coordinate.y * 8, 0), Quaternion.identity);
                 newObj.SetActive(true);
-                newObj.GetComponent<SpriteRenderer>().sprite = chestClose;
+                newObj.GetComponent<SpriteRenderer>().sprite = constDictionary.chestClose;
                 sprites.Add(coordinate, newObj);
             }
             if (mapTile.roomContent == MapRoomContent.Trader)
             {
                 GameObject newObj = Instantiate(enemyPrefab, new Vector3(coordinate.x * 8 + 1.5f, coordinate.y * 8, 0), Quaternion.identity);
                 newObj.SetActive(true);
-                newObj.GetComponent<SpriteRenderer>().sprite = trader;
+                newObj.GetComponent<SpriteRenderer>().sprite = constDictionary.trader;
                 sprites.Add(coordinate, newObj);
             }
         }
@@ -320,7 +311,6 @@ namespace Assets.Scripts
                 }
             }
 
-
             for (int x = 0; x < 8; x++)
             {
                 for (int y = 0; y < 8; y++)
@@ -328,47 +318,47 @@ namespace Assets.Scripts
                     var randomIndex = Mathf.Abs(coordinate.x * 13 + coordinate.y * 29 + x * 79 + y * 53);
                     if (room[7 - y, x] == 1)
                     {
-                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), floorTiles[randomIndex % floorTiles.Length]);
+                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), constDictionary.floorTiles[randomIndex % constDictionary.floorTiles.Length]);
                         continue;
                     }
 
                     if (7 - y + 1 <= 7 && room[7 - y + 1, x] == 1)
                     {
-                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), wallTiles[randomIndex % wallTiles.Length]);
+                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), constDictionary.wallTiles[randomIndex % constDictionary.wallTiles.Length]);
                         continue;
                     }
 
                     if (x + 1 <= 7 && room[7 - y, x + 1] == 1 && 7 - y - 1 >= 0 && room[7 - y - 1, x] == 1)
                     {
-                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), edgeUpRightTiles[randomIndex % edgeUpRightTiles.Length]);
+                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), constDictionary.edgeUpRightTiles[randomIndex % constDictionary.edgeUpRightTiles.Length]);
                         continue;
                     }
 
                     if (x - 1 >= 0 && room[7 - y, x - 1] == 1 && 7 - y - 1 >= 0 && room[7 - y - 1, x] == 1)
                     {
-                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), edgeUpLeftTiles[randomIndex % edgeUpLeftTiles.Length]);
+                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), constDictionary.edgeUpLeftTiles[randomIndex % constDictionary.edgeUpLeftTiles.Length]);
                         continue;
                     }
 
                     if (7 - y - 1 >= 0 && room[7 - y - 1, x] == 1)
                     {
-                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), edgeUpTiles[randomIndex % edgeUpTiles.Length]);
+                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), constDictionary.edgeUpTiles[randomIndex % constDictionary.edgeUpTiles.Length]);
                         continue;
                     }
 
                     if ((x - 1 >= 0 && room[7 - y, x - 1] == 1) || (x - 1 >= 0 && 7 - y + 1 <= 7 && room[7 - y + 1, x - 1] == 1))
                     {
-                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), edgeLeftTiles[randomIndex % edgeLeftTiles.Length]);
+                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), constDictionary.edgeLeftTiles[randomIndex % constDictionary.edgeLeftTiles.Length]);
                         continue;
                     }
 
                     if ((x + 1 <= 7 && room[7 - y, x + 1] == 1) || (x + 1 <= 7 && 7 - y + 1 <= 7 && room[7 - y + 1, x + 1] == 1))
                     {
-                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), edgeRightTiles[randomIndex % edgeRightTiles.Length]);
+                        tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), constDictionary.edgeRightTiles[randomIndex % constDictionary.edgeRightTiles.Length]);
                         continue;
                     }
 
-                    tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), nothingTiles[randomIndex % nothingTiles.Length]);
+                    tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), constDictionary.nothingTiles[randomIndex % constDictionary.nothingTiles.Length]);
                 }
             }
 
@@ -383,6 +373,27 @@ namespace Assets.Scripts
                     copy.transform.localPosition = new Vector3Int(coordinate.x * 8 + x - 4, coordinate.y * 8 + y - 4, 0);
                     copy.transform.SetParent(shadowCasterContainer.transform);
                 }
+            }
+
+            if (mapTile.entries.up && tilemap.GetTile(new Vector3Int(coordinate.x * 8 + 3, coordinate.y * 8 + 8, 0)) == null)
+            {
+                tilemap.SetTile(new Vector3Int(coordinate.x * 8 + 3, coordinate.y * 8 + 8, 0), constDictionary.tileToEmptyRoom[0]);
+                tilemap.SetTile(new Vector3Int(coordinate.x * 8 + 4, coordinate.y * 8 + 8, 0), constDictionary.tileToEmptyRoom[0]);
+            }
+            if (mapTile.entries.left && tilemap.GetTile(new Vector3Int(coordinate.x * 8 - 1, coordinate.y * 8 + 4, 0)) == null)
+            {
+                tilemap.SetTile(new Vector3Int(coordinate.x * 8 - 1, coordinate.y * 8 + 4, 0), constDictionary.tileToEmptyRoom[1]);
+                tilemap.SetTile(new Vector3Int(coordinate.x * 8 - 1, coordinate.y * 8 + 3, 0), constDictionary.tileToEmptyRoom[1]);
+            }
+            if (mapTile.entries.down && tilemap.GetTile(new Vector3Int(coordinate.x * 8 + 3, coordinate.y * 8 - 1, 0)) == null)
+            {
+                tilemap.SetTile(new Vector3Int(coordinate.x * 8 + 3, coordinate.y * 8 - 1, 0), constDictionary.tileToEmptyRoom[2]);
+                tilemap.SetTile(new Vector3Int(coordinate.x * 8 + 4, coordinate.y * 8 - 1, 0), constDictionary.tileToEmptyRoom[2]);
+            }
+            if (mapTile.entries.right && tilemap.GetTile(new Vector3Int(coordinate.x * 8 + 8, coordinate.y * 8 + 4, 0)) == null)
+            {
+                tilemap.SetTile(new Vector3Int(coordinate.x * 8 + 8, coordinate.y * 8 + 4, 0), constDictionary.tileToEmptyRoom[3]);
+                tilemap.SetTile(new Vector3Int(coordinate.x * 8 + 8, coordinate.y * 8 + 3, 0), constDictionary.tileToEmptyRoom[3]);
             }
         }
 
