@@ -16,7 +16,6 @@ namespace Assets.Scripts
         public GUIRenderer theGUIRenderer;
         public ActionsRenderer actionsRenderer;
         public Camera mainCamera;
-        public GameObject shadowCasterContainer;
         public GameObject shadowCasterPrefab;
 
         [Space(100)]
@@ -359,19 +358,6 @@ namespace Assets.Scripts
                     }
 
                     tilemap.SetTile(new Vector3Int(coordinate.x * 8 + x, coordinate.y * 8 + y, 0), constDictionary.nothingTiles[randomIndex % constDictionary.nothingTiles.Length]);
-                }
-            }
-
-            for (int x = 0; x < 8; x++)
-            {
-                for (int y = 0; y < 8; y++)
-                {
-                    if (room[7 - y, x] != 0) continue;
-
-                    GameObject copy = Instantiate(shadowCasterPrefab, Vector3.zero, Quaternion.identity);
-                    copy.SetActive(true);
-                    copy.transform.localPosition = new Vector3Int(coordinate.x * 8 + x - 4, coordinate.y * 8 + y - 4, 0);
-                    copy.transform.SetParent(shadowCasterContainer.transform);
                 }
             }
 

@@ -27,7 +27,7 @@ namespace Assets.Scripts
             position = new Coordinate(0, 0);
             potions = gameState.upgradeInitPotions;
             spells = gameState.upgradeInitSpells;
-            money = 10;
+            money = 0;
             tokens = 0;
             keys = 0;
             roomCleared = new List<Coordinate>();
