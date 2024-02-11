@@ -18,6 +18,8 @@ namespace Assets.Scripts
         public Sprite trader;
         public Sprite chestClose;
         public Sprite[] enemies;
+        public Sprite[] progressBar;
+        public Sprite[] progressBarPieces;
     }
 }
 

@@ -18,6 +18,8 @@ namespace Assets.Scripts
         private SerializedProperty trader;
         private SerializedProperty chestClose;
         private SerializedProperty enemies;
+        private SerializedProperty progressBar;
+        private SerializedProperty progressBarPieces;
 
         private const float thumbnailSize = 64f;
         private float thumbnailsPerRow;
@@ -36,6 +38,8 @@ namespace Assets.Scripts
             trader = serializedObject.FindProperty("trader");
             chestClose = serializedObject.FindProperty("chestClose");
             enemies = serializedObject.FindProperty("enemies");
+            progressBar = serializedObject.FindProperty("progressBar");
+            progressBarPieces = serializedObject.FindProperty("progressBarPieces");
         }
 
         private void UpdateThumbnailsPerRow()
@@ -60,6 +64,8 @@ namespace Assets.Scripts
             DisplayThumbnailGrid(tileToEmptyRoom);
             DisplayThumbnailGrid(nothingTiles);
             DisplayThumbnailGrid(enemies);
+            DisplayThumbnailGrid(progressBar);
+            DisplayThumbnailGrid(progressBarPieces);
 
             EditorGUILayout.ObjectField(
                 trader,
@@ -86,6 +92,8 @@ namespace Assets.Scripts
             EditorGUILayout.PropertyField(tileToEmptyRoom, true);
             EditorGUILayout.PropertyField(nothingTiles, true);
             EditorGUILayout.PropertyField(enemies, true);
+            EditorGUILayout.PropertyField(progressBar, true);
+            EditorGUILayout.PropertyField(progressBarPieces, true);
             serializedObject.ApplyModifiedProperties();
         }
 

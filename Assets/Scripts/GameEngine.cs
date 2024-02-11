@@ -18,6 +18,13 @@ namespace Assets.Scripts
             NewGame();
         }
 
+        public GameEngine(Config config, GameState gameState)
+        {
+            this.gameState = gameState;
+            this.config = config;
+            NewGame();
+        }
+
         public void NewGame()
         {
             map = new Dictionary<Coordinate, MapTile>();

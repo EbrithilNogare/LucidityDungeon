@@ -98,3 +98,15 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 5972a3e741ab96445a438d64475fb40b, type: 2}
   - {fileID: 21300000, guid: ab0f627ef1113224e987ca3fdf8be822, type: 2}
   - {fileID: 21300000, guid: 7680b0b5d16d122488364b4c414e5ade, type: 2}
+  progressBar:
+  - {fileID: -893743464, guid: 16e52eb6f02aacd43abd14ccc2dd5bfb, type: 3}
+  - {fileID: -847514340, guid: 16e52eb6f02aacd43abd14ccc2dd5bfb, type: 3}
+  - {fileID: 1438755093, guid: 16e52eb6f02aacd43abd14ccc2dd5bfb, type: 3}
+  - {fileID: 1858889042, guid: 16e52eb6f02aacd43abd14ccc2dd5bfb, type: 3}
+  - {fileID: -1985960732, guid: 16e52eb6f02aacd43abd14ccc2dd5bfb, type: 3}
+  - {fileID: -831489780, guid: 16e52eb6f02aacd43abd14ccc2dd5bfb, type: 3}
+  progressBarPieces:
+  - {fileID: 744802332, guid: 97be076977c3a054db8ea8c1d60faf37, type: 3}
+  - {fileID: -1045117875, guid: 97be076977c3a054db8ea8c1d60faf37, type: 3}
+  - {fileID: 1912535033, guid: 97be076977c3a054db8ea8c1d60faf37, type: 3}
+  - {fileID: -522890862, guid: 97be076977c3a054db8ea8c1d60faf37, type: 3}

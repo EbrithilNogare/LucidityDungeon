@@ -1,15 +1,16 @@
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts
 {
     class ShoppingActionsRenderer : MonoBehaviour
     {
-        [Header("Editable")]
+        [Header("Public")]
+        public ShoppingHallConnector shoppingHallConnector;
 
         [Space(100)]
 
-        [Header("From prefab")]
+        [Header("Private")]
         public GameObject initSpells;
         public GameObject spellStrength;
         public GameObject initPotions;
@@ -19,24 +20,115 @@ namespace Assets.Scripts
         public GameObject enemyCount;
         public GameObject exit;
 
-        public void InitSpells() { }
-        public void SpellStrength() { }
-        public void InitPotions() { }
-        public void PotionsStrength() { }
-        public void EnergyUpgrade() { }
-        public void EnemyLevel() { }
-        public void EnemyCount() { }
-        public void Exit() { }
+        private bool nearEnergyTrader = false;
+        private bool nearPotionTrader = false;
+        private bool nearSpellTrader = false;
+        private bool nearEnemyTrader = false;
+        private bool nearBed = false;
 
-        public void RenderShoppingActions(List<ShoppingHallAction> actions, GameState gameState, Config config)
+        public void OnClickInitSpells()
         {
-            initSpells.SetActive(actions.Contains(ShoppingHallAction.upgradeInitSpells));
-            spellStrength.SetActive(actions.Contains(ShoppingHallAction.upgradeSpellLevel));
-            initPotions.SetActive(actions.Contains(ShoppingHallAction.upgradeInitPotions));
-            potionsStrength.SetActive(actions.Contains(ShoppingHallAction.upgradePotionLevel));
-            energyUpgrade.SetActive(actions.Contains(ShoppingHallAction.upgradeEnergyLevel));
-            enemyLevel.SetActive(actions.Contains(ShoppingHallAction.upgradeEnemyLevel));
-            enemyCount.SetActive(actions.Contains(ShoppingHallAction.upgradeEnemyAndTreasureProbability));
+            shoppingHallConnector.OnBuyInShoppingHall(ShoppingHallAction.upgradeInitSpells);
+            RenderShoppingActions();
+        }
+        public void OnClickSpellStrength()
+        {
+            shoppingHallConnector.OnBuyInShoppingHall(ShoppingHallAction.upgradeSpellLevel);
+            RenderShoppingActions();
+        }
+        public void OnClickInitPotions()
+        {
+            shoppingHallConnector.OnBuyInShoppingHall(ShoppingHallAction.upgradeInitPotions);
+            RenderShoppingActions();
+        }
+        public void OnClickPotionsStrength()
+        {
+            shoppingHallConnector.OnBuyInShoppingHall(ShoppingHallAction.upgradePotionLevel);
+            RenderShoppingActions();
+        }
+        public void OnClickEnergyUpgrade()
+        {
+            shoppingHallConnector.OnBuyInShoppingHall(ShoppingHallAction.upgradeEnergyLevel);
+            RenderShoppingActions();
+        }
+        public void OnClickEnemyLevel()
+        {
+            shoppingHallConnector.OnBuyInShoppingHall(ShoppingHallAction.upgradeEnemyLevel);
+            RenderShoppingActions();
+        }
+        public void OnClickEnemyCount()
+        {
+            shoppingHallConnector.OnBuyInShoppingHall(ShoppingHallAction.upgradeEnemyAndTreasureProbability);
+            RenderShoppingActions();
+        }
+        public void OnClickExit()
+        {
+            Store._instance.SavePrefs();
+            SceneManager.LoadScene("Game", LoadSceneMode.Single);
+        }
+
+        public void RenderShoppingActions()
+        {
+            var actions = shoppingHallConnector.gameEngine.GetValidActionsInShoppingHall();
+            initSpells.SetActive(nearSpellTrader && actions.Contains(ShoppingHallAction.upgradeInitSpells));
+            spellStrength.SetActive(nearSpellTrader && actions.Contains(ShoppingHallAction.upgradeSpellLevel));
+            initPotions.SetActive(nearPotionTrader && actions.Contains(ShoppingHallAction.upgradeInitPotions));
+            potionsStrength.SetActive(nearPotionTrader && actions.Contains(ShoppingHallAction.upgradePotionLevel));
+            energyUpgrade.SetActive(nearEnergyTrader && actions.Contains(ShoppingHallAction.upgradeEnergyLevel));
+            enemyLevel.SetActive(nearEnemyTrader && actions.Contains(ShoppingHallAction.upgradeEnemyLevel));
+            enemyCount.SetActive(nearEnemyTrader && actions.Contains(ShoppingHallAction.upgradeEnemyAndTreasureProbability));
+            exit.SetActive(nearBed);
+        }
+
+        public void SetEnergyTraderOn()
+        {
+            nearEnergyTrader = true;
+            RenderShoppingActions();
+        }
+        public void SetEnergyTraderOff()
+        {
+            nearEnergyTrader = false;
+            RenderShoppingActions();
+        }
+        public void SetPotionTraderOn()
+        {
+            nearPotionTrader = true;
+            RenderShoppingActions();
+        }
+        public void SetPotionTraderOff()
+        {
+            nearPotionTrader = false;
+            RenderShoppingActions();
+        }
+        public void SetSpellTraderOn()
+        {
+            nearSpellTrader = true;
+            RenderShoppingActions();
+        }
+        public void SetSpellTraderOff()
+        {
+            nearSpellTrader = false;
+            RenderShoppingActions();
+        }
+        public void SetEnemyTraderOn()
+        {
+            nearEnemyTrader = true;
+            RenderShoppingActions();
+        }
+        public void SetEnemyTraderOff()
+        {
+            nearEnemyTrader = false;
+            RenderShoppingActions();
+        }
+        public void SetBedOn()
+        {
+            nearBed = true;
+            RenderShoppingActions();
+        }
+        public void SetBedOff()
+        {
+            nearBed = false;
+            RenderShoppingActions();
         }
     }
 }

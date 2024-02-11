@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 namespace Assets.Scripts
@@ -44,7 +45,7 @@ namespace Assets.Scripts
             nextActionTimeout = timeToAction;
             renderNewGame = true;
             Config config = new Config();
-            gameEngine = new GameEngine(config);
+            gameEngine = new GameEngine(config, Store._instance.gameState);
             ai = new AI();
             enumerator = SGA.MainGenerator().GetEnumerator();
             actionsInQueue = new List<GameAction>();
@@ -173,6 +174,9 @@ namespace Assets.Scripts
             if (action == GameAction.Exit)
             {
                 Debug.Log("Tokens: " + gameEngine.turnState.tokens + ", Money: " + gameEngine.turnState.money);
+                Store._instance.gameState = gameEngine.gameState;
+                Store._instance.SavePrefs();
+                SceneManager.LoadScene("Shopping hall", LoadSceneMode.Single);
             }
 
             gameEngine.Tick(action);
