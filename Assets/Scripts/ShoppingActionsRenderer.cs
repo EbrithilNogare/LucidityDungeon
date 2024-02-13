@@ -26,6 +26,11 @@ namespace Assets.Scripts
         private bool nearEnemyTrader = false;
         private bool nearBed = false;
 
+        void Start()
+        {
+            RenderShoppingActions();
+        }
+
         public void OnClickInitSpells()
         {
             shoppingHallConnector.OnBuyInShoppingHall(ShoppingHallAction.upgradeInitSpells);
@@ -69,7 +74,7 @@ namespace Assets.Scripts
 
         public void RenderShoppingActions()
         {
-            var actions = shoppingHallConnector.gameEngine.GetValidActionsInShoppingHall();
+            var actions = shoppingHallConnector?.gameEngine?.GetValidActionsInShoppingHall();
             initSpells.SetActive(nearSpellTrader && actions.Contains(ShoppingHallAction.upgradeInitSpells));
             spellStrength.SetActive(nearSpellTrader && actions.Contains(ShoppingHallAction.upgradeSpellLevel));
             initPotions.SetActive(nearPotionTrader && actions.Contains(ShoppingHallAction.upgradeInitPotions));

@@ -22,11 +22,11 @@ namespace Assets.Scripts
         {
             if (optionsMenuOpen)
             {
-                optionsMenu.DOAnchorPos(new Vector2(900, 100), .5f);
+                optionsMenu.DOAnchorPos(new Vector2(900, 30), .5f);
             }
             else
             {
-                optionsMenu.DOAnchorPos(new Vector2(-100, 100), .5f);
+                optionsMenu.DOAnchorPos(new Vector2(-100, 30), .5f);
             }
             optionsMenuOpen = !optionsMenuOpen;
         }

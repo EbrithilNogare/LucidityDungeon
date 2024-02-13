@@ -23,7 +23,7 @@ namespace Assets.Scripts
             hp = 100;
             enemyHp = 0;
             weaponLevel = 0;
-            energy = (byte)config.energy[gameState.upgradeEnemyLevel];
+            energy = (byte)config.energy[gameState.upgradeEnergyLevel];
             position = new Coordinate(0, 0);
             potions = gameState.upgradeInitPotions;
             spells = gameState.upgradeInitSpells;

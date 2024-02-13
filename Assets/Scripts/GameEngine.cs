@@ -216,7 +216,7 @@ namespace Assets.Scripts
             if (turnState.enemyHp <= 0)
             {
                 int enemyLevel = GetEnemyLevel(turnState.position);
-                enemyDefeated(turnState, enemyLevel);
+                return enemyDefeated(turnState, enemyLevel);
             }
 
             return turnState;

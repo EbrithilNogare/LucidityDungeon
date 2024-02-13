@@ -27,8 +27,11 @@ namespace Assets.Scripts
         public TextMeshProUGUI enemyCount;
         public TextMeshProUGUI tokensCount;
 
+        private Config config;
+
         void Start()
         {
+            config = new Config();
             RenderGUI();
         }
 
@@ -42,7 +45,7 @@ namespace Assets.Scripts
 
             potionCount.SetText(gameState.upgradeInitPotions.ToString());
             spellCount.SetText(gameState.upgradeInitSpells.ToString());
-            enemyCount.SetText(gameState.upgradeEnemyAndTreasureProbability.ToString() + "%");
+            enemyCount.SetText((config.enemyAndTreasureProbability[gameState.upgradeEnemyAndTreasureProbability] * 100f) + "%");
             tokensCount.SetText(gameState.lastRunTokens.ToString());
         }
 

@@ -39,6 +39,8 @@ namespace Assets.Scripts
             PlayerPrefs.SetInt("upgradeInitSpells", gameState.upgradeInitSpells);
             PlayerPrefs.SetInt("upgradeEnergyLevel", gameState.upgradeEnergyLevel);
             PlayerPrefs.SetInt("lastRunTokens", gameState.lastRunTokens);
+
+            PlayerPrefs.Save();
         }
 
         public void LoadPrefs()
