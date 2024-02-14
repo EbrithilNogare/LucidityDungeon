@@ -7,8 +7,8 @@
 [![](https://img.shields.io/github/size/EbrithilNogare/LucidityDungeon/Build/WebGL.data?branch=gh-pages&style=for-the-badge&label=Size%20of%20data&cacheSeconds=300)](https://github.com/EbrithilNogare/LucidityDungeon/tree/gh-pages/Build)
 
 ## Versions
-[Lucidity Dungeon WebGL](https://ebrithilnogare.github.io/LucidityDungeon/)
-[Lucidity Dungeon for Android](https://nightly.link/EbrithilNogare/LucidityDungeon/workflows/buildGame/main/Build-Android.zip)
+![Static Badge](https://img.shields.io/badge/Online%20version-555555?style=for-the-badge&logo=webgl&logoColor=white&cacheSeconds=3000&link=https%3A%2F%2Febrithilnogare.github.io%2FLucidityDungeon%2F)
+![Static Badge](https://img.shields.io/badge/Android%20version-555555?style=for-the-badge&logo=android&logoColor=white&cacheSeconds=3000&link=https%3A%2F%2Fnightly.link%2FEbrithilNogare%2FLucidityDungeon%2Fworkflows%2FbuildGame%2Fmain%2FBuild-Android.zip)
 
 ## Wiki
 https://github.com/EbrithilNogare/LucidityDungeon/wiki
