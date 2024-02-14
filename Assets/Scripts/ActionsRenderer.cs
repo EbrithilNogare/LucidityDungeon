@@ -20,7 +20,13 @@ namespace Assets.Scripts
         public GameObject buyPotion;
         public GameObject buySpell;
         public GameObject exit;
-        public TextMeshProUGUI potionValue;
+
+        public TextMeshProUGUI usePotionValue;
+        public TextMeshProUGUI useSpellValue;
+        public TextMeshProUGUI buyTokenValue;
+        public TextMeshProUGUI buyTokenValue2;
+        public TextMeshProUGUI buyPotionValue;
+        public TextMeshProUGUI buySpellValue;
 
         public void Attack() { gameEngineCOnnector.AddActionToQueue(GameAction.Attack, true); }
         public void UsePotion() { gameEngineCOnnector.AddActionToQueue(GameAction.UsePotion, true); }
@@ -31,7 +37,7 @@ namespace Assets.Scripts
         public void BuySpell() { gameEngineCOnnector.AddActionToQueue(GameAction.BuySpell, true); }
         public void Exit() { gameEngineCOnnector.AddActionToQueue(GameAction.Exit, true); }
 
-        public void RenderActions(List<GameAction> actions, TurnState turnState, Config config)
+        public void RenderActions(List<GameAction> actions, TurnState turnState, GameState gameState, Config config)
         {
             attack.SetActive(actions.Contains(GameAction.Attack));
             usePotion.SetActive(actions.Contains(GameAction.UsePotion));
@@ -41,6 +47,13 @@ namespace Assets.Scripts
             buyPotion.SetActive(actions.Contains(GameAction.BuyPotion));
             buySpell.SetActive(actions.Contains(GameAction.BuySpell));
             exit.SetActive(actions.Contains(GameAction.Exit));
+
+            usePotionValue.SetText("");
+            useSpellValue.SetText("");
+            buyTokenValue.SetText(config.tokenPrice.ToString());
+            buyTokenValue2.SetText(config.tokensCountForPrice.ToString());
+            buyPotionValue.SetText(config.potionPrice.ToString());
+            buySpellValue.SetText(config.spellPrice.ToString());
         }
     }
 }

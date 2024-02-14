@@ -12,10 +12,12 @@ namespace Assets.Scripts
 
         public void Continue()
         {
-
+            SceneManager.LoadScene("Game", LoadSceneMode.Single);
         }
         public void NewGame()
         {
+            Store._instance.gameState = new GameState();
+            Store._instance.SavePrefs();
             SceneManager.LoadScene("Game", LoadSceneMode.Single);
         }
         public void Options()
