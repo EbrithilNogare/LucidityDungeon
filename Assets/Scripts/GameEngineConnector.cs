@@ -13,6 +13,10 @@ namespace Assets.Scripts
     {
         [Header("Editable")]
         public GameObject player;
+        public Animator swordHitAnimator;
+        public Animator spellHitAnimator;
+        public Animator clawsHitAnimator;
+        public ParticleSystem OpenChestParticles;
         public Tilemap tilemap;
         public GUIRenderer theGUIRenderer;
         public ActionsRenderer actionsRenderer;
@@ -177,6 +181,18 @@ namespace Assets.Scripts
                 Store._instance.gameState = gameEngine.gameState;
                 Store._instance.SavePrefs();
                 SceneManager.LoadScene("Shopping hall", LoadSceneMode.Single);
+                return;
+            }
+
+            if (action == GameAction.Attack)
+            {
+                swordHitAnimator.Play("sword hit", 0, 0);
+                clawsHitAnimator.Play("claws hit", 0, 0);
+            }
+
+            if (action == GameAction.OpenChest)
+            {
+                OpenChestParticles.Play();
             }
 
             gameEngine.Tick(action);
@@ -186,8 +202,9 @@ namespace Assets.Scripts
                 sprites.Remove(gameEngine.turnState.position, out GameObject sprite);
                 Destroy(sprite);
             }
-            if (action == GameAction.Exit || gameEngine.turnState.lives == 0)
+            if (gameEngine.turnState.lives == 0)
             {
+                // todo die
                 renderNewGame = true;
                 gameEngine.config.seed++;
                 gameEngine.NewGame();
