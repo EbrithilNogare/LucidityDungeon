@@ -25,8 +25,8 @@
         public int playerDefaultLives = 3;
 
         // Trader
-        public int potionPrice = 3;
-        public int spellPrice = 2;
+        public int potionPrice = 2;
+        public int spellPrice = 4;
         public int tokenPrice = 20;
         public int tokensCountForPrice = 2;
 

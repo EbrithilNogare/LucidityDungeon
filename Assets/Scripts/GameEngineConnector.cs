@@ -16,6 +16,7 @@ namespace Assets.Scripts
         public Animator swordHitAnimator;
         public Animator spellHitAnimator;
         public Animator clawsHitAnimator;
+        public ParticleSystem usePotionParticles;
         public ParticleSystem OpenChestParticles;
         public Tilemap tilemap;
         public GUIRenderer theGUIRenderer;
@@ -127,7 +128,7 @@ namespace Assets.Scripts
         {
             if (!context.performed) return;
             if (Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId)) return;
-            var touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+            Vector2 touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
             ResolveClick(touchPosition);
         }
 
@@ -141,28 +142,43 @@ namespace Assets.Scripts
 
         private void PerformNavigation(Coordinate coordinate)
         {
-            var validActions = gameEngine.GetValidActions();
-
-            if (!gameEngine.isEnemyInMyRoom(gameEngine.turnState))
+            if (gameEngine.isEnemyInMyRoom(gameEngine.turnState))
             {
-                if (gameEngine.map.ContainsKey(coordinate))
-                    AddActionToQueue(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate), true);
-                else if (gameEngine.map.ContainsKey(new Coordinate(coordinate.x + 1, coordinate.y)) && gameEngine.map[new Coordinate(coordinate.x + 1, coordinate.y)].entries.left)
-                {
-                    AddActionToQueue(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate), true);
-                }
-                else if (gameEngine.map.ContainsKey(new Coordinate(coordinate.x - 1, coordinate.y)) && gameEngine.map[new Coordinate(coordinate.x - 1, coordinate.y)].entries.right)
-                {
-                    AddActionToQueue(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate), true);
-                }
-                else if (gameEngine.map.ContainsKey(new Coordinate(coordinate.x, coordinate.y + 1)) && gameEngine.map[new Coordinate(coordinate.x, coordinate.y + 1)].entries.down)
-                {
-                    AddActionToQueue(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate), true);
-                }
-                else if (gameEngine.map.ContainsKey(new Coordinate(coordinate.x, coordinate.y - 1)) && gameEngine.map[new Coordinate(coordinate.x, coordinate.y - 1)].entries.up)
-                {
-                    AddActionToQueue(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate), true);
-                }
+                return;
+            }
+
+            if (gameEngine.map.ContainsKey(coordinate))
+            {
+                AddActionToQueue(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate), true);
+                return;
+            }
+
+            var neighborCoordinates = new Coordinate(coordinate.x + 1, coordinate.y);
+            if (gameEngine.map.ContainsKey(neighborCoordinates) && gameEngine.map[neighborCoordinates].entries.left)
+            {
+                AddActionToQueue(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate), true);
+                return;
+            }
+
+            neighborCoordinates = new Coordinate(coordinate.x - 1, coordinate.y);
+            if (gameEngine.map.ContainsKey(neighborCoordinates) && gameEngine.map[neighborCoordinates].entries.right)
+            {
+                AddActionToQueue(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate), true);
+                return;
+            }
+
+            neighborCoordinates = new Coordinate(coordinate.x, coordinate.y + 1);
+            if (gameEngine.map.ContainsKey(neighborCoordinates) && gameEngine.map[neighborCoordinates].entries.down)
+            {
+                AddActionToQueue(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate), true);
+                return;
+            }
+
+            neighborCoordinates = new Coordinate(coordinate.x, coordinate.y - 1);
+            if (gameEngine.map.ContainsKey(neighborCoordinates) && gameEngine.map[neighborCoordinates].entries.up)
+            {
+                AddActionToQueue(gameEngine.GetPathFromSourceToGoal(gameEngine.turnState.position, coordinate), true);
+                return;
             }
         }
 
@@ -175,19 +191,19 @@ namespace Assets.Scripts
         {
             var countOfRoomCleared = gameEngine.turnState.roomCleared.Count;
 
-            if (action == GameAction.Exit)
-            {
-                Debug.Log("Tokens: " + gameEngine.turnState.tokens + ", Money: " + gameEngine.turnState.money);
-                Store._instance.gameState = gameEngine.gameState;
-                Store._instance.SavePrefs();
-                SceneManager.LoadScene("Shopping hall", LoadSceneMode.Single);
-                return;
-            }
-
             if (action == GameAction.Attack)
             {
                 swordHitAnimator.Play("sword hit", 0, 0);
-                clawsHitAnimator.Play("claws hit", 0, 0);
+            }
+
+            if (action == GameAction.UseSpell)
+            {
+                spellHitAnimator.Play("spell hit", 0, 0);
+            }
+
+            if (action == GameAction.UsePotion)
+            {
+                usePotionParticles.Play();
             }
 
             if (action == GameAction.OpenChest)
@@ -197,11 +213,26 @@ namespace Assets.Scripts
 
             gameEngine.Tick(action);
 
+
+            if (action == GameAction.Attack && gameEngine.turnState.enemyHp > 0)
+            {
+                clawsHitAnimator.Play("claws hit", 0, 0);
+            }
+
             if (countOfRoomCleared < gameEngine.turnState.roomCleared.Count)
             {
                 sprites.Remove(gameEngine.turnState.position, out GameObject sprite);
                 Destroy(sprite);
             }
+
+            if (action == GameAction.Exit)
+            {
+                Store._instance.gameState = gameEngine.gameState;
+                Store._instance.SavePrefs();
+                SceneManager.LoadScene("Shopping hall", LoadSceneMode.Single);
+                return;
+            }
+
             if (gameEngine.turnState.lives == 0)
             {
                 // todo die
