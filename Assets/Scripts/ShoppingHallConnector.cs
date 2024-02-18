@@ -1,5 +1,4 @@
 using DG.Tweening;
-using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -14,17 +13,21 @@ namespace Assets.Scripts
         public GameObject player;
         public Camera mainCamera;
         public GameEngine gameEngine;
+        public TilemapAStar tilemapAStar;
 
         [Space(100)]
 
         [Header("From prefab")]
         public float duration;
 
+        private Sequence sequence;
+
         void Start()
         {
             Config config = new Config();
             gameEngine = new GameEngine(config);
             gameEngine.gameState = Store._instance.gameState;
+            sequence = DOTween.Sequence();
         }
 
         public void Click(InputAction.CallbackContext context)
@@ -47,11 +50,31 @@ namespace Assets.Scripts
         {
             float cameraSize = mainCamera.orthographicSize;
             Vector3 worldMousePosition = mainCamera.ScreenToWorldPoint(new Vector3(position.x, position.y, cameraSize));
-            var coordinate = new Coordinate((int)Math.Round(worldMousePosition.x), (int)Math.Round(worldMousePosition.y));
 
-            // todo
             DOTween.Kill(player.transform, complete: false);
-            player.transform.DOMove(new Vector3(worldMousePosition.x, worldMousePosition.y + .5f, player.transform.position.z), duration).SetSpeedBased(true);
+
+            Vector2Int start = new Vector2Int((int)Mathf.Round(player.transform.position.x - .5f), (int)Mathf.Round(player.transform.position.y - 1));
+            Vector2Int end = new Vector2Int((int)Mathf.Floor(worldMousePosition.x), (int)Mathf.Floor(worldMousePosition.y));
+            var path = tilemapAStar.FindPath(start, end);
+            Vector2Int currentPosition = start;
+
+            sequence.Kill(complete: false);
+            sequence = DOTween.Sequence();
+
+            foreach (var direction in path)
+            {
+                switch (direction)
+                {
+                    case TilemapAStar.Direction.Up: currentPosition += Vector2Int.up; break;
+                    case TilemapAStar.Direction.Down: currentPosition += Vector2Int.down; break;
+                    case TilemapAStar.Direction.Left: currentPosition += Vector2Int.left; break;
+                    case TilemapAStar.Direction.Right: currentPosition += Vector2Int.right; break;
+                }
+
+                sequence.Append(player.transform.DOMove(new Vector3(currentPosition.x + .5f, currentPosition.y + 1, player.transform.position.z), duration).SetEase(Ease.Linear));
+            }
+
+            tilemapAStar.PrintDebug(path, new Vector2Int((int)player.transform.position.x, (int)player.transform.position.y));
         }
 
         public void OnBuyInShoppingHall(ShoppingHallAction action)
