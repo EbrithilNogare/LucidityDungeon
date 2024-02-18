@@ -18,6 +18,11 @@ namespace Assets.Scripts
         public Animator clawsHitAnimator;
         public ParticleSystem usePotionParticles;
         public ParticleSystem OpenChestParticles;
+        public AudioSource swordSound;
+        public AudioSource spellSound;
+        public AudioSource healSound;
+        public AudioSource buySound;
+        public AudioSource openChestSound;
         public Tilemap tilemap;
         public GUIRenderer theGUIRenderer;
         public ActionsRenderer actionsRenderer;
@@ -56,6 +61,17 @@ namespace Assets.Scripts
             actionsInQueue = new List<GameAction>();
             alreadyRenderedRooms = new HashSet<Coordinate>();
             sprites = new Dictionary<Coordinate, GameObject>();
+            SetAudioVolume();
+        }
+
+        private void SetAudioVolume()
+        {
+            float soundVolume = Store._instance.sounds == 0 ? 0 : Mathf.Pow(10f, Mathf.Lerp(-40f, 0f, Store._instance.sounds / 5f) / 20f);
+            swordSound.volume = soundVolume;
+            spellSound.volume = soundVolume;
+            healSound.volume = soundVolume;
+            buySound.volume = soundVolume;
+            openChestSound.volume = soundVolume;
         }
 
         private void Update()
@@ -194,21 +210,30 @@ namespace Assets.Scripts
             if (action == GameAction.Attack)
             {
                 swordHitAnimator.Play("sword hit", 0, 0);
+                swordSound.Play();
             }
 
             if (action == GameAction.UseSpell)
             {
                 spellHitAnimator.Play("spell hit", 0, 0);
+                spellSound.Play();
             }
 
             if (action == GameAction.UsePotion)
             {
                 usePotionParticles.Play();
+                healSound.Play();
+            }
+
+            if (action == GameAction.BuyPotion || action == GameAction.BuySpell || action == GameAction.BuyToken)
+            {
+                buySound.Play();
             }
 
             if (action == GameAction.OpenChest)
             {
                 OpenChestParticles.Play();
+                openChestSound.Play();
             }
 
             gameEngine.Tick(action);

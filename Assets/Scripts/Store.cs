@@ -6,7 +6,17 @@ namespace Assets.Scripts
     {
         public static Store _instance;
 
-        public int volume;
+        private int _volume;
+        public int volume
+        {
+            get { return _volume; }
+            set
+            {
+                float mappedValue = value == 0 ? 0 : Mathf.Pow(10f, Mathf.Lerp(-40f, 0f, value / 5f) / 20f);
+                transform.GetComponent<AudioSource>().volume = mappedValue;
+                _volume = value;
+            }
+        }
         public int sounds;
         public GameState gameState;
 
@@ -46,8 +56,8 @@ namespace Assets.Scripts
         public void LoadPrefs()
         {
             // Settings
-            volume = PlayerPrefs.GetInt("volume", 2);
-            sounds = PlayerPrefs.GetInt("sounds", 2);
+            volume = PlayerPrefs.GetInt("volume", 3);
+            sounds = PlayerPrefs.GetInt("sounds", 3);
 
             // Game
             int upgradeEnemyAndTreasureProbability = PlayerPrefs.GetInt("upgradeEnemyAndTreasureProbability", 0);
