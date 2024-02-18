@@ -243,7 +243,6 @@ namespace Assets.Scripts
 
             if (action == GameAction.GoUp || action == GameAction.GoLeft || action == GameAction.GoDown || action == GameAction.GoRight)
             {
-                // render room
                 var pos = gameEngine.turnState.position;
                 gameEngine.checkMapTile(pos);
                 RenderRoom(gameEngine.map[pos], pos);
