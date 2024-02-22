@@ -10,15 +10,13 @@ namespace Assets.Scripts
 
         private bool optionsMenuOpen = false;
 
-        public void Continue()
+        public void Play()
         {
             SceneManager.LoadScene("Game", LoadSceneMode.Single);
         }
-        public void NewGame()
+        public void Tutorial()
         {
-            Store._instance.gameState = new GameState();
-            Store._instance.SavePrefs();
-            SceneManager.LoadScene("Game", LoadSceneMode.Single);
+            SceneManager.LoadScene("Tutorial", LoadSceneMode.Single);
         }
         public void Options()
         {
