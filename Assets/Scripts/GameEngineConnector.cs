@@ -224,10 +224,14 @@ namespace Assets.Scripts
 
                 float previousMagnitude = (touchZeroPrevPosition - touchOnePrevPosition).magnitude;
                 float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
-
                 float difference = currentMagnitude - previousMagnitude;
 
-                resolveZoom(difference * .01f);
+                if (Mathf.Abs(difference) >= 10)
+                {
+                    return;
+                }
+
+                resolveZoom(difference * .02f);
             }
             else
             {

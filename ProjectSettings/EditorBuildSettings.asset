@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Shopping hall.unity
     guid: 13ca7a79cc45f184da7ce1986bf25ed0
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: e4ec5fe159d2f3949bf0ad9364008ec5
   m_configObjects: {}
