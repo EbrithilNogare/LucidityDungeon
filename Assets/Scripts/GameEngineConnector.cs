@@ -116,6 +116,8 @@ namespace Assets.Scripts
 
                 renderNewGame = false;
             }
+
+            CheckPinch();
         }
 
         public void AddActionToQueue(GameAction gameAction, bool removeOtherActions = false)
@@ -200,7 +202,31 @@ namespace Assets.Scripts
 
         public void Zoom(InputAction.CallbackContext context)
         {
-            mainCamera.orthographicSize = Math.Min(Math.Max(mainCamera.orthographicSize + context.ReadValue<float>() / -120, minCameraSize), maxCameraSize);
+            resolveZoom(context.ReadValue<float>() / -120);
+        }
+
+        private void CheckPinch()
+        {
+            if (Input.touchCount == 2)
+            {
+                Touch touchZero = Input.GetTouch(0);
+                Touch touchOne = Input.GetTouch(1);
+
+                Vector2 touchZeroPrevPosition = touchZero.position - touchZero.deltaPosition;
+                Vector2 touchOnePrevPosition = touchOne.position - touchOne.deltaPosition;
+
+                float previousMagnitude = (touchZeroPrevPosition - touchOnePrevPosition).magnitude;
+                float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
+
+                float difference = currentMagnitude - previousMagnitude;
+
+                resolveZoom(difference * .01f);
+            }
+        }
+
+        public void resolveZoom(float difference)
+        {
+            mainCamera.orthographicSize = Math.Min(Math.Max(mainCamera.orthographicSize + difference, minCameraSize), maxCameraSize);
         }
 
         private void DoGameTick(GameAction action)

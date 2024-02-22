@@ -6992,7 +6992,7 @@ MonoBehaviour:
     m_ActionId: 8759182f-f9b0-43bf-989e-73b78ade185e
     m_ActionName: Gameplay/New action
   m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
+  m_DefaultControlScheme: Touch
   m_DefaultActionMap: Gameplay
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
