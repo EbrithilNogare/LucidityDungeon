@@ -47,8 +47,9 @@ namespace Assets.Scripts
         private bool renderNewGame;
         private IEnumerator<int> enumerator;
         private HashSet<Coordinate> alreadyRenderedRooms;
-
+        private bool firstTouch = true;
         private List<GameAction> actionsInQueue;
+
 
         void Start()
         {
@@ -209,6 +210,12 @@ namespace Assets.Scripts
         {
             if (Input.touchCount == 2)
             {
+                if (firstTouch)
+                {
+                    firstTouch = false;
+                    return;
+                }
+
                 Touch touchZero = Input.GetTouch(0);
                 Touch touchOne = Input.GetTouch(1);
 
@@ -221,6 +228,10 @@ namespace Assets.Scripts
                 float difference = currentMagnitude - previousMagnitude;
 
                 resolveZoom(difference * .01f);
+            }
+            else
+            {
+                firstTouch = true;
             }
         }
 
