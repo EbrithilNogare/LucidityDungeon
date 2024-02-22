@@ -88,7 +88,7 @@ namespace Assets.Scripts
             }
 
             nextActionTimeout -= Time.deltaTime;
-            if (actionsInQueue.Count > 0 && nextActionTimeout < 0)
+            if (actionsInQueue.Count > 0 && (ActionCanEvaluateFast(actionsInQueue[0]) || nextActionTimeout < 0))
             {
                 nextActionTimeout = timeToAction;
                 var action = actionsInQueue[0];
@@ -119,6 +119,18 @@ namespace Assets.Scripts
             }
 
             CheckPinch();
+        }
+
+        private bool ActionCanEvaluateFast(GameAction gameAction)
+        {
+            switch (gameAction)
+            {
+                case GameAction.BuyPotion:
+                case GameAction.BuySpell:
+                case GameAction.BuyToken:
+                    return true;
+            }
+            return false;
         }
 
         public void AddActionToQueue(GameAction gameAction, bool removeOtherActions = false)
