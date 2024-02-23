@@ -28,6 +28,11 @@ namespace Assets.Scripts
             gameEngine = new GameEngine(config);
             gameEngine.gameState = Store._instance.gameState;
             sequence = DOTween.Sequence();
+
+            if (gameEngine.gameState.lastRunTokens > 0)
+            {
+                Store._instance.HandleAchievementProgress(Store.AchievementProgressType.Dreamwalker);
+            }
         }
 
         public void Click(InputAction.CallbackContext context)
@@ -83,6 +88,12 @@ namespace Assets.Scripts
             Store._instance.gameState = gameEngine.gameState;
             Store._instance.SavePrefs();
             shoppingHallGUIRenderer.RenderGUI();
+
+            Config config = new Config();
+            if ((action == ShoppingHallAction.upgradeEnemyLevel || action == ShoppingHallAction.upgradeEnemyAndTreasureProbability) && gameEngine.gameState.upgradeEnemyLevel == config.enemyLevelPrices.Length - 1 && gameEngine.gameState.upgradeEnemyAndTreasureProbability == config.enemyProbabilityPrices.Length - 1)
+            {
+                Store._instance.HandleAchievementProgress(Store.AchievementProgressType.HardcoreWarrior);
+            }
         }
     }
 }
