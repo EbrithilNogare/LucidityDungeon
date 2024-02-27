@@ -2,7 +2,7 @@
 {
     class Config
     {
-        public int seed = 5393; // balanced prime number
+        //public int seed = 5393; // balanced prime number
 
         public int[] energy = new int[] { 60, 90, 120, 160, 200 };
 

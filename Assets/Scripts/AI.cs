@@ -15,8 +15,13 @@ namespace Assets.Scripts
         {
             List<GameAction> possibleMoves = gameEngine.GetValidActions();
 
+            // trader
             if (possibleMoves.Contains(GameAction.BuyToken)) return GameAction.BuyToken;
+            if (possibleMoves.Contains(GameAction.BuySpell)) return GameAction.BuySpell;
+            if (possibleMoves.Contains(GameAction.BuyPotion)) return GameAction.BuyPotion;
+            // chest
             if (possibleMoves.Contains(GameAction.OpenChest)) return GameAction.OpenChest;
+            // fight
             if (possibleMoves.Contains(GameAction.UseSpell) && gameEngine.turnState.hp < gameEngine.config.playerDefaultHealthPoints / 2) return GameAction.UseSpell;
             if (possibleMoves.Contains(GameAction.UsePotion)
                 && gameEngine.turnState.hp + gameEngine.config.healthPotionRegeneration[gameEngine.gameState.upgradePotionLevel] < gameEngine.config.playerDefaultHealthPoints)
@@ -24,15 +29,14 @@ namespace Assets.Scripts
                 return GameAction.UsePotion;
             }
             if (possibleMoves.Contains(GameAction.Attack)) return GameAction.Attack;
-
+            // go home
             var distanceAndActionToExit = gameEngine.DistanceToExit(gameEngine.turnState);
-            if (gameEngine.turnState.energy - 5 <= distanceAndActionToExit.Item1)
+            if (gameEngine.turnState.energy - 5 <= distanceAndActionToExit.Item1 || gameEngine.turnState.lives == 1)
             {
                 return distanceAndActionToExit.Item2;
             }
-
             possibleMoves.Remove(GameAction.Exit);
-
+            // move
             var x = gameEngine.turnState.position.x;
             var y = gameEngine.turnState.position.y;
             var possibleGoings = new List<GameAction>();

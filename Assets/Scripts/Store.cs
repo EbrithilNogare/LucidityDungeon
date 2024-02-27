@@ -92,43 +92,44 @@ namespace Assets.Scripts
 
         public enum AchievementProgressType
         {
-            Dreamwalker,
-            Keymaster,
-            TokenHoarder,
-            Energized,
-            ArcaneScholar,
-            PotionConnoisseur,
-            HardcoreWarrior,
+            CompleteDungeon,
+            OpenManyChests,
+            GetManyCoins,
+            BuyAllEnergyUpgrades,
+            BuyAllSpellUpgrades,
+            BuyAllPotionUpgrades,
+            BuyAllEnemyUpgrades,
             LuckyJoe,
         }
 
-        private Dictionary<string, string> AchievementsText = new Dictionary<string, string> {
-            { "Dreamwalker", "Successfuly complete dream run." },
-            { "Keymaster", "Open 20 chests in single dream run." },
-            { "Token Hoarder", "Accumulate 500 tokens." },
-            { "Energized", "Purchase full energy upgrade." },
-            { "Arcane Scholar", "Collect all init spells and upgrades." },
-            { "Potion Connoisseur", "Acquire all potions and upgrades." },
-            { "Hardcore Warrior", "Call as many strongest beasts into dungeon as possible." },
-            { "End?", "Or not?" },
+        private Dictionary<AchievementProgressType, (string title, string description)> AchievementsText = new()
+        {
+            { AchievementProgressType.CompleteDungeon, ("Dreamwalker", "Successfully complete dream run.") },
+            { AchievementProgressType.OpenManyChests, ("Keymaster", "Open 10 chests in single dream run.") },
+            { AchievementProgressType.GetManyCoins, ("Token Hoarder", "Accumulate 500 coins.") },
+            { AchievementProgressType.BuyAllEnergyUpgrades, ("Energized", "Purchase full energy upgrade.") },
+            { AchievementProgressType.BuyAllSpellUpgrades, ("Arcane Scholar", "Collect all init spells and upgrades.") },
+            { AchievementProgressType.BuyAllPotionUpgrades, ("Potion Connoisseur", "Acquire all potions and upgrades.") },
+            { AchievementProgressType.BuyAllEnemyUpgrades, ("Hardcore Warrior", "Call as many strongest beasts into dungeon as possible.") },
+            { AchievementProgressType.LuckyJoe, ("Lucky Joe", "Survive with only 1 HP") },
         };
 
-        // Store._instance.HandleAchievementProgress(Store.AchievementProgressType.ArcaneScholar);
-
+        // call like this:
+        // Store._instance.HandleAchievementProgress(Store.AchievementProgressType.CompleteDungeon);
         public void HandleAchievementProgress(AchievementProgressType achievementProgressType)
         {
             int achievementProgressBefore = achievementProgress;
 
-            // save data
+            // save binary data
             switch (achievementProgressType)
             {
-                case AchievementProgressType.Dreamwalker: achievementProgress |= (1 << 0); break;
-                case AchievementProgressType.Keymaster: achievementProgress |= (1 << 1); break;
-                case AchievementProgressType.TokenHoarder: achievementProgress |= (1 << 2); break;
-                case AchievementProgressType.Energized: achievementProgress |= (1 << 3); break;
-                case AchievementProgressType.ArcaneScholar: achievementProgress |= (1 << 4); break;
-                case AchievementProgressType.PotionConnoisseur: achievementProgress |= (1 << 5); break;
-                case AchievementProgressType.HardcoreWarrior: achievementProgress |= (1 << 6); break;
+                case AchievementProgressType.CompleteDungeon: achievementProgress |= (1 << 0); break;
+                case AchievementProgressType.OpenManyChests: achievementProgress |= (1 << 1); break;
+                case AchievementProgressType.GetManyCoins: achievementProgress |= (1 << 2); break;
+                case AchievementProgressType.BuyAllEnergyUpgrades: achievementProgress |= (1 << 3); break;
+                case AchievementProgressType.BuyAllSpellUpgrades: achievementProgress |= (1 << 4); break;
+                case AchievementProgressType.BuyAllPotionUpgrades: achievementProgress |= (1 << 5); break;
+                case AchievementProgressType.BuyAllEnemyUpgrades: achievementProgress |= (1 << 6); break;
                 case AchievementProgressType.LuckyJoe: achievementProgress |= (1 << 7); break;
             }
 
@@ -141,26 +142,15 @@ namespace Assets.Scripts
 
             // show badge
             card.SetActive(true);
-            switch (achievementProgressType)
-            {
-                case AchievementProgressType.Dreamwalker: title.SetText("Dreamwalker"); label.SetText(AchievementsText["Dreamwalker"]); break;
-                //case AchievementProgressType.Keymaster: title.SetText("Keymaster"); label.SetText(AchievementsText["Keymaster"]); break;
-                //case AchievementProgressType.TokenHoarder: title.SetText("Token Hoarder"); label.SetText(AchievementsText["Token Hoarder"]); break;
-                //case AchievementProgressType.Energized: title.SetText("Energized"); label.SetText(AchievementsText["Energized"]); break;
-                //case AchievementProgressType.ArcaneScholar: title.SetText("Arcane Scholar"); label.SetText(AchievementsText["Arcane Scholar"]); break;
-                //case AchievementProgressType.PotionConnoisseur: title.SetText("Potion Connoisseur"); label.SetText(AchievementsText["Potion Connoisseur"]); break;
-                case AchievementProgressType.HardcoreWarrior: title.SetText("Hardcore Warrior"); label.SetText(AchievementsText["Hardcore Warrior"]); break;
-                    //case AchievementProgressType.LuckyJoe: title.SetText("End?"); label.SetText(AchievementsText["End?"]); break;
-            }
+            title.SetText(AchievementsText[achievementProgressType].title);
+            label.SetText(AchievementsText[achievementProgressType].description);
+
             card.transform.localScale = new Vector3(0, 0, 1);
-            Sequence sequence = DOTween.Sequence();
+            var sequence = DOTween.Sequence();
             sequence.Append(card.transform.DOScale(new Vector3(1, 1, 1), 1f).SetEase(Ease.InOutExpo));
             sequence.Append(card.transform.DOScale(new Vector3(1.05f, 1.05f, 1f), 4f).SetEase(Ease.Linear));
             sequence.Append(card.transform.DOScale(new Vector3(0, 0, 1), .5f).SetEase(Ease.InOutExpo));
-            sequence.OnComplete(() =>
-            {
-                card.SetActive(false);
-            });
+            sequence.OnComplete(() => { card.SetActive(false); });
         }
     }
 }

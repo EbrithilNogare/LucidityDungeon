@@ -47,8 +47,8 @@ namespace Assets.Scripts
         private bool renderNewGame;
         private IEnumerator<int> enumerator;
         private HashSet<Coordinate> alreadyRenderedRooms;
-        private bool firstTouch = true;
         private List<GameAction> actionsInQueue;
+        private int openedChestsCount;
 
 
         void Start()
@@ -56,10 +56,11 @@ namespace Assets.Scripts
             nextActionTimeout = timeToAction;
             renderNewGame = true;
             Config config = new Config();
-            gameEngine = new GameEngine(config, Store._instance.gameState);
+            gameEngine = new GameEngine(config, Store._instance.gameState, UnityEngine.Random.Range(32, 1048576));
             ai = new AI();
             enumerator = SGA.MainGenerator().GetEnumerator();
             actionsInQueue = new List<GameAction>();
+            openedChestsCount = 0;
             alreadyRenderedRooms = new HashSet<Coordinate>();
             sprites = new Dictionary<Coordinate, GameObject>();
             SetAudioVolume();
@@ -222,12 +223,6 @@ namespace Assets.Scripts
         {
             if (Input.touchCount == 2)
             {
-                if (firstTouch)
-                {
-                    firstTouch = false;
-                    return;
-                }
-
                 Touch touchZero = Input.GetTouch(0);
                 Touch touchOne = Input.GetTouch(1);
 
@@ -245,15 +240,14 @@ namespace Assets.Scripts
 
                 resolveZoom(difference * .02f);
             }
-            else
-            {
-                firstTouch = true;
-            }
         }
 
         public void resolveZoom(float difference)
         {
-            mainCamera.orthographicSize = Math.Min(Math.Max(mainCamera.orthographicSize + difference, minCameraSize), maxCameraSize);
+            if (mainCamera)
+            {
+                mainCamera.orthographicSize = Math.Min(Math.Max(mainCamera.orthographicSize + difference, minCameraSize), maxCameraSize);
+            }
         }
 
         private void DoGameTick(GameAction action)
@@ -287,10 +281,26 @@ namespace Assets.Scripts
             {
                 OpenChestParticles.Play();
                 openChestSound.Play();
+
+                openedChestsCount++;
+                if (openedChestsCount == 10)
+                {
+                    Store._instance.HandleAchievementProgress(Store.AchievementProgressType.OpenManyChests);
+                }
             }
 
             gameEngine.Tick(action);
 
+
+            if (gameEngine.turnState.money >= 500)
+            {
+                Store._instance.HandleAchievementProgress(Store.AchievementProgressType.GetManyCoins);
+            }
+
+            if (gameEngine.turnState.hp == 1)
+            {
+                Store._instance.HandleAchievementProgress(Store.AchievementProgressType.LuckyJoe);
+            }
 
             if (action == GameAction.Attack && gameEngine.turnState.enemyHp > 0)
             {
@@ -315,7 +325,6 @@ namespace Assets.Scripts
             {
                 // todo die
                 renderNewGame = true;
-                gameEngine.config.seed++;
                 gameEngine.NewGame();
             }
 

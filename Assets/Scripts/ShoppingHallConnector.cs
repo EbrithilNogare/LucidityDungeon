@@ -31,7 +31,7 @@ namespace Assets.Scripts
 
             if (gameEngine.gameState.lastRunTokens > 0)
             {
-                Store._instance.HandleAchievementProgress(Store.AchievementProgressType.Dreamwalker);
+                Store._instance.HandleAchievementProgress(Store.AchievementProgressType.CompleteDungeon);
             }
         }
 
@@ -90,9 +90,21 @@ namespace Assets.Scripts
             shoppingHallGUIRenderer.RenderGUI();
 
             Config config = new Config();
+            if (action == ShoppingHallAction.upgradeEnergyLevel && gameEngine.gameState.upgradeEnergyLevel == config.energyPrices.Length - 1)
+            {
+                Store._instance.HandleAchievementProgress(Store.AchievementProgressType.BuyAllEnergyUpgrades);
+            }
+            if ((action == ShoppingHallAction.upgradeInitSpells || action == ShoppingHallAction.upgradeSpellLevel) && gameEngine.gameState.upgradeInitSpells == config.upgradeInitSpellsPrices.Length - 1 && gameEngine.gameState.upgradeSpellLevel == config.upgradeSpellPrices.Length - 1)
+            {
+                Store._instance.HandleAchievementProgress(Store.AchievementProgressType.BuyAllSpellUpgrades);
+            }
+            if ((action == ShoppingHallAction.upgradeInitPotions || action == ShoppingHallAction.upgradePotionLevel) && gameEngine.gameState.upgradeInitPotions == config.upgradeInitPotionsPrices.Length - 1 && gameEngine.gameState.upgradePotionLevel == config.upgradePotionPrices.Length - 1)
+            {
+                Store._instance.HandleAchievementProgress(Store.AchievementProgressType.BuyAllPotionUpgrades);
+            }
             if ((action == ShoppingHallAction.upgradeEnemyLevel || action == ShoppingHallAction.upgradeEnemyAndTreasureProbability) && gameEngine.gameState.upgradeEnemyLevel == config.enemyLevelPrices.Length - 1 && gameEngine.gameState.upgradeEnemyAndTreasureProbability == config.enemyProbabilityPrices.Length - 1)
             {
-                Store._instance.HandleAchievementProgress(Store.AchievementProgressType.HardcoreWarrior);
+                Store._instance.HandleAchievementProgress(Store.AchievementProgressType.BuyAllEnemyUpgrades);
             }
         }
     }

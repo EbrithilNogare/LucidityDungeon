@@ -182,9 +182,9 @@ namespace Assets.Scripts
         static int FitnessFunction(List<int> individual)
         {
             Config config = MapToConfig(individual);
-            config.seed = UnityEngine.Random.Range(0, 10000);
+            int seed = UnityEngine.Random.Range(0, 10000);
 
-            var gameEngine = new GameEngine(config);
+            var gameEngine = new GameEngine(config, new GameState(), seed);
             var ai = new AI();
 
             List<int> upgradeTimes = new List<int>();

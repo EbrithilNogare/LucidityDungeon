@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
@@ -92,17 +93,6 @@ namespace Assets.Scripts
 
         public void RenderShoppingActions()
         {
-            var actions = shoppingHallConnector?.gameEngine?.GetValidActionsInShoppingHall();
-            initSpells.SetActive(nearSpellTrader && actions.Contains(ShoppingHallAction.upgradeInitSpells));
-            spellStrength.SetActive(nearSpellTrader && actions.Contains(ShoppingHallAction.upgradeSpellLevel));
-            initPotions.SetActive(nearPotionTrader && actions.Contains(ShoppingHallAction.upgradeInitPotions));
-            potionsStrength.SetActive(nearPotionTrader && actions.Contains(ShoppingHallAction.upgradePotionLevel));
-            energyUpgrade.SetActive(nearEnergyTrader && actions.Contains(ShoppingHallAction.upgradeEnergyLevel));
-            enemyLevel.SetActive(nearEnemyTrader && actions.Contains(ShoppingHallAction.upgradeEnemyLevel));
-            enemyCount.SetActive(nearEnemyTrader && actions.Contains(ShoppingHallAction.upgradeEnemyAndTreasureProbability));
-            toDungeon.SetActive(nearBed);
-            exit.SetActive(nearBed);
-
             var gameState = shoppingHallConnector?.gameEngine?.gameState ?? new GameState();
             initSpellsPrice.SetText(config.upgradeInitSpellsPrices[(gameState.upgradeInitSpells + 1) % config.upgradeInitSpellsPrices.Length].ToString());
             spellStrengthPrice.SetText(config.upgradeSpellPrices[(gameState.upgradeSpellLevel + 1) % config.upgradeSpellPrices.Length].ToString());
@@ -111,6 +101,29 @@ namespace Assets.Scripts
             energyUpgradePrice.SetText(config.energyPrices[(gameState.upgradeEnergyLevel + 1) % config.energyPrices.Length].ToString());
             enemyLevelPrice.SetText(config.enemyLevelPrices[(gameState.upgradeEnemyLevel + 1) % config.enemyLevelPrices.Length].ToString());
             enemyCountPrice.SetText(config.enemyProbabilityPrices[(gameState.upgradeEnemyAndTreasureProbability + 1) % config.enemyProbabilityPrices.Length].ToString());
+
+
+            var actions = shoppingHallConnector?.gameEngine?.GetValidActionsInShoppingHall();
+            initSpells.SetActive(nearSpellTrader && initSpellsPrice.text != "0");
+            if (nearSpellTrader) initSpells.GetComponent<Button>().interactable = actions.Contains(ShoppingHallAction.upgradeInitSpells);
+            spellStrength.SetActive(nearSpellTrader && spellStrengthPrice.text != "0");
+            if (nearSpellTrader) spellStrength.GetComponent<Button>().interactable = actions.Contains(ShoppingHallAction.upgradeSpellLevel);
+
+            initPotions.SetActive(nearPotionTrader && initPotionsPrice.text != "0");
+            if (nearPotionTrader) initPotions.GetComponent<Button>().interactable = actions.Contains(ShoppingHallAction.upgradeInitPotions);
+            potionsStrength.SetActive(nearPotionTrader && potionsStrengthPrice.text != "0");
+            if (nearPotionTrader) potionsStrength.GetComponent<Button>().interactable = actions.Contains(ShoppingHallAction.upgradePotionLevel);
+
+            energyUpgrade.SetActive(nearEnergyTrader && energyUpgradePrice.text != "0");
+            if (nearEnergyTrader) energyUpgrade.GetComponent<Button>().interactable = actions.Contains(ShoppingHallAction.upgradeEnergyLevel);
+
+            enemyLevel.SetActive(nearEnemyTrader && enemyLevelPrice.text != "0");
+            if (nearEnemyTrader) enemyLevel.GetComponent<Button>().interactable = actions.Contains(ShoppingHallAction.upgradeEnemyLevel);
+            enemyCount.SetActive(nearEnemyTrader && enemyCountPrice.text != "0");
+            if (nearEnemyTrader) enemyCount.GetComponent<Button>().interactable = actions.Contains(ShoppingHallAction.upgradeEnemyAndTreasureProbability);
+
+            toDungeon.SetActive(nearBed);
+            exit.SetActive(nearBed);
         }
 
         public void SetEnergyTraderOn()

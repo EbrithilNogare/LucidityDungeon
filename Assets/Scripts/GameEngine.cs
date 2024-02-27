@@ -10,25 +10,22 @@ namespace Assets.Scripts
         public TurnState turnState;
         public Config config;
         public Dictionary<Coordinate, MapTile> map;
+        public int seed;
 
-        public GameEngine(Config config)
-        {
-            gameState = new GameState();
-            this.config = config;
-            NewGame();
-        }
-
-        public GameEngine(Config config, GameState gameState)
+        public GameEngine(Config config) : this(config, new GameState()) { }
+        public GameEngine(Config config, GameState gameState) : this(config, gameState, 5393) { }
+        public GameEngine(Config config, GameState gameState, int seed)
         {
             this.gameState = gameState;
             this.config = config;
+            this.seed = seed;
             NewGame();
         }
 
         public void NewGame()
         {
             map = new Dictionary<Coordinate, MapTile>();
-            map.Add(new Coordinate(0, 0), new MapTile(new Coordinate(0, 0), gameState, config));
+            map.Add(new Coordinate(0, 0), new MapTile(new Coordinate(0, 0), gameState, config, seed));
             turnState = new TurnState(gameState, config);
         }
 
@@ -85,14 +82,14 @@ namespace Assets.Scripts
             int enemyLevel = GetEnemyLevel(turnState.position);
 
 
-            turnState.enemyHp -= MyRandom.RangeInt(config.seed + turnState.position.GetHashCode() + turnState.enemyHp, 1, config.weaponDamageDiceSides[turnState.weaponLevel] + 1);
+            turnState.enemyHp -= MyRandom.RangeInt(seed + turnState.position.GetHashCode() + turnState.enemyHp, 1, config.weaponDamageDiceSides[turnState.weaponLevel] + 1);
 
             if (turnState.enemyHp <= 0)
             {
                 return enemyDefeated(turnState, enemyLevel);
             }
 
-            turnState.hp -= MyRandom.RangeInt(config.seed + turnState.position.GetHashCode() + turnState.hp, 1, config.enemyDamageCountPerLevel * enemyLevel + 5 + 1);
+            turnState.hp -= MyRandom.RangeInt(seed + turnState.position.GetHashCode() + turnState.hp, 1, config.enemyDamageCountPerLevel * enemyLevel + 5 + 1);
 
             if (turnState.hp <= 0)
             {
@@ -116,12 +113,12 @@ namespace Assets.Scripts
         {
             turnState.roomCleared.Add(turnState.position);
 
-            if (MyRandom.NextFloat(config.seed + turnState.position.GetHashCode()) < config.enemyDropRateKeyBase + config.enemyDropRateKeyPerLevel * enemyLevel)
+            if (MyRandom.NextFloat(seed + turnState.position.GetHashCode()) < config.enemyDropRateKeyBase + config.enemyDropRateKeyPerLevel * enemyLevel)
             {
                 turnState.keys++;
             }
 
-            if (MyRandom.NextFloat(config.seed + turnState.position.GetHashCode() + 1) < config.enemyDropRateWeapon)
+            if (MyRandom.NextFloat(seed + turnState.position.GetHashCode() + 1) < config.enemyDropRateWeapon)
             {
                 if (enemyLevel <= 2)
                 {
@@ -146,7 +143,7 @@ namespace Assets.Scripts
         public int GetEnemyLevel(Coordinate position)
         {
             int upgradeEnemyLevel = gameState.upgradeEnemyLevel;
-            return MyRandom.RangeInt(config.seed + position.GetHashCode(), config.enemyLevelRanges[upgradeEnemyLevel, 0], config.enemyLevelRanges[upgradeEnemyLevel, 1] + 1);
+            return MyRandom.RangeInt(seed + position.GetHashCode(), config.enemyLevelRanges[upgradeEnemyLevel, 0], config.enemyLevelRanges[upgradeEnemyLevel, 1] + 1);
         }
 
         [Pure]
@@ -197,8 +194,8 @@ namespace Assets.Scripts
             }
 
             turnState.keys--;
-            turnState.money += MyRandom.RangeInt(config.seed + turnState.position.GetHashCode(), config.treasureDropMoneyCountMin, config.treasureDropMoneyCountMax + 1);
-            turnState.tokens += MyRandom.RangeInt(config.seed + turnState.position.GetHashCode() + 42, config.treasureDropTokensCountMin, config.treasureDropTokensCountMax + 1);
+            turnState.money += MyRandom.RangeInt(seed + turnState.position.GetHashCode(), config.treasureDropMoneyCountMin, config.treasureDropMoneyCountMax + 1);
+            turnState.tokens += MyRandom.RangeInt(seed + turnState.position.GetHashCode() + 42, config.treasureDropTokensCountMin, config.treasureDropTokensCountMax + 1);
             turnState.roomCleared.Add(turnState.position);
             return turnState;
         }
@@ -304,7 +301,7 @@ namespace Assets.Scripts
         {
             if (!map.ContainsKey(coordinate))
             {
-                map.Add(coordinate, new MapTile(coordinate, gameState, config));
+                map.Add(coordinate, new MapTile(coordinate, gameState, config, seed));
             }
         }
 
