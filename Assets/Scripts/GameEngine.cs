@@ -123,11 +123,11 @@ namespace Assets.Scripts
 
             if (MyRandom.NextFloat(config.seed + turnState.position.GetHashCode() + 1) < config.enemyDropRateWeapon)
             {
-                if (enemyLevel < 4)
+                if (enemyLevel <= 2)
                 {
                     turnState.weaponLevel = Math.Max(turnState.weaponLevel, (byte)1);
                 }
-                else if (enemyLevel < 7)
+                else if (enemyLevel <= 4)
                 {
                     turnState.weaponLevel = Math.Max(turnState.weaponLevel, (byte)2);
                 }

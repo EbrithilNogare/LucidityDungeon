@@ -9147,6 +9147,11 @@ MonoBehaviour:
   keysText: {fileID: 321170934}
   exactHealtPointsValue: {fileID: 1969814397}
   exactEnergyValue: {fileID: 50182458}
+  weaponSprites:
+  - {fileID: 21300000, guid: e6c528a818e643a4bbfc5c42cb95e82e, type: 2}
+  - {fileID: 21300000, guid: c8a095b8518bc3c409fcac9953922354, type: 2}
+  - {fileID: 21300000, guid: 6e1e78e5ce5ed764b991462f1c6a0125, type: 2}
+  - {fileID: 21300000, guid: 1d65cdf0836ad2649b33f7c08406e319, type: 2}
   weaponIcon: {fileID: 1789931615}
   healthBar: {fileID: 1362586787}
   energyBar: {fileID: 1545718108}

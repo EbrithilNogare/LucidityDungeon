@@ -15,6 +15,7 @@ namespace Assets.Scripts
         public TextMeshProUGUI keysText;
         public TextMeshProUGUI exactHealtPointsValue;
         public TextMeshProUGUI exactEnergyValue;
+        public Sprite[] weaponSprites;
         public GameObject weaponIcon;
         public GameObject healthBar;
         public GameObject energyBar;
@@ -55,6 +56,7 @@ namespace Assets.Scripts
             keysText.SetText(turnState.keys.ToString());
             healthBar.GetComponent<Image>().sprite = barSprites[(int)Mathf.Floor(turnState.hp * barSprites.Length / ((float)config.playerDefaultHealthPoints + 1))];
             energyBar.GetComponent<Image>().sprite = barSprites[(int)Mathf.Floor(turnState.energy * barSprites.Length / ((float)config.energy[gameState.upgradeEnergyLevel] + 1))];
+            weaponIcon.GetComponent<Image>().sprite = weaponSprites[turnState.weaponLevel];
 
             var children = new List<GameObject>();
             foreach (Transform child in enemyHealthBarContainer.transform) children.Add(child.gameObject);

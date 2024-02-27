@@ -110,7 +110,7 @@ namespace Assets.Scripts
             { "Arcane Scholar", "Collect all init spells and upgrades." },
             { "Potion Connoisseur", "Acquire all potions and upgrades." },
             { "Hardcore Warrior", "Call as many strongest beasts into dungeon as possible." },
-            { "End?", "Get 1000 tokens from a single game." },
+            { "End?", "Or not?" },
         };
 
         // Store._instance.HandleAchievementProgress(Store.AchievementProgressType.ArcaneScholar);
