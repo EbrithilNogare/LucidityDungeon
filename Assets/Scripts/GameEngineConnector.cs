@@ -101,6 +101,8 @@ namespace Assets.Scripts
 
             if (renderNewGame)
             {
+                actionsInQueue.Clear();
+
                 // tilemap
                 alreadyRenderedRooms.Clear();
                 tilemap.ClearAllTiles();
@@ -112,7 +114,6 @@ namespace Assets.Scripts
                     Destroy(sprite.Value);
                 }
                 sprites.Clear();
-
                 theGUIRenderer.UpdateGUI(gameEngine);
                 actionsRenderer.RenderActions(gameEngine.GetValidActions(), gameEngine.turnState, gameEngine.gameState, gameEngine.config);
 
@@ -233,6 +234,7 @@ namespace Assets.Scripts
                 float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
                 float difference = previousMagnitude - currentMagnitude;
 
+                // prevent computation jump on first call
                 if (Mathf.Abs(difference) >= 1000)
                 {
                     return;
@@ -520,6 +522,5 @@ namespace Assets.Scripts
                 tilemap.SetTile(new Vector3Int(coordinate.x * 8 + 8, coordinate.y * 8 + 3, 0), constDictionary.tileToEmptyRoom[3]);
             }
         }
-
     }
 }
