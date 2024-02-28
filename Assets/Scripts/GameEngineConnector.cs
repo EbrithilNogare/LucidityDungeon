@@ -233,7 +233,7 @@ namespace Assets.Scripts
                 float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
                 float difference = previousMagnitude - currentMagnitude;
 
-                if (Mathf.Abs(difference) >= 100)
+                if (Mathf.Abs(difference) >= 1000)
                 {
                     return;
                 }
