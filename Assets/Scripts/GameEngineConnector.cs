@@ -319,6 +319,7 @@ namespace Assets.Scripts
             {
                 Store._instance.gameState = gameEngine.gameState;
                 Store._instance.SavePrefs();
+                DOTween.KillAll(false);
                 SceneManager.LoadScene("Shopping hall", LoadSceneMode.Single);
                 return;
             }

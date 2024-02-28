@@ -12,10 +12,12 @@ namespace Assets.Scripts
 
         public void Play()
         {
+            DOTween.KillAll(false);
             SceneManager.LoadScene("Game", LoadSceneMode.Single);
         }
         public void Tutorial()
         {
+            DOTween.KillAll(false);
             SceneManager.LoadScene("Tutorial", LoadSceneMode.Single);
         }
         public void Options()
@@ -32,6 +34,7 @@ namespace Assets.Scripts
         }
         public void Credits()
         {
+            DOTween.KillAll(false);
             SceneManager.LoadScene("Credits", LoadSceneMode.Single);
         }
         public void Exit()

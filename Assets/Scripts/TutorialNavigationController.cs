@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 namespace Assets.Scripts
@@ -15,6 +16,7 @@ namespace Assets.Scripts
 
         public void RightButtonClicked()
         {
+            DOTween.KillAll(false);
             SceneManager.LoadScene("Main menu", LoadSceneMode.Single);
         }
     }

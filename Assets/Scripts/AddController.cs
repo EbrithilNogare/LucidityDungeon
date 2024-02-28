@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
@@ -23,6 +24,7 @@ namespace Assets.Scripts
         void OnVideoEnd(VideoPlayer vp)
         {
             vp.loopPointReached -= OnVideoEnd;
+            DOTween.KillAll(false);
             SceneManager.LoadScene("Game");
         }
     }
