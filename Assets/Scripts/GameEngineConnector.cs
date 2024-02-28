@@ -216,7 +216,7 @@ namespace Assets.Scripts
 
         public void Zoom(InputAction.CallbackContext context)
         {
-            resolveZoom(context.ReadValue<float>() / -120);
+            ResolveZoom(context.ReadValue<float>() / -120);
         }
 
         private void CheckPinch()
@@ -231,18 +231,18 @@ namespace Assets.Scripts
 
                 float previousMagnitude = (touchZeroPrevPosition - touchOnePrevPosition).magnitude;
                 float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
-                float difference = currentMagnitude - previousMagnitude;
+                float difference = previousMagnitude - currentMagnitude;
 
                 if (Mathf.Abs(difference) >= 100)
                 {
                     return;
                 }
 
-                resolveZoom(difference * .02f);
+                ResolveZoom(difference * .02f);
             }
         }
 
-        public void resolveZoom(float difference)
+        public void ResolveZoom(float difference)
         {
             if (mainCamera)
             {
