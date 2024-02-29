@@ -13,7 +13,14 @@ namespace Assets.Scripts
         public void Play()
         {
             DOTween.KillAll(false);
-            SceneManager.LoadScene("Game", LoadSceneMode.Single);
+            if (Store._instance.achievementProgress == 0)
+            {
+                SceneManager.LoadScene("Story", LoadSceneMode.Single);
+            }
+            else
+            {
+                SceneManager.LoadScene("Game", LoadSceneMode.Single);
+            }
         }
         public void Tutorial()
         {
