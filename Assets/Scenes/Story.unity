@@ -367,8 +367,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: As he drifted into slumber, he found himself transported to a mysterious
-    dungeon, its stone walls echoing with the whispers of adventure.
+  m_text: As  he  drifted  into  slumber,  he  found  himself  transported  to  a 
+    mysterious  dungeon,  its  stone  walls  echoing  with  the  whispers  of  adventure.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 07a959c1220a12e4a9a6169fccba145d, type: 2}
   m_sharedMaterial: {fileID: 2007404910692551064, guid: 07a959c1220a12e4a9a6169fccba145d, type: 2}
@@ -677,8 +677,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Armed with courage and curiosity, he ventured deeper into the dreamworld
-    dungeon, ready to face the challenges that awaited him in the realm of the subconscious.\r"
+  m_text: "Armed  with  courage  and  curiosity,  he  ventured  deeper  into  the 
+    dreamworld  dungeon,  ready  to  face  the  challenges  that  awaited  him  in 
+    the  realm  of  the  dreams.\r"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 07a959c1220a12e4a9a6169fccba145d, type: 2}
   m_sharedMaterial: {fileID: 2007404910692551064, guid: 07a959c1220a12e4a9a6169fccba145d, type: 2}
@@ -1521,7 +1522,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -64, y: 56}
-  m_SizeDelta: {x: 702.6, y: 330.9}
+  m_SizeDelta: {x: 702.6, y: 379.7}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1437504564
 MonoBehaviour:
@@ -2057,8 +2058,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Exhausted from a grueling day of work, the main hero sank into the welcoming
-    embrace of his bed, seeking respite in the realm of dreams.
+  m_text: Exhausted  from  a  grueling  day  of  work,  the  main  hero  sank  into 
+    the  welcoming  embrace  of  his  bed,  seeking  respite  in  the  realm  of 
+    subconscious.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 07a959c1220a12e4a9a6169fccba145d, type: 2}
   m_sharedMaterial: {fileID: 2007404910692551064, guid: 07a959c1220a12e4a9a6169fccba145d, type: 2}
