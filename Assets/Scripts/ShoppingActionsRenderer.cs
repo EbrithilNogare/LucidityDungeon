@@ -84,13 +84,13 @@ namespace Assets.Scripts
         public void OnClickToDungeon()
         {
             Store._instance.SavePrefs();
-            DOTween.KillAll(false);
+            DOTween.KillAll(true);
             SceneManager.LoadScene("Game", LoadSceneMode.Single);
         }
         public void OnClickExit()
         {
             Store._instance.SavePrefs();
-            DOTween.KillAll(false);
+            DOTween.KillAll(true);
             SceneManager.LoadScene("Main menu", LoadSceneMode.Single);
         }
 

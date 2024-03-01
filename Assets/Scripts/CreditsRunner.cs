@@ -34,7 +34,7 @@ namespace Assets.Scripts
 
         public void BackToMainMenu()
         {
-            DOTween.KillAll(false);
+            DOTween.KillAll(true);
             SceneManager.LoadScene(0, LoadSceneMode.Single);
         }
     }

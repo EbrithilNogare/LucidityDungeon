@@ -36,7 +36,7 @@ namespace Assets.Scripts
 
             if (index < 0)
             {
-                DOTween.KillAll(false);
+                DOTween.KillAll(true);
                 SceneManager.LoadScene(previousScene, LoadSceneMode.Single);
                 return;
             }
@@ -51,7 +51,7 @@ namespace Assets.Scripts
 
             if (index > chapters.Length - 1)
             {
-                DOTween.KillAll(false);
+                DOTween.KillAll(true);
                 SceneManager.LoadScene(nextScene, LoadSceneMode.Single);
                 return;
             }

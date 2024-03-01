@@ -24,7 +24,7 @@ namespace Assets.Scripts
         void OnVideoEnd(VideoPlayer vp)
         {
             vp.loopPointReached -= OnVideoEnd;
-            DOTween.KillAll(false);
+            DOTween.KillAll(true);
             SceneManager.LoadScene("Game");
         }
     }

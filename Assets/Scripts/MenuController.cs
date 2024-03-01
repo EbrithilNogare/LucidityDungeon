@@ -12,7 +12,7 @@ namespace Assets.Scripts
 
         public void Play()
         {
-            DOTween.KillAll(false);
+            DOTween.KillAll(true);
             if (Store._instance.achievementProgress == 0)
             {
                 SceneManager.LoadScene("Story", LoadSceneMode.Single);
@@ -24,7 +24,7 @@ namespace Assets.Scripts
         }
         public void Tutorial()
         {
-            DOTween.KillAll(false);
+            DOTween.KillAll(true);
             SceneManager.LoadScene("Tutorial", LoadSceneMode.Single);
         }
         public void Options()
@@ -41,7 +41,7 @@ namespace Assets.Scripts
         }
         public void Credits()
         {
-            DOTween.KillAll(false);
+            DOTween.KillAll(true);
             SceneManager.LoadScene("Credits", LoadSceneMode.Single);
         }
         public void Exit()

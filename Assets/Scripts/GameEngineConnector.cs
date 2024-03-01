@@ -298,7 +298,7 @@ namespace Assets.Scripts
                 Store._instance.endScreenVariant = Store.EndScreenVariants.Sleep;
                 Store._instance.gameState = new GameState();
                 Store._instance.SavePrefs();
-                DOTween.KillAll(false);
+                DOTween.KillAll(true);
                 SceneManager.LoadScene("End");
                 return;
             }
@@ -339,7 +339,7 @@ namespace Assets.Scripts
                 Store._instance.endScreenVariant = Store.EndScreenVariants.Victory;
                 Store._instance.gameState = gameEngine.gameState;
                 Store._instance.SavePrefs();
-                DOTween.KillAll(false);
+                DOTween.KillAll(true);
                 if (bossDefeated)
                 {
                     SceneManager.LoadScene("End");
@@ -356,7 +356,7 @@ namespace Assets.Scripts
                 Store._instance.endScreenVariant = Store.EndScreenVariants.Death;
                 Store._instance.gameState = gameEngine.gameState;
                 Store._instance.SavePrefs();
-                DOTween.KillAll(false);
+                DOTween.KillAll(true);
                 SceneManager.LoadScene("End");
                 return;
             }
