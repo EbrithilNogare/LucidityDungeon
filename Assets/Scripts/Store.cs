@@ -7,10 +7,18 @@ namespace Assets.Scripts
 {
     class Store : MonoBehaviour
     {
+        public enum EndScreenVariants
+        {
+            Victory,
+            Sleep,
+            Death,
+        }
+
         public static Store _instance;
         public GameObject card;
         public TextMeshProUGUI title;
         public TextMeshProUGUI label;
+        public EndScreenVariants endScreenVariant;
 
         private int _volume;
         public int volume

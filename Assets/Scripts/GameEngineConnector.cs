@@ -49,6 +49,7 @@ namespace Assets.Scripts
         private HashSet<Coordinate> alreadyRenderedRooms;
         private List<GameAction> actionsInQueue;
         private int openedChestsCount;
+        private bool bossDefeated;
 
 
         void Start()
@@ -61,6 +62,7 @@ namespace Assets.Scripts
             enumerator = SGA.MainGenerator().GetEnumerator();
             actionsInQueue = new List<GameAction>();
             openedChestsCount = 0;
+            bossDefeated = false;
             alreadyRenderedRooms = new HashSet<Coordinate>();
             sprites = new Dictionary<Coordinate, GameObject>();
             SetAudioVolume();
@@ -291,6 +293,16 @@ namespace Assets.Scripts
                 }
             }
 
+            if (gameEngine.turnState.energy == 0)
+            {
+                Store._instance.endScreenVariant = Store.EndScreenVariants.Sleep;
+                Store._instance.gameState = new GameState();
+                Store._instance.SavePrefs();
+                DOTween.KillAll(false);
+                SceneManager.LoadScene("End");
+                return;
+            }
+
             gameEngine.Tick(action);
 
 
@@ -309,6 +321,13 @@ namespace Assets.Scripts
                 clawsHitAnimator.Play("claws hit", 0, 0);
             }
 
+            if ((action == GameAction.Attack || action == GameAction.UseSpell)
+                && gameEngine.turnState.enemyHp <= 0
+                && gameEngine.GetEnemyLevel(gameEngine.turnState.position) == gameEngine.config.enemyLevelRanges[gameEngine.config.enemyLevelRanges.GetLength(0) - 1, 1])
+            {
+                bossDefeated = true;
+            }
+
             if (countOfRoomCleared < gameEngine.turnState.roomCleared.Count)
             {
                 sprites.Remove(gameEngine.turnState.position, out GameObject sprite);
@@ -317,18 +336,29 @@ namespace Assets.Scripts
 
             if (action == GameAction.Exit)
             {
+                Store._instance.endScreenVariant = Store.EndScreenVariants.Victory;
                 Store._instance.gameState = gameEngine.gameState;
                 Store._instance.SavePrefs();
                 DOTween.KillAll(false);
-                SceneManager.LoadScene("Shopping hall", LoadSceneMode.Single);
+                if (bossDefeated)
+                {
+                    SceneManager.LoadScene("End");
+                }
+                else
+                {
+                    SceneManager.LoadScene("Shopping hall", LoadSceneMode.Single);
+                }
                 return;
             }
 
             if (gameEngine.turnState.lives == 0)
             {
-                // todo die
-                renderNewGame = true;
-                gameEngine.NewGame();
+                Store._instance.endScreenVariant = Store.EndScreenVariants.Death;
+                Store._instance.gameState = gameEngine.gameState;
+                Store._instance.SavePrefs();
+                DOTween.KillAll(false);
+                SceneManager.LoadScene("End");
+                return;
             }
 
             if (action == GameAction.GoUp || action == GameAction.GoLeft || action == GameAction.GoDown || action == GameAction.GoRight)

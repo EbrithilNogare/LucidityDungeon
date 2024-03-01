@@ -54,8 +54,8 @@ namespace Assets.Scripts
             livesText.SetText(turnState.lives.ToString());
             tokensText.SetText(turnState.tokens.ToString());
             keysText.SetText(turnState.keys.ToString());
-            healthBar.GetComponent<Image>().sprite = barSprites[(int)Mathf.Floor(turnState.hp * barSprites.Length / ((float)config.playerDefaultHealthPoints + 1))];
-            energyBar.GetComponent<Image>().sprite = barSprites[(int)Mathf.Floor(turnState.energy * barSprites.Length / ((float)config.energy[gameState.upgradeEnergyLevel] + 1))];
+            healthBar.GetComponent<Image>().sprite = barSprites[Mathf.Clamp((int)Mathf.Floor(turnState.hp * barSprites.Length / ((float)config.playerDefaultHealthPoints + 1)), 0, barSprites.Length - 1)];
+            energyBar.GetComponent<Image>().sprite = barSprites[Mathf.Clamp((int)Mathf.Floor(turnState.energy * barSprites.Length / ((float)config.energy[gameState.upgradeEnergyLevel] + 1)), 0, barSprites.Length - 1)];
             weaponIcon.GetComponent<Image>().sprite = weaponSprites[turnState.weaponLevel];
 
             var children = new List<GameObject>();
