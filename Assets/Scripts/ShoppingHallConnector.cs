@@ -14,6 +14,7 @@ namespace Assets.Scripts
         public Camera mainCamera;
         public GameEngine gameEngine;
         public TilemapAStar tilemapAStar;
+        public AudioSource buySound;
 
         [Space(100)]
 
@@ -84,6 +85,8 @@ namespace Assets.Scripts
 
         public void OnBuyInShoppingHall(ShoppingHallAction action)
         {
+            buySound.Play();
+
             gameEngine.BuyInShoppingHall(action);
             Store._instance.gameState = gameEngine.gameState;
             Store._instance.SavePrefs();
