@@ -19,6 +19,7 @@ namespace Assets.Scripts
         public TextMeshProUGUI title;
         public TextMeshProUGUI label;
         public EndScreenVariants endScreenVariant;
+        public AudioSource achievementSound;
 
         private int _volume;
         public int volume
@@ -122,8 +123,6 @@ namespace Assets.Scripts
             { AchievementProgressType.LuckyJoe, ("Lucky Joe", "Survive with only 1 HP") },
         };
 
-        // call like this:
-        // Store._instance.HandleAchievementProgress(Store.AchievementProgressType.CompleteDungeon);
         public void HandleAchievementProgress(AchievementProgressType achievementProgressType)
         {
             int achievementProgressBefore = achievementProgress;
@@ -150,6 +149,7 @@ namespace Assets.Scripts
 
             // show badge
             card.SetActive(true);
+            achievementSound.Play();
             title.SetText(AchievementsText[achievementProgressType].title);
             label.SetText(AchievementsText[achievementProgressType].description);
 

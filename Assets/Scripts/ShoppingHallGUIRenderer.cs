@@ -12,7 +12,7 @@ namespace Assets.Scripts
         [Space(100)]
 
         [Header("Private")]
-        // left, mid, right, solo
+        [Tooltip("0:left, 1:mid, 2:right, 3:solo")]
         public GameObject[] BarPieceSources;
         public GameObject energyBar;
         public Color32 energyBarColor;

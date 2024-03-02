@@ -20,7 +20,8 @@ namespace Assets.Scripts
         public GameObject healthBar;
         public GameObject energyBar;
         public Sprite[] barSprites;
-        public GameObject[] healthBarSprites; // 0:solo, 1:left, 2:mid, 3:right 
+        [Tooltip("0:solo, 1:left, 2:mid, 3:right")]
+        public GameObject[] healthBarSprites;
         public TextMeshProUGUI enemyName;
         public GameObject enemyHealthBarContainer;
 
