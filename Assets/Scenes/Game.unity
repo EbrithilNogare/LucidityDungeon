@@ -5626,6 +5626,7 @@ GameObject:
   m_Component:
   - component: {fileID: 122920133}
   - component: {fileID: 122920132}
+  - component: {fileID: 122920134}
   m_Layer: 0
   m_Name: Open chest sound
   m_TagString: Untagged
@@ -5744,6 +5745,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 765324287}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &122920134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 122920131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fea5d52ef0439a4bbeba1235f950f30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &135710713
 GameObject:
   m_ObjectHideFlags: 0
@@ -6112,6 +6125,7 @@ GameObject:
   m_Component:
   - component: {fileID: 222837027}
   - component: {fileID: 222837028}
+  - component: {fileID: 222837029}
   m_Layer: 0
   m_Name: Buy sound
   m_TagString: Untagged
@@ -6230,6 +6244,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &222837029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222837026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fea5d52ef0439a4bbeba1235f950f30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &279289155 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7504507718320065085, guid: 8cc50c86a20ea12489bb491a6c1121e3, type: 3}
@@ -6731,6 +6757,7 @@ GameObject:
   m_Component:
   - component: {fileID: 367505960}
   - component: {fileID: 367505961}
+  - component: {fileID: 367505962}
   m_Layer: 0
   m_Name: Spell sound
   m_TagString: Untagged
@@ -6849,6 +6876,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &367505962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 367505959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fea5d52ef0439a4bbeba1235f950f30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &422779720
 GameObject:
   m_ObjectHideFlags: 0
@@ -7614,6 +7653,7 @@ GameObject:
   m_Component:
   - component: {fileID: 649602935}
   - component: {fileID: 649602936}
+  - component: {fileID: 649602937}
   m_Layer: 0
   m_Name: Achievement sound
   m_TagString: Untagged
@@ -7732,6 +7772,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &649602937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649602934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fea5d52ef0439a4bbeba1235f950f30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &652431892
 GameObject:
   m_ObjectHideFlags: 0
@@ -10051,6 +10103,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1179863366}
   - component: {fileID: 1179863367}
+  - component: {fileID: 1179863368}
   m_Layer: 0
   m_Name: Sword sound
   m_TagString: Untagged
@@ -10169,6 +10222,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1179863368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1179863365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fea5d52ef0439a4bbeba1235f950f30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1183964252
 GameObject:
   m_ObjectHideFlags: 0
@@ -11783,15 +11848,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1178778121101561898, guid: 00ff9e99f7a87ec4ca65fd6ada6dd8b5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1283.7369
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1178778121101561898, guid: 00ff9e99f7a87ec4ca65fd6ada6dd8b5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 505.16678
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1178778121101561898, guid: 00ff9e99f7a87ec4ca65fd6ada6dd8b5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.789146
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1178778121101561898, guid: 00ff9e99f7a87ec4ca65fd6ada6dd8b5, type: 3}
       propertyPath: m_LocalRotation.w
@@ -12468,6 +12533,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1962767206}
   - component: {fileID: 1962767207}
+  - component: {fileID: 1962767208}
   m_Layer: 0
   m_Name: Heal sound
   m_TagString: Untagged
@@ -12586,6 +12652,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1962767208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1962767205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fea5d52ef0439a4bbeba1235f950f30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1969814396
 GameObject:
   m_ObjectHideFlags: 0
