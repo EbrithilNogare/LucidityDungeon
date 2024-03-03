@@ -25,7 +25,7 @@ namespace Assets.Scripts
         public void Tutorial()
         {
             DOTween.KillAll(true);
-            SceneManager.LoadScene("Tutorial", LoadSceneMode.Single);
+            SceneManager.LoadScene("Story", LoadSceneMode.Single);
         }
         public void Options()
         {
