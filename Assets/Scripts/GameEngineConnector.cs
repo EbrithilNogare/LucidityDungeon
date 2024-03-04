@@ -313,22 +313,22 @@ namespace Assets.Scripts
                 Destroy(sprite);
             }
 
-            if (gameEngine.turnState.energy == 0)
-            {
-                Store._instance.endScreenVariant = Store.EndScreenVariants.Sleep;
-                Store._instance.SavePrefs();
-                DOTween.KillAll(true);
-                SceneManager.LoadScene("End");
-                return;
-            }
-
-            if (action == GameAction.Exit)
+            if (action == GameAction.Exit || (gameEngine.turnState.energy == 0 && gameEngine.turnState.position == new Coordinate(0,0) ))
             {
                 Store._instance.endScreenVariant = Store.EndScreenVariants.Victory;
                 Store._instance.gameState = gameEngine.gameState;
                 Store._instance.SavePrefs();
                 DOTween.KillAll(true);
                 SceneManager.LoadScene(bossDefeated ? "End" : "Shopping hall", LoadSceneMode.Single);
+                return;
+            }
+
+            if (gameEngine.turnState.energy == 0)
+            {
+                Store._instance.endScreenVariant = Store.EndScreenVariants.Sleep;
+                Store._instance.SavePrefs();
+                DOTween.KillAll(true);
+                SceneManager.LoadScene("End");
                 return;
             }
 
