@@ -313,7 +313,7 @@ namespace Assets.Scripts
                 Destroy(sprite);
             }
 
-            if (action == GameAction.Exit || (gameEngine.turnState.energy == 0 && gameEngine.turnState.position == new Coordinate(0,0) ))
+            if (action == GameAction.Exit || (gameEngine.turnState.energy == 0 && gameEngine.turnState.position.Equals(new Coordinate(0,0))))
             {
                 Store._instance.endScreenVariant = Store.EndScreenVariants.Victory;
                 Store._instance.gameState = gameEngine.gameState;
