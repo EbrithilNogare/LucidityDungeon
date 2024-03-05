@@ -15,7 +15,7 @@ on:
 jobs:
   buildForAllSupportedPlatforms:
     name: Build for ${{ matrix.targetPlatform }}
-    runs-on: ubuntu-latest-xlarge
+    runs-on: macos-13
     strategy:
       fail-fast: false
       matrix:
