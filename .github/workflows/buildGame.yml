@@ -14,35 +14,35 @@ on:
 
 jobs:
   buildForAllSupportedPlatforms:
-    name: Build for ${{ matrix.targetPlatform.platform }}
+    name: Build for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        targetPlatform:
-          - { platform: StandaloneOSX, itchChannel: "osx" } # Build a macOS standalone (Intel 64-bit)
-          #- { platform: StandaloneWindows, itchChannel: "" } # Build a Windows standalone
-          - { platform: StandaloneWindows64, itchChannel: "windows" } # Build a Windows 64-bit standalone
-          - { platform: StandaloneLinux64, itchChannel: "linux" } # Build a Linux 64-bit standalone
-          - { platform: Android, itchChannel: "android" } # Build an Android .apk standalone app
-          - { platform: WebGL, itchChannel: "html5" } # WebGL
+        target platform:
+          - StandaloneOSX # Build a macOS standalone (Intel 64-bit)
+          - StandaloneWindows # Build a Windows standalone
+          - StandaloneWindows64 # Build a Windows 64-bit standalone
+          - StandaloneLinux64 # Build a Linux 64-bit standalone
+          - Android # Build an Android .apk standalone app
+          - WebGL # WebGL
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           lfs: false
 
-      - if: matrix.targetPlatform.platform == 'WebGL'
+      - if: matrix.targetPlatform == 'WebGL'
         run: mkdir -p ./build/WebGL/WebGL && touch ./build/WebGL/WebGL/package.json
 
-      - if: matrix.targetPlatform.platform == 'WebGL' ||  matrix.targetPlatform.platform == 'Android' || matrix.targetPlatform.platform == 'StandaloneWindows64'
+      - if: matrix.targetPlatform == 'WebGL' ||  matrix.targetPlatform == 'Android' || matrix.targetPlatform == 'StandaloneWindows64'
         uses: actions/cache@v4
         with:
           path: Library
-          key: Library-${{ matrix.targetPlatform.platform }}
+          key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
 
-      - if: matrix.targetPlatform.platform == 'Android' || matrix.targetPlatform.platform == 'StandaloneOSX'
+      - if: matrix.targetPlatform == 'Android' || matrix.targetPlatform == 'StandaloneOSX'
         uses: jlumbroso/free-disk-space@v1.3.1
 
       - uses: game-ci/unity-builder@v4
@@ -53,12 +53,12 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           versioning: Semantic
-          targetPlatform: ${{ matrix.targetPlatform.platform }}
+          targetPlatform: ${{ matrix.targetPlatform }}
 
-      - if: matrix.targetPlatform.platform == 'WebGL'
+      - if: matrix.targetPlatform == 'WebGL'
         run: echo '{ "version":"${{ steps.myBuildStep.outputs.buildVersion }}" }' > ./build/WebGL/WebGL/package.json
 
-      - if: matrix.targetPlatform.platform == 'WebGL'
+      - if: matrix.targetPlatform == 'WebGL'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
@@ -66,13 +66,31 @@ jobs:
           commit-message: Deploy
           single-commit: true
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
-          name: Build-${{ matrix.targetPlatform.platform }}
-          path: build/${{ matrix.targetPlatform.platform }}
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
 
-      - if: matrix.targetPlatform.itchChannel != ''
-        name: Push ${{ matrix.targetPlatform.platform }} to Itch.io
+  deploy:
+    name: Butler Push to Itch
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - { platform: StandaloneOSX, itchChannel: "osx" } # Build a macOS standalone (Intel 64-bit)
+          - { platform: StandaloneWindows, itchChannel: "win" } # Build a Windows standalone
+          - { platform: StandaloneWindows64, itchChannel: "windows" } # Build a Windows 64-bit standalone
+          - { platform: StandaloneLinux64, itchChannel: "linux" } # Build a Linux 64-bit standalone
+          - { platform: Android, itchChannel: "android" } # Build an Android .apk standalone app
+          - { platform: WebGL, itchChannel: "html5" } # WebGL
+    needs: buildForAllSupportedPlatforms
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-${{ matrix.targetPlatform.platform }}
+          path: build/${{ matrix.targetPlatform.platform }}
+      - name: Push ${{ matrix.targetPlatform.platform }} to Itch.io
         uses: manleydev/butler-publish-itchio-action@master
         env:
           BUTLER_CREDENTIALS: ${{ secrets.ITCH_IO_CREDENTIALS }}
