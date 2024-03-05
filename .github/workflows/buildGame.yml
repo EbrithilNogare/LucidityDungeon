@@ -6,79 +6,59 @@ on:
       - main
 
 jobs:
-  buildForWebGL:
-    name: Build for WebGL
+  buildForAllSupportedPlatforms:
+    name: Build for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneOSX # Build a macOS standalone (Intel 64-bit).
+          - StandaloneWindows # Build a Windows standalone.
+          - StandaloneWindows64 # Build a Windows 64-bit standalone.
+          - StandaloneLinux64 # Build a Linux 64-bit standalone.
+          - iOS # Build an iOS player.
+          - Android # Build an Android .apk standalone app.
+          - WebGL # WebGL.
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
+          fetch-depth: 1
           lfs: false
 
-      - run: mkdir -p ./build/WebGL/WebGL && touch ./build/WebGL/WebGL/package.json
+      - if: matrix.targetPlatform == 'WebGL'
+        run: mkdir -p ./build/WebGL/WebGL && touch ./build/WebGL/WebGL/package.json
       
       - uses: actions/cache@v3
         with:
           path: Library
-          key: Library-WebGL-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-WebGL-
-            Library-
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
 
-      - name: Build WebGL
-        uses: game-ci/unity-builder@v3
-        id: myBuildStep
+      - if: matrix.targetPlatform == 'Android'
+        uses: jlumbroso/free-disk-space@v1.3.1
+        
+      - uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           versioning: Semantic
-          targetPlatform: WebGL
+          targetPlatform: ${{ matrix.targetPlatform }}
 
-      - run: echo '{ "version":"${{ steps.myBuildStep.outputs.buildVersion }}" }' > ./build/WebGL/WebGL/package.json
+      - if: matrix.targetPlatform == 'WebGL'
+        run: echo '{ "version":"${{ steps.myBuildStep.outputs.buildVersion }}" }' > ./build/WebGL/WebGL/package.json
 
-      - uses: JamesIves/github-pages-deploy-action@v4
+      - if: matrix.targetPlatform == 'WebGL'   
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: build/WebGL/WebGL
           commit-message: Deploy
           single-commit: true
-
-  buildForAndroid:
-    name: Build for Android
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          lfs: false
-
-      - uses: actions/cache@v3
-        with:
-          path: Library
-          key: Library-Android-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-Android-
-            Library-
-
-      - uses: jlumbroso/free-disk-space@v1.3.0
       
-      - name: Build Android
-        uses: game-ci/unity-builder@v3
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-        with:
-          versioning: Semantic
-          targetPlatform: Android
-
       - uses: actions/upload-artifact@v3
         with:
-          name: Build-Android
-          path: build/Android/Android.apk
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
