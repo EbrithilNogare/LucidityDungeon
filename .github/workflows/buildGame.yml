@@ -72,14 +72,22 @@ jobs:
           path: build/${{ matrix.targetPlatform }}
 
   deploy:
-    name: Push to Itch.io
+    name: Push ${{ matrix.targetPlatform.source }} to Itch.io
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform: 
+          - { source: WebGL, target: html5 }
+          - { source: StandaloneWindows64, target: windows }
+          - { source: StandaloneLinux64, target: linux }
+          - { source: Android, target: android }
     needs: buildForAllSupportedPlatforms
     steps:
       - uses: manleydev/butler-publish-itchio-action@master
         env:
           BUTLER_CREDENTIALS: ${{ secrets.ITCH_IO_CREDENTIALS }}
-          CHANNEL: html5
+          CHANNEL: ${{ matrix.targetPlatform.target }}
           ITCH_GAME: luciditydungeon # HERE change this
           ITCH_USER: ebrithilnogare # HERE change this
-          PACKAGE: build/WebGL
+          PACKAGE: build/${{ matrix.targetPlatform.source }}
