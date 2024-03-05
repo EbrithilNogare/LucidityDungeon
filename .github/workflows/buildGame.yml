@@ -35,7 +35,8 @@ jobs:
       - if: matrix.targetPlatform == 'WebGL'
         run: mkdir -p ./build/WebGL/WebGL && touch ./build/WebGL/WebGL/package.json
       
-      - uses: actions/cache@v4
+      - if: matrix.targetPlatform == 'WebGL' ||  matrix.targetPlatform == 'Android' || matrix.targetPlatform == 'StandaloneWindows64'
+        uses: actions/cache@v4
         with:
           path: Library
           key: Library-${{ matrix.targetPlatform }}
