@@ -71,12 +71,15 @@ jobs:
           name: Build-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
 
-      - if: matrix.targetPlatform == 'WebGL'
-        name: Itch.io Push
-        uses: yeslayla/butler-publish-itchio-action@master
+  deploy:
+    name: Push to Itch.io
+    runs-on: ubuntu-latest
+    needs: buildForAllSupportedPlatforms
+    steps:
+      - uses: manleydev/butler-publish-itchio-action@master
         env:
           BUTLER_CREDENTIALS: ${{ secrets.ITCH_IO_CREDENTIALS }}
           CHANNEL: html5
-          ITCH_GAME: LucidityDungeon # HERE change this
+          ITCH_GAME: luciditydungeon # HERE change this
           ITCH_USER: ebrithilnogare # HERE change this
           PACKAGE: build/WebGL
