@@ -689,7 +689,9 @@ PlayerSettings:
     PS4: 3
     PS5: 3
     QNX: 3
+    Server: 3
     Stadia: 3
+    Standalone: 3
     VisionOS: 3
     WebGL: 3
     Windows Store Apps: 3
