@@ -1,8 +1,15 @@
 name: Build project
 
-on:
+on: 
   push:
     branches:
+      - master
+      - main
+    tags:
+      - "*"
+  pull_request:
+    branches:
+      - master
       - main
 
 jobs:
@@ -17,7 +24,6 @@ jobs:
           - StandaloneWindows # Build a Windows standalone.
           - StandaloneWindows64 # Build a Windows 64-bit standalone.
           - StandaloneLinux64 # Build a Linux 64-bit standalone.
-          - iOS # Build an iOS player.
           - Android # Build an Android .apk standalone app.
           - WebGL # WebGL.
     steps:
@@ -29,7 +35,7 @@ jobs:
       - if: matrix.targetPlatform == 'WebGL'
         run: mkdir -p ./build/WebGL/WebGL && touch ./build/WebGL/WebGL/package.json
       
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: Library
           key: Library-${{ matrix.targetPlatform }}
