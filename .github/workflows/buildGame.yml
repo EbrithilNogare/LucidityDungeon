@@ -42,6 +42,15 @@ jobs:
           path: Library
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
+          
+      - if: matrix.targetPlatform != 'WebGL' &&  matrix.targetPlatform != 'Android' && matrix.targetPlatform != 'StandaloneWindows64'
+        uses: actions/cache/restore@v4
+        with:
+          path: Library
+          key: Library-StandaloneWindows64
+          restore-keys:
+            Library-WebGL
+            Library-
 
       - if: matrix.targetPlatform == 'Android' || matrix.targetPlatform == 'StandaloneOSX'
         uses: jlumbroso/free-disk-space@v1.3.1
