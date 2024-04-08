@@ -99,8 +99,8 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}-${{ matrix.targetPlatform }}
-          path: build/${{ github.event.repository.name }}-${{ matrix.targetPlatform }}
+          name: ${{ github.event.repository.name }}-${{ matrix.targetPlatform.platform }}
+          path: build/${{ github.event.repository.name }}-${{ matrix.targetPlatform.platform }}
       - name: Push ${{ matrix.targetPlatform.platform }} to Itch.io
         uses: manleydev/butler-publish-itchio-action@master
         env:
@@ -108,4 +108,4 @@ jobs:
           CHANNEL: ${{ matrix.targetPlatform.itchChannel }}
           ITCH_GAME: luciditydungeon # HERE change this
           ITCH_USER: ebrithilnogare # HERE change this
-          PACKAGE: build/${{ github.event.repository.name }}-${{ matrix.targetPlatform }}
+          PACKAGE: build/${{ github.event.repository.name }}-${{ matrix.targetPlatform.platform }}
