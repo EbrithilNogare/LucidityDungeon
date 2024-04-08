@@ -89,7 +89,7 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-          - { platform: StandaloneOSX, itchChannel: "osx" } # Build a macOS standalone (Intel 64-bit)
+          # - { platform: StandaloneOSX, itchChannel: "osx" } # Build a macOS standalone (Intel 64-bit)
           - { platform: StandaloneWindows, itchChannel: "win32" } # Build a Windows standalone
           - { platform: StandaloneWindows64, itchChannel: "windows" } # Build a Windows 64-bit standalone
           - { platform: StandaloneLinux64, itchChannel: "linux" } # Build a Linux 64-bit standalone
