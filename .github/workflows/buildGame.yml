@@ -11,6 +11,8 @@ on:
     branches:
       - master
       - main
+  schedule:
+    - cron: "0 0 1 */2 *" # run every 2 months to keep artifacts alive
 
 jobs:
   buildForAllSupportedPlatforms:
@@ -20,9 +22,8 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-          # - StandaloneOSX # Build a macOS standalone (Intel 64-bit)
           # - iOS # Build an iOS player
-          - StandaloneWindows # Build a Windows standalone
+          # - StandaloneWindows # Build a Windows standalone
           - StandaloneWindows64 # Build a Windows 64-bit standalone
           - StandaloneLinux64 # Build a Linux 64-bit standalone
           - Android # Build an Android .apk standalone app
@@ -45,12 +46,18 @@ jobs:
         with:
           path: Library
           key: Library-StandaloneWindows64
-          restore-keys:
-            Library-WebGL
+          restore-keys: Library-WebGL
             Library-
 
-      - if: matrix.targetPlatform == 'Android' || matrix.targetPlatform == 'StandaloneOSX'
+      - if: matrix.targetPlatform == 'Android'
         uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          android: true # ~ 8.7 GiB in 5s
+          dotnet: true # ~ 1.6 GiB in 1s
+          haskell: true # ~ 5.2 GiB in 1s
+          large-packages: false # ~ 4,7 GiB in 100s
+          docker-images: true # ~ 3.2 GiB in 1s
+          swap-storage: false # ~ 4.0 GiB in 1s
 
       - uses: game-ci/unity-builder@v4
         id: myBuildStep
@@ -62,9 +69,14 @@ jobs:
           buildName: ${{ github.event.repository.name }}
           versioning: Semantic
           targetPlatform: ${{ matrix.targetPlatform }}
-      
+
+      - name: Get disk space usage
+        run: df -ah /
+
       - name: Remove DoNotShip folder
-        run: sudo find ./build/${{ matrix.targetPlatform }} -maxdepth 1 -type d -name "*DoNotShip*" -exec rm -rf {} +
+        run: |
+          sudo find ./build/${{ matrix.targetPlatform }} -maxdepth 1 -type d -name "*DoNotShip*" -exec rm -rf {} +
+          sudo find ./build/${{ matrix.targetPlatform }} -maxdepth 1 -type d -name "*ButDontShipItWithYourGame*" -exec rm -rf {} +
 
       - name: Write version into package.json for badges to work
         if: matrix.targetPlatform == 'WebGL'
@@ -82,31 +94,3 @@ jobs:
         with:
           name: ${{ github.event.repository.name }}-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
-
-  deploy:
-    name: Butler Push to Itch
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        targetPlatform:
-          # - { platform: StandaloneOSX, itchChannel: "osx" } # Build a macOS standalone (Intel 64-bit)
-          - { platform: StandaloneWindows, itchChannel: "win32" } # Build a Windows standalone
-          - { platform: StandaloneWindows64, itchChannel: "windows" } # Build a Windows 64-bit standalone
-          - { platform: StandaloneLinux64, itchChannel: "linux" } # Build a Linux 64-bit standalone
-          - { platform: Android, itchChannel: "android" } # Build an Android .apk standalone app
-          - { platform: WebGL, itchChannel: "html5" } # WebGL
-    needs: buildForAllSupportedPlatforms
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: ${{ github.event.repository.name }}-${{ matrix.targetPlatform.platform }}
-          path: build/${{ github.event.repository.name }}-${{ matrix.targetPlatform.platform }}
-      - name: Push ${{ matrix.targetPlatform.platform }} to Itch.io
-        uses: manleydev/butler-publish-itchio-action@master
-        env:
-          BUTLER_CREDENTIALS: ${{ secrets.ITCH_IO_CREDENTIALS }}
-          CHANNEL: ${{ matrix.targetPlatform.itchChannel }}
-          ITCH_GAME: luciditydungeon # HERE change this
-          ITCH_USER: ebrithilnogare # HERE change this
-          PACKAGE: build/${{ github.event.repository.name }}-${{ matrix.targetPlatform.platform }}
