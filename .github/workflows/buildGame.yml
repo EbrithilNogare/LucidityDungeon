@@ -11,13 +11,13 @@ on:
     branches:
       - master
       - main
-  schedule:
-    - cron: "0 0 1 */2 *" # run every 2 months to keep artifacts alive
 
 jobs:
   buildForAllSupportedPlatforms:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.versionSave.outputs.version }}
     strategy:
       fail-fast: false
       matrix:
@@ -34,22 +34,26 @@ jobs:
           fetch-depth: 0
           lfs: false
 
-      - if: matrix.targetPlatform == 'WebGL' ||  matrix.targetPlatform == 'Android' || matrix.targetPlatform == 'StandaloneWindows64'
+      - name: Restore platform specific cache
+        if: matrix.targetPlatform == 'WebGL' || matrix.targetPlatform == 'Android' || matrix.targetPlatform == 'StandaloneWindows64'
         uses: actions/cache@v4
         with:
           path: Library
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
 
-      - if: matrix.targetPlatform != 'WebGL' &&  matrix.targetPlatform != 'Android' && matrix.targetPlatform != 'StandaloneWindows64'
+      - name: Restore fallback cache
+        if: matrix.targetPlatform != 'WebGL' && matrix.targetPlatform != 'Android' && matrix.targetPlatform != 'StandaloneWindows64'
         uses: actions/cache/restore@v4
         with:
           path: Library
           key: Library-StandaloneWindows64
-          restore-keys: Library-WebGL
+          restore-keys: |
+            Library-WebGL
             Library-
 
-      - if: matrix.targetPlatform == 'Android'
+      - name: Free disk space
+        if: matrix.targetPlatform == 'Android'
         uses: jlumbroso/free-disk-space@v1.3.1
         with:
           android: true # ~ 8.7 GiB in 5s
@@ -82,7 +86,12 @@ jobs:
         if: matrix.targetPlatform == 'WebGL'
         run: echo '{ "version":"${{ steps.myBuildStep.outputs.buildVersion }}" }' | sudo tee ./build/WebGL/${{ github.event.repository.name }}/package.json
 
-      - if: matrix.targetPlatform == 'WebGL'
+      - name: Save version for next job
+        id: versionSave
+        run: echo "version=${{ steps.myBuildStep.outputs.buildVersion }}" | cut -d. -f1,2 >> "$GITHUB_OUTPUT"
+
+      - name: Deploy to GitHub Pages
+        if: matrix.targetPlatform == 'WebGL'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
@@ -94,3 +103,58 @@ jobs:
         with:
           name: ${{ github.event.repository.name }}-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
+
+  createRelease:
+    name: Create GitHub Release
+    needs: buildForAllSupportedPlatforms
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Check if release exists
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view "${{ needs.buildForAllSupportedPlatforms.outputs.version }}" > /dev/null 2>&1; then
+            echo "release_exists=true" >> $GITHUB_ENV
+          else
+            echo "release_exists=false" >> $GITHUB_ENV
+          fi
+
+      - uses: actions/create-release@v1
+        if: env.release_exists == 'false'
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ needs.buildForAllSupportedPlatforms.outputs.version }}
+          release_name: Release ${{ needs.buildForAllSupportedPlatforms.outputs.version }}
+          body: This is an automated release that contains all builds.
+          draft: false
+          prerelease: false
+
+      - name: Upload release variants
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd ./artifacts
+          for file in ./*; do
+            if [ -d "$file" ]; then
+              file_count=$(find "$file" -maxdepth 3 -type f | wc -l)
+              if [ "$file_count" -eq 1 ]; then
+                single_file=$(find "$file" -maxdepth 3 -type f)
+                echo "Uploading single file $single_file"
+                gh release upload "${{needs.buildForAllSupportedPlatforms.outputs.version}}" "$single_file" --clobber
+              elif [ "$file_count" -gt 1 ]; then
+                zip_file="${file}.zip"
+                echo "Zipping directory $file to $zip_file"
+                zip -r -q "$zip_file" "$file"
+                echo "Uploading zip file $zip_file"
+                gh release upload "${{needs.buildForAllSupportedPlatforms.outputs.version}}" "$zip_file" --clobber
+              fi
+            fi
+          done
